@@ -1,0 +1,147 @@
+/* Taylor Occlusion Index: shared design tokens and base styles.
+   Layout: a full-bleed night hero (canvas) above a single reading column (~66ch) whose
+   figures, charts and tables break out to a wider track. One deliberate look: night.
+   Moonlight (warm white) is the natural reference; sodium amber marks everything
+   human-made (the TOI itself). Everything else stays cool and recessive. */
+
+:root {
+  color-scheme: dark;
+
+  /* Sky and surfaces, darkest first */
+  --sky-0: #03050b;            /* page ground */
+  --sky-1: #070c18;            /* section surface */
+  --sky-2: #0d1526;            /* raised: figures, code, tables */
+  --sky-3: #16213a;            /* hover, selected row */
+
+  /* Ink */
+  --ink-1: #e8ecf5;            /* primary text */
+  --ink-2: #aab3c8;            /* secondary text */
+  --ink-3: #6e7892;            /* muted labels, axes */
+  --rule: rgba(170, 190, 230, 0.14);
+  --rule-strong: rgba(170, 190, 230, 0.30);
+
+  /* Light sources */
+  --moon: #f4ecd6;             /* moonlight */
+  --moon-glow: #ffe8b3;
+  --wire: #8fb7d8;             /* terrain wireframe */
+  --sodium: #ffad4d;           /* human-made: reserved for TOI marks */
+  --sodium-dim: rgba(255, 173, 77, 0.55);
+  --sodium-soft: rgba(255, 173, 77, 0.16);
+
+  /* Type */
+  --font-serif: "Newsreader", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --step--2: 0.6875rem;   /* 11px: micro labels */
+  --step--1: 0.8125rem;   /* 13px: captions, mono labels */
+  --step-0: 1.0625rem;    /* 17px: body */
+  --step-1: 1.3125rem;    /* 21px: lead */
+  --step-2: 1.75rem;      /* 28px: h3 */
+  --step-3: 2.375rem;     /* 38px: h2 */
+  --step-4: 3.25rem;      /* 52px: section display */
+  --step-hero: clamp(4.5rem, 13vw, 9.5rem);
+
+  --leading-body: 1.62;
+  --tracking-label: 0.14em;
+
+  /* Space */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 72px;
+  --space-9: 112px;
+
+  --measure: 66ch;
+  --wide: 1120px;
+  --gutter-l: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+
+  --radius: 3px;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  background: var(--sky-0);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--sky-0);
+  color: var(--ink-1);
+  font-family: var(--font-serif);
+  font-size: var(--step-0);
+  line-height: var(--leading-body);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+img, svg, canvas { display: block; max-width: 100%; }
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 300;
+  line-height: 1.12;
+  text-wrap: balance;
+  letter-spacing: -0.01em;
+}
+
+p { margin: 0; text-wrap: pretty; }
+
+a {
+  color: inherit;
+  text-decoration-color: var(--rule-strong);
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+a:hover { text-decoration-color: var(--sodium); }
+
+:focus-visible {
+  outline: 2px solid var(--sodium);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection { background: var(--sodium-soft); color: var(--ink-1); }
+
+/* Mono label: uppercase instrument annotation */
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.num, .tabular {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

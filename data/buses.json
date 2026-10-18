@@ -1,0 +1,661 @@
+[
+ {
+  "id": "starlink-v1",
+  "label": "Starlink v1.0 / v1.5",
+  "family": "Starlink",
+  "confidence": "published",
+  "area_model": "curated",
+  "match": {
+   "gcat_bus": [
+    "Starlink"
+   ],
+   "norad": [],
+   "name_regex": "^STARLINK[- ][1-6]\\d{3}$"
+  },
+  "body": {
+   "a_m": 1.3,
+   "b_m": 2.8
+  },
+  "arrays": {
+   "n": 1,
+   "length_m": 8.1,
+   "width_m": 2.8,
+   "tracking": "sun"
+  },
+  "extra_area_m2": 0.0,
+  "A_abs_m2": 26.32,
+  "A_fac_m2": 14.98,
+  "P_fac_m": 24.4,
+  "n_on_orbit": 3143,
+  "toi_abs": 0.006023588289714071,
+  "toi_fac": 0.0034283188670180182,
+  "median_alt_km": 470.5,
+  "alt_history": {
+   "shell_km": 550.0,
+   "until": "2026-01-01",
+   "ramp_until": "2026-10-01",
+   "raise_days": 45,
+   "descent_days": 120,
+   "transit_km": 350.0
+  },
+  "sources": [
+   {
+    "title": "Mallama et al. 2023, Assessment of Brightness Mitigation Practices for Starlink Satellites",
+    "url": "https://arxiv.org/abs/2309.14152"
+   },
+   {
+    "title": "McDowell, Starlink satellite dimensions from SpaceX's October 2022 FCC filing",
+    "url": "https://planet4589.org/astro/starsim/index.html"
+   },
+   {
+    "title": "SpaceX, Brightness Mitigation Best Practices for Satellite Operators",
+    "url": "https://api.starlink.com/public-files/BrightnessMitigationBestPracticesSatelliteOperators.pdf"
+   },
+   {
+    "title": "Engadget, Starlink is lowering thousands of satellites' orbits (1 January 2026)",
+    "url": "https://www.engadget.com/science/space/starlink-is-lowering-thousands-of-satellites-orbits-to-reduce-risk-of-collisions-030509067.html"
+   }
+  ],
+  "notes": "Mallama et al. (2023) give a 1.3 x 2.8 m antenna panel and one 2.8 x 8.1 m solar array, 26.32 m2 in all, unchanged from the first launches through v1.5. On station the panel faces Earth and the array tracks the Sun, so the array counts at one half in the facing area. These satellites flew at about 550 km until SpaceX lowered about 4,400 satellites to about 480 km during 2026. The reconstruction keeps them at 550 km until 1 January 2026 and moves each one linearly to its current altitude by 1 October 2026."
+ },
+ {
+  "id": "starlink-v2-mini",
+  "label": "Starlink V2 Mini",
+  "family": "Starlink",
+  "confidence": "published",
+  "area_model": "curated",
+  "match": {
+   "gcat_bus": [
+    "Starlink V2M"
+   ],
+   "norad": [],
+   "name_regex": "^STARLINK[- ]3[0-2]\\d{3}$"
+  },
+  "body": {
+   "a_m": 2.7,
+   "b_m": 4.1
+  },
+  "arrays": {
+   "n": 2,
+   "length_m": 12.8,
+   "width_m": 4.1,
+   "tracking": "sun"
+  },
+  "extra_area_m2": 0.0,
+  "A_abs_m2": 116.03,
+  "A_fac_m2": 63.55,
+  "P_fac_m": 64.8,
+  "n_on_orbit": 2562,
+  "toi_abs": 0.020753698376912096,
+  "toi_fac": 0.011366866602196655,
+  "median_alt_km": 483.0,
+  "alt_history": {
+   "shell_km": 530.0,
+   "until": "2026-01-01",
+   "ramp_until": "2026-10-01",
+   "raise_days": 45,
+   "descent_days": 120,
+   "transit_km": 350.0
+  },
+  "sources": [
+   {
+    "title": "Mallama et al. 2023, Assessment of Brightness Mitigation Practices for Starlink Satellites",
+    "url": "https://arxiv.org/abs/2309.14152"
+   },
+   {
+    "title": "SpaceX, Brightness Mitigation Best Practices for Satellite Operators",
+    "url": "https://api.starlink.com/public-files/BrightnessMitigationBestPracticesSatelliteOperators.pdf"
+   },
+   {
+    "title": "FCC 22-91, SpaceX Gen2 order and authorization (1 December 2022)",
+    "url": "https://docs.fcc.gov/public/attachments/FCC-22-91A1.pdf"
+   },
+   {
+    "title": "Engadget, Starlink is lowering thousands of satellites' orbits (1 January 2026)",
+    "url": "https://www.engadget.com/science/space/starlink-is-lowering-thousands-of-satellites-orbits-to-reduce-risk-of-collisions-030509067.html"
+   }
+  ],
+  "notes": "Mallama et al. (2023) give a 2.7 x 4.1 m antenna panel and two 4.1 x 12.8 m solar arrays, 116.0 m2 in all. The panel faces Earth. The arrays track the Sun and turn edge-on to Earth near the day-night line (SpaceX calls this terminator tracking), so they count at one half in the facing area. The FCC authorized the first Gen2 satellites in shells at 525, 530 and 535 km; the reconstruction uses 530 km until 1 January 2026, then ramps to each satellite's current altitude by 1 October 2026, as for v1."
+ },
+ {
+  "id": "starlink-v2-mini-optimized",
+  "label": "Starlink V2 Mini Optimized",
+  "family": "Starlink",
+  "confidence": "assumed",
+  "area_model": "curated",
+  "match": {
+   "gcat_bus": [
+    "Starlink V2MO"
+   ],
+   "norad": [],
+   "name_regex": "^STARLINK[- ]3[3-9]\\d{3}$"
+  },
+  "body": {
+   "a_m": 2.7,
+   "b_m": 4.1
+  },
+  "arrays": {
+   "n": 2,
+   "length_m": 12.8,
+   "width_m": 4.1,
+   "tracking": "sun"
+  },
+  "extra_area_m2": 0.0,
+  "A_abs_m2": 116.03,
+  "A_fac_m2": 63.55,
+  "P_fac_m": 64.8,
+  "n_on_orbit": 4789,
+  "toi_abs": 0.040166128459410845,
+  "toi_fac": 0.021999116294022982,
+  "median_alt_km": 465.5,
+  "alt_history": {
+   "shell_km": 530.0,
+   "until": "2026-01-01",
+   "ramp_until": "2026-10-01",
+   "raise_days": 45,
+   "descent_days": 120,
+   "transit_km": 350.0
+  },
+  "sources": [
+   {
+    "title": "Spaceflight Now, launch coverage giving 575 kg V2 Mini Optimized satellites (6 January 2025)",
+    "url": "https://spaceflightnow.com/2025/01/06/live-coverage-spacex-to-launch-24-starlink-satellites-on-falcon-9-rocket-from-cape-canaveral-4/"
+   },
+   {
+    "title": "Mallama et al. 2023, Assessment of Brightness Mitigation Practices for Starlink Satellites",
+    "url": "https://arxiv.org/abs/2309.14152"
+   },
+   {
+    "title": "McDowell, General Catalog of Artificial Space Objects (GCAT)",
+    "url": "https://planet4589.org/space/gcat/"
+   }
+  ],
+  "notes": "SpaceX has not published dimensions for this version, which has launched on Falcon 9 since late 2024 at about 575 kg, lighter than the 730 to 800 kg V2 Mini. GCAT records the same 4.1 m body and 29.0 m span as V2 Mini, so we assume the V2 Mini envelope. This is the largest single assumption in the index. If the arrays were 25% smaller, the facing TOI would fall by about 10%."
+ },
+ {
+  "id": "starlink-v2-mini-dtc",
+  "label": "Starlink V2 Mini direct-to-cell",
+  "family": "Starlink",
+  "confidence": "assumed",
+  "area_model": "curated",
+  "match": {
+   "gcat_bus": [
+    "Starlink V2MD"
+   ],
+   "norad": [],
+   "name_regex": "^STARLINK[- ]\\d+ \\[DTC\\]$"
+  },
+  "body": {
+   "a_m": 2.7,
+   "b_m": 4.1
+  },
+  "arrays": {
+   "n": 2,
+   "length_m": 12.8,
+   "width_m": 4.1,
+   "tracking": "sun"
+  },
+  "extra_area_m2": 0.0,
+  "A_abs_m2": 116.03,
+  "A_fac_m2": 63.55,
+  "P_fac_m": 64.8,
+  "n_on_orbit": 637,
+  "toi_abs": 0.008996765070869134,
+  "toi_fac": 0.004927556840935417,
+  "median_alt_km": 356.5,
+  "alt_history": {
+   "shell_km": 360.0,
+   "until": "2026-01-01",
+   "ramp_until": "2026-10-01",
+   "raise_days": 45,
+   "descent_days": 120,
+   "transit_km": 350.0
+  },
+  "sources": [
+   {
+    "title": "Mallama et al. 2023, Assessment of Brightness Mitigation Practices for Starlink Satellites",
+    "url": "https://arxiv.org/abs/2309.14152"
+   },
+   {
+    "title": "McDowell, General Catalog of Artificial Space Objects (GCAT)",
+    "url": "https://planet4589.org/space/gcat/"
+   }
+  ],
+  "notes": "The direct-to-cell satellites use the V2 Mini bus with an added phone antenna and weigh about 960 kg in GCAT. SpaceX has not published the antenna size, so we use the V2 Mini envelope and add nothing for the antenna. They fly in low shells near 360 km, which makes each one count about 1.8 times as much as a V2 Mini at 480 km."
+ },
+ {
+  "id": "starlink-v3",
+  "label": "Starlink V3",
+  "family": "Starlink",
+  "confidence": "proxy",
+  "area_model": "curated",
+  "match": {
+   "gcat_bus": [
+    "Starlink V3"
+   ],
+   "norad": [],
+   "name_regex": "^STARLINK[- ][4-9]\\d{4}$"
+  },
+  "body": {
+   "a_m": 2.7,
+   "b_m": 6.4
+  },
+  "arrays": {
+   "n": 2,
+   "length_m": 20.2,
+   "width_m": 6.4,
+   "tracking": "sun"
+  },
+  "extra_area_m2": 0.0,
+  "A_abs_m2": 275.84,
+  "A_fac_m2": 146.56,
+  "P_fac_m": 99.0,
+  "n_on_orbit": 26,
+  "toi_abs": 0.0009623501896580044,
+  "toi_fac": 0.0005113183142266428,
+  "median_alt_km": 345.5,
+  "alt_history": null,
+  "sources": [
+   {
+    "title": "McDowell, Starlink satellite dimensions from SpaceX's October 2022 FCC filing",
+    "url": "https://planet4589.org/astro/starsim/index.html"
+   },
+   {
+    "title": "McDowell, General Catalog of Artificial Space Objects (GCAT)",
+    "url": "https://planet4589.org/space/gcat/"
+   }
+  ],
+  "notes": "SpaceX has not published V3 dimensions. We use the full-size Gen2 satellite from SpaceX's October 2022 FCC filing as listed by McDowell, with a 6.4 x 2.7 m bus and two 6.4 x 20.2 m solar arrays (two by analogy with V2 Mini). GCAT records V3 with an 8.1 m body and a 60 m span, which gives a similar area through the generic model. The first 26 were deployed by Starship in September 2026 and were still raising their orbits on the catalog date."
+ },
+ {
+  "id": "starshield",
+  "label": "Starshield",
+  "family": "Starlink",
+  "confidence": "proxy",
+  "area_model": "curated",
+  "match": {
+   "gcat_bus": [
+    "Starshield"
+   ],
+   "norad": [],
+   "name_regex": null
+  },
+  "body": {
+   "a_m": 2.7,
+   "b_m": 4.1
+  },
+  "arrays": {
+   "n": 2,
+   "length_m": 12.8,
+   "width_m": 4.1,
+   "tracking": "sun"
+  },
+  "extra_area_m2": 0.0,
+  "A_abs_m2": 116.03,
+  "A_fac_m2": 63.55,
+  "P_fac_m": 64.8,
+  "n_on_orbit": 323,
+  "toi_abs": 0.002960460482655616,
+  "toi_fac": 0.0016214536212424927,
+  "median_alt_km": 577.0,
+  "alt_history": null,
+  "sources": [
+   {
+    "title": "McDowell, General Catalog of Artificial Space Objects (GCAT)",
+    "url": "https://planet4589.org/space/gcat/"
+   },
+   {
+    "title": "Mallama et al. 2023, Assessment of Brightness Mitigation Practices for Starlink Satellites",
+    "url": "https://arxiv.org/abs/2309.14152"
+   }
+  ],
+  "notes": "Starshield satellites are classified and no dimensions are published. GCAT records them with the same 4.1 m body and 29.0 m span as V2 Mini, flagged as guesses, and with masses of 575 to 800 kg that match the V2 Mini family, so we use the V2 Mini envelope. If they were the size of Starlink v1.5 instead, the facing TOI would fall by about 3%. Orbits come from CelesTrak where it lists them and from GCAT otherwise."
+ },
+ {
+  "id": "ast-bluebird-block1",
+  "label": "AST SpaceMobile BlueWalker 3 and BlueBird Block 1",
+  "family": "AST SpaceMobile",
+  "confidence": "published",
+  "area_model": "curated",
+  "match": {
+   "gcat_bus": [
+    "BW3"
+   ],
+   "norad": [],
+   "name_regex": "^(BLUEWALKER-3|SPACEMOBILE-00[1-5])$"
+  },
+  "body": null,
+  "arrays": {
+   "n": 1,
+   "length_m": 8.024,
+   "width_m": 8.024,
+   "tracking": "earth"
+  },
+  "extra_area_m2": 0.0,
+  "A_abs_m2": 64.384576,
+  "A_fac_m2": 64.384576,
+  "P_fac_m": 32.096,
+  "n_on_orbit": 6,
+  "toi_abs": 2.4713390275092793e-05,
+  "toi_fac": 2.4713390275092793e-05,
+  "median_alt_km": 504.5,
+  "alt_history": null,
+  "sources": [
+   {
+    "title": "AST SpaceMobile, Commercial Satellites Arrive at Cape Canaveral (8 August 2024)",
+    "url": "https://www.businesswire.com/news/home/20240808143608/en/AST-SpaceMobile%E2%80%99s-Commercial-Satellites-Arrive-at-Cape-Canaveral-For-Upcoming-Launch"
+   },
+   {
+    "title": "Space.com, SpaceX launches 5 BlueBird satellites for AST SpaceMobile (September 2024)",
+    "url": "https://www.space.com/spacex-ast-spacemobile-bluebird-launch-september-2024"
+   },
+   {
+    "title": "Space.com, BlueWalker 3 deploys the largest commercial array in low Earth orbit",
+    "url": "https://space.com/bluewalker-3-satellite-deploys-largest-commercial-array"
+   }
+  ],
+  "notes": "BlueWalker 3 and BlueBirds 1 to 5 each unfold a 693 square foot (64.4 m2) phased array. The solar cells are on the back of the array, which faces Earth, so the whole array counts in both the absolute and the facing area. We model the array as a square of that area to get its perimeter. The bus sits behind the array and adds nothing seen from below."
+ },
+ {
+  "id": "ast-bluebird-block2",
+  "label": "AST SpaceMobile BlueBird Block 2",
+  "family": "AST SpaceMobile",
+  "confidence": "published",
+  "area_model": "curated",
+  "match": {
+   "gcat_bus": [
+    "BB Block-2"
+   ],
+   "norad": [],
+   "name_regex": "^SPACEMOBILE-(0(0[6-9]|[1-9]\\d)|[1-9]\\d{2})$"
+  },
+  "body": null,
+  "arrays": {
+   "n": 1,
+   "length_m": 14.932,
+   "width_m": 14.932,
+   "tracking": "earth"
+  },
+  "extra_area_m2": 0.0,
+  "A_abs_m2": 222.964624,
+  "A_fac_m2": 222.964624,
+  "P_fac_m": 59.728,
+  "n_on_orbit": 7,
+  "toi_abs": 8.858415419882343e-05,
+  "toi_fac": 8.858415419882343e-05,
+  "median_alt_km": 526.0,
+  "alt_history": null,
+  "sources": [
+   {
+    "title": "Satnews, AST SpaceMobile deploys BlueBird 6, largest commercial array in LEO (24 December 2025)",
+    "url": "https://satnews.com/2025/12/24/ast-spacemobile-deploys-bluebird-6-largest-commercial-array-in-leo"
+   },
+   {
+    "title": "AST SpaceMobile, $43 million contract in support of the U.S. Space Development Agency (26 February 2025)",
+    "url": "https://www.businesswire.com/news/home/20250226892736/en/AST-SpaceMobile-Secures-%252443-Million-Contract-in-Support-of-U.S.-Space-Development-Agency-Through-Prime-Contractor"
+   }
+  ],
+  "notes": "AST SpaceMobile gives the Block 2 array as about 2,400 square feet (223 m2), about three times the Block 1 array. As for Block 1, the array faces Earth with the solar cells on its back and is modelled as a square of that area."
+ },
+ {
+  "id": "iss",
+  "label": "International Space Station",
+  "family": "Stations",
+  "confidence": "estimated",
+  "area_model": "curated",
+  "match": {
+   "gcat_bus": [],
+   "norad": [
+    25544
+   ],
+   "name_regex": null
+  },
+  "body": null,
+  "arrays": null,
+  "extra_area_m2": 0.0,
+  "A_abs_m2": 4300.0,
+  "A_fac_m2": 2560.0,
+  "P_fac_m": 1180.0,
+  "n_on_orbit": 1,
+  "toi_abs": 0.00037982619049920554,
+  "toi_fac": 0.00022612908085534097,
+  "median_alt_km": 420.0,
+  "alt_history": null,
+  "sources": [
+   {
+    "title": "NASA, Space Station Facts and Figures",
+    "url": "https://www.nasa.gov/international-space-station/space-station-facts-and-figures/"
+   },
+   {
+    "title": "Lockheed Martin, Final Pair of Massive Solar Arrays Begin Providing Power to ISS (21 March 2009)",
+    "url": "https://news.lockheedmartin.com/2009-03-21-Final-Pair-of-Massive-Lockheed-Martin-Solar-Arrays-Begin-Providing-Power-to-International-Space-Station"
+   },
+   {
+    "title": "Boeing, First of Twin Boeing-built Trusses Ready for International Space Station (24 September 2002)",
+    "url": "https://boeing.mediaroom.com/2002-09-24-First-of-Twin-Boeing-built-Trusses-Ready-for-International-Space-Station"
+   }
+  ],
+  "notes": "Counted from its documented parts as one object; docked modules and visiting vehicles carry the station's catalog number and are not counted separately. Eight solar array wings of 107 x 38 ft give 3,022 m2 (Lockheed Martin); they track the Sun and count at one half in the facing area. Six heat-rejection radiators of 75 x 11 ft add 467 m2 (Boeing), also held edge-on to the Sun and counted at one half. The 94 m truss at 4.5 m wide adds 423 m2, and the pressurized modules (67 m along the main axis at about 4.2 m, plus the cross-axis modules) add about 390 m2; the station flies with these parallel to the ground, so they count in full. That gives 4,300 m2 absolute and 2,560 m2 facing. The newer roll-out arrays mostly cover the original wings and are not added. The perimeter of the facing outline, estimated from the same parts, is about 1,180 m."
+ },
+ {
+  "id": "tiangong",
+  "label": "Tiangong space station",
+  "family": "Stations",
+  "confidence": "estimated",
+  "area_model": "curated",
+  "match": {
+   "gcat_bus": [],
+   "norad": [
+    48274
+   ],
+   "name_regex": null
+  },
+  "body": null,
+  "arrays": null,
+  "extra_area_m2": 0.0,
+  "A_abs_m2": 770.0,
+  "A_fac_m2": 495.0,
+  "P_fac_m": 390.0,
+  "n_on_orbit": 1,
+  "toi_abs": 8.094393235162773e-05,
+  "toi_fac": 5.203538508318926e-05,
+  "median_alt_km": 385.0,
+  "alt_history": null,
+  "sources": [
+   {
+    "title": "Xinhua via Belt and Road Studies Network, China's space lab module powered by huge flexible solar panels (16 August 2022)",
+    "url": "https://www.brsn.net/Latest%20News/20220816/20623_Chinas-space-lab-module-powered-by-huge-flexible-solar-panels.html"
+   },
+   {
+    "title": "Spaceflight Now, Wentian science module docks with China's space station (24 July 2022)",
+    "url": "https://spaceflightnow.com/2022/07/24/wentian-science-module-docks-with-chinas-space-station/"
+   },
+   {
+    "title": "McDowell, General Catalog of Artificial Space Objects (GCAT)",
+    "url": "https://planet4589.org/space/gcat/"
+   }
+  ],
+  "notes": "Counted as one object from its documented parts. Wentian and Mengtian each carry two solar wings of about 110 m2, spanning about 55 m tip to tip (Xinhua). Xinhua describes these as twice the array area of the Tianhe core module, which gives about 110 m2 for Tianhe's own wings. The arrays total about 550 m2 and track the Sun, so they count at one half in the facing area. The three modules (16.6 m and twice 17.9 m long, 4.2 m across) add about 220 m2 seen from below. That gives 770 m2 absolute and 495 m2 facing, with an outline perimeter of about 390 m."
+ },
+ {
+  "id": "amazon-leo",
+  "label": "Amazon Leo (Kuiper)",
+  "family": "Amazon Leo",
+  "confidence": "estimated",
+  "area_model": "curated",
+  "match": {
+   "gcat_bus": [
+    "Kuiper"
+   ],
+   "norad": [],
+   "name_regex": "^(KUIPER|AMAZON[ -]?LEO)"
+  },
+  "body": {
+   "a_m": 2.0,
+   "b_m": 3.0
+  },
+  "arrays": {
+   "n": 1,
+   "length_m": 12.0,
+   "width_m": 2.0,
+   "tracking": "sun"
+  },
+  "extra_area_m2": 0.0,
+  "A_abs_m2": 30.0,
+  "A_fac_m2": 18.0,
+  "P_fac_m": 34.0,
+  "n_on_orbit": 392,
+  "toi_abs": 0.0004707641500492695,
+  "toi_fac": 0.00028245849002956307,
+  "median_alt_km": 629.5,
+  "alt_history": null,
+  "sources": [
+   {
+    "title": "Mallama et al. 2026, Brightness Characterization and Modeling for Amazon Leo Satellites",
+    "url": "https://arxiv.org/abs/2601.07708"
+   },
+   {
+    "title": "McDowell, General Catalog of Artificial Space Objects (GCAT)",
+    "url": "https://planet4589.org/space/gcat/"
+   }
+  ],
+  "notes": "Amazon has not published dimensions. Mallama et al. (2026) describe three antenna panels that deploy into one Earth-facing panel and a single solar array that rotates about its long axis to track the Sun, and find reflective characteristics similar to Starlink v1. We take a 2.0 x 3.0 m panel and one 2.0 x 12.0 m array, 30 m2 face-on, the same order as Starlink v1's 26 m2. GCAT's figures (a 1.8 x 0.7 m body with a 5.0 m span, flagged as guesses) would give about 4 m2, which does not fit the deployed antenna panels."
+ },
+ {
+  "id": "oneweb",
+  "label": "OneWeb",
+  "family": "OneWeb",
+  "confidence": "estimated",
+  "area_model": "gcat",
+  "match": {
+   "gcat_bus": [],
+   "norad": [],
+   "name_regex": "^ONEWEB-\\d+"
+  },
+  "body": null,
+  "arrays": null,
+  "extra_area_m2": 0.0,
+  "A_abs_m2": 5.792844953645636,
+  "A_fac_m2": 3.6500000000000004,
+  "P_fac_m": 12.583627878423158,
+  "n_on_orbit": 654,
+  "toi_abs": 4.1673237664176424e-05,
+  "toi_fac": 2.6257791929769743e-05,
+  "median_alt_km": 1201.5,
+  "alt_history": null,
+  "sources": [
+   {
+    "title": "McDowell, General Catalog of Artificial Space Objects (GCAT)",
+    "url": "https://planet4589.org/space/gcat/"
+   }
+  ],
+  "notes": "OneWeb has not published the array size, so the generic model is applied to GCAT's dimensions for the Arrow bus, a 1.3 x 1.0 m box with two arrays across a 5.0 m span. The satellites are matched by name because GCAT also uses the Arrow bus for other operators' satellites."
+ },
+ {
+  "id": "qianfan",
+  "label": "Qianfan (Thousand Sails)",
+  "family": "Qianfan",
+  "confidence": "estimated",
+  "area_model": "gcat",
+  "match": {
+   "gcat_bus": [
+    "Qianfan"
+   ],
+   "norad": [],
+   "name_regex": "^QIANFAN"
+  },
+  "body": null,
+  "arrays": null,
+  "extra_area_m2": 0.0,
+  "A_abs_m2": 15.0,
+  "A_fac_m2": 9.75,
+  "P_fac_m": 23.0,
+  "n_on_orbit": 258,
+  "toi_abs": 5.950237456661789e-05,
+  "toi_fac": 3.8676543468302106e-05,
+  "median_alt_km": 1068.5,
+  "alt_history": null,
+  "sources": [
+   {
+    "title": "Mallama et al. 2024, Brightness of the Qianfan Satellites",
+    "url": "https://arxiv.org/abs/2409.20432"
+   },
+   {
+    "title": "Mallama et al. 2025, Brightness Characteristics of the Qianfan Satellites and Evidence That Some Are Tumbling",
+    "url": "https://arxiv.org/abs/2505.07194"
+   },
+   {
+    "title": "McDowell, General Catalog of Artificial Space Objects (GCAT)",
+    "url": "https://planet4589.org/space/gcat/"
+   }
+  ],
+  "notes": "No dimensions are published, so the generic model is applied to GCAT's dimensions, a flat panel 3.0 m across with one array across a 10.0 m span. Mallama et al. (2024) model the satellites as an Earth-facing antenna panel with one Sun-tracking array, which matches the generic flat-panel row. Some of these satellites are tumbling (Mallama et al. 2025)."
+ },
+ {
+  "id": "guowang",
+  "label": "Guowang (China SatNet)",
+  "family": "Guowang",
+  "confidence": "estimated",
+  "area_model": "gcat",
+  "match": {
+   "gcat_bus": [
+    "Xingwang C",
+    "Xingwang S",
+    "Xingwang CL",
+    "Xingwang Y"
+   ],
+   "norad": [],
+   "name_regex": "^(HULIANWANG DIGUI|GUOWANG)"
+  },
+  "body": null,
+  "arrays": null,
+  "extra_area_m2": 0.0,
+  "A_abs_m2": 11.358898943540673,
+  "A_fac_m2": 7.0,
+  "P_fac_m": 21.853981633974485,
+  "n_on_orbit": 222,
+  "toi_abs": 3.068347901753538e-05,
+  "toi_fac": 1.890890606478075e-05,
+  "median_alt_km": 1149.5,
+  "alt_history": null,
+  "sources": [
+   {
+    "title": "McDowell, General Catalog of Artificial Space Objects (GCAT)",
+    "url": "https://planet4589.org/space/gcat/"
+   }
+  ],
+  "notes": "No dimensions are published, so the generic model is applied to GCAT's dimensions, a 3.0 x 1.0 m box with two arrays across a 10.0 m span. GCAT lists these satellites under the Xingwang bus family with the name Hulianwang Digui and owner China SatNet."
+ },
+ {
+  "id": "iridium-next",
+  "label": "Iridium NEXT",
+  "family": "Iridium",
+  "confidence": "estimated",
+  "area_model": "gcat",
+  "match": {
+   "gcat_bus": [
+    "EliteBus"
+   ],
+   "norad": [],
+   "name_regex": "^IRIDIUM 1\\d\\d$"
+  },
+  "body": null,
+  "arrays": null,
+  "extra_area_m2": 0.0,
+  "A_abs_m2": 16.400359702921858,
+  "A_fac_m2": 10.5,
+  "P_fac_m": 22.181857593448868,
+  "n_on_orbit": 80,
+  "toi_abs": 3.521801601754587e-05,
+  "toi_fac": 2.2547625471796826e-05,
+  "median_alt_km": 777.5,
+  "alt_history": null,
+  "sources": [
+   {
+    "title": "McDowell, General Catalog of Artificial Space Objects (GCAT)",
+    "url": "https://planet4589.org/space/gcat/"
+   }
+  ],
+  "notes": "Iridium has not published the array size, so the generic model is applied to GCAT's dimensions for the ELiTeBus, a 3.1 x 1.5 m body with two arrays across a 9.4 m span."
+ }
+]
