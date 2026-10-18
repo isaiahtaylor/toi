@@ -21,7 +21,7 @@
   <div class="hero__readout og-card__readout">
     <p class="og-card__eyebrow">Taylor Occlusion Index <span aria-hidden="true">·</span> {{ catalog_date | month }}</p>
     <p class="og-card__value"><span class="og-card__num">{{ toi.facing | sig2 }}</span> <span class="og-card__unit">moons</span></p>
-    <p class="og-card__sentence">Every tracked object in orbit, overhead and facing the ground, would cover {{ toi.facing | pct1 }} of the full&nbsp;Moon.</p>
+    <p class="og-card__sentence">Every tracked object in orbit, overhead and facing the ground, would cover {{ toi.facing | pctsig2 }} of the full&nbsp;Moon.</p>
   </div>
 </main>
 <script type="module" src="assets/js/og.js"></script>

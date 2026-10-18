@@ -21,6 +21,7 @@ Standard library only.
 import argparse
 import csv
 import datetime as dt
+import hashlib
 import json
 import math
 import os
@@ -67,6 +68,7 @@ FILTERS = {
     "sig4": lambda v: sig(v, 4),
     "pct1": lambda v: f"{float(v) * 100:.1f}%",
     "pct0": lambda v: f"{float(v) * 100:.0f}%",
+    "pctsig2": lambda v: f"{sig(float(v) * 100, 2)}%",         # 4.6%, 12%, 0.93% (as the hero)
     "int": lambda v: f"{int(round(float(v))):,}",
     "sci": lambda v: sci(v),
     "sci3": lambda v: sci(v, 3),
@@ -131,11 +133,18 @@ def site_url(env=os.environ):
     return url.rstrip("/")
 
 
-def social(latest, env=os.environ):
-    """URLs for the og:/twitter: tags. The image URL carries the catalog date, so
-    platforms that cache previews fetch the new image after each monthly update."""
+def social(latest, data_dir, env=os.environ):
+    """URLs for the og:/twitter: tags. The image URL carries a short hash of og.png, so
+    platforms that cache previews by URL fetch the image again whenever it changes: after
+    each monthly render, and after a redesign of the card in the middle of a month.
+    Without og.png it falls back to the catalog date."""
     base = site_url(env)
-    image = f"data/og.png?v={latest['catalog_date'][:10]}"
+    png = Path(data_dir) / "og.png"
+    if png.is_file():
+        version = hashlib.sha256(png.read_bytes()).hexdigest()[:10]
+    else:
+        version = latest["catalog_date"][:10]
+    image = f"data/og.png?v={version}"
     return {
         "site_url": base,
         "og_url": f"{base}/" if base else "./",
@@ -169,7 +178,7 @@ def derive(latest, data_dir):
         "oct2024_abs": float("nan"), "oct2024_fac": float("nan"),
     }
     d["top_lead"] = top_lead(latest)
-    d.update(social(latest))
+    d.update(social(latest, data_dir))
     # Published file sizes, for the Verify table and the explorer's loading note.
     for key, name in (("latest", "latest.json"), ("objects", "objects.csv"),
                       ("buses", "buses.json"), ("history", "history.csv")):

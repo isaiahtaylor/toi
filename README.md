@@ -72,7 +72,8 @@ Social platforms only accept absolute image URLs, so the build needs the site's 
 | `VERCEL_PROJECT_PRODUCTION_URL` | Set by Vercel at build time; used when `SITE_URL` is not set. |
 
 With neither, as in a local build, the tags use relative paths. The image URL ends in
-`?v=` and the catalog date, so platforms that cache previews fetch the new image each month.
+`?v=` and a short hash of `og.png`, so platforms that cache previews fetch the image again
+whenever it changes.
 
 ## Data and credits
 
