@@ -7,16 +7,16 @@
       <p class="m-kicker"><span class="m-kicker__num">00</span> Method</p>
       <h2 class="m-display" id="idea-title">How much of the sky have we covered?</h2>
 
-      <figure class="m-tweet">
-        <blockquote cite="https://x.com/isaiah_p_taylor/status/1844164374845587514">
-          <p>I’m minting a new term: the Taylor Occlusion Index (TOI). TOI is the present cumulative amount of occlusion caused by manmade satellites in earth orbit. The unit is moons. Right now we’re at .~03 moons.</p>
-          <p>I feel like we can easily go up to a TOI of like 10.</p>
-          <blockquote class="m-tweet__quoted">
-            <p class="m-tweet__quoted-meta label">Quoted post · 5 October 2024</p>
-            <p>If you put every single satellite currently in LEO right next to each other in the shape of a disc (perfect packing, no gaps), how large would that disc appear in the sky?</p>
-          </blockquote>
+      <p class="m-lead">In October 2024, there was a lot of discussion about how many satellites SpaceX was going to put into orbit for the new Starlink constellation, and I started thinking about what this looks like long-term. This led me to mint a new term, which I tweeted about here:</p>
+
+      <figure class="m-tweet m-tweet--embed">
+        <!-- X's widget replaces this blockquote with the live post (including the post it quotes).
+             Without JavaScript the blockquote stays as a plain quote. -->
+        <blockquote class="twitter-tweet" data-theme="dark" data-dnt="true" data-align="center" lang="en">
+          <p lang="en" dir="ltr">I’m minting a new term: the Taylor Occlusion Index (TOI). TOI is the present cumulative amount of occlusion caused by manmade satellites in earth orbit. The unit is moons. Right now we’re at .~03 moons.<br><br>I feel like we can easily go up to a TOI of like 10.</p>
+          <p class="m-tweet__by">Isaiah Taylor (@isaiah_p_taylor) <a href="https://twitter.com/isaiah_p_taylor/status/1844164374845587514">October 9, 2024</a></p>
         </blockquote>
-        <figcaption><a href="https://x.com/isaiah_p_taylor/status/1844164374845587514">My post on X, 9 October 2024</a></figcaption>
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
       </figure>
 
       <p class="m-lead">I built this site to compute that number from public satellite catalogs. It updates on the first of every month. Take every tracked object in Earth orbit, place it directly overhead at its own altitude, and add up the patches of sky the objects cover. Divide by the patch the full Moon covers. The result is the TOI, in moons.</p>
