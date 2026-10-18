@@ -144,7 +144,8 @@ function init(hero) {
       }
       for (const el of hero.querySelectorAll('[data-hero="seeing"]')) el.textContent = arcsec(seeing);
       if (latest.catalog_date) {
-        $('month').textContent = monthYear(latest.catalog_date);
+        const month = $('month');
+        if (month) month.textContent = monthYear(latest.catalog_date);
         $('date').textContent = dateLong(latest.catalog_date);
       }
       if (latest.counts && Number.isFinite(latest.counts.total)) $('count').textContent = intl(latest.counts.total);
