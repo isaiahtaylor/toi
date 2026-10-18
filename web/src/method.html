@@ -20,7 +20,7 @@
       </figure>
 
       <p class="m-lead">This site computes that number from public satellite catalogs and updates it on the first of every month. Take every tracked object in Earth orbit, place it directly overhead at its own altitude, and add up the patches of sky the objects cover. Divide by the patch the full Moon covers. The result is the TOI, in moons.</p>
-      <p>How you count each object’s area changes the answer, so the site reports three expressions. On {{ catalog_date | date_long }} the catalogs held {{ counts.total | int }} objects.</p>
+      <p>How you count each object’s area changes the answer, so the site reports three expressions. The headline at the top of the page is Facing: the area the hardware presents to the ground as it flies. On {{ catalog_date | date_long }} the catalogs held {{ counts.total | int }} objects.</p>
     </div>
 
     <div class="m-wide">

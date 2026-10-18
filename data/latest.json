@@ -1,14 +1,14 @@
 {
  "schema_version": 1,
  "fixture": false,
- "generated_at": "2026-10-18T19:59:08Z",
+ "generated_at": "2026-10-18T20:54:58Z",
  "catalog_date": "2026-10-18",
  "next_update": "2026-11-01",
  "status": "ok",
  "status_notes": [
   "532 objects that GCAT lists in Earth orbit but CelesTrak does not carry are counted, with orbits from GCAT.",
   "5 objects that GCAT records as docked with or attached to another counted object are counted through their host (MEV-1, SHIJIAN-25 (SJ-25), SHIJIAN-29B (SJ-29B) and 2 others).",
-  "3 objects that only GCAT lists carry a catalogued object attached to them and are counted through that object.",
+  "3 objects that only GCAT lists carry a cataloged object attached to them and are counted through that object.",
   "16 objects in GCAT's temporary catalog are not counted because CelesTrak already lists unidentified objects from the same launches (2025-276, 2026-067, 2026-156, 2026-227).",
   "122 objects that CelesTrak lists in orbit have no orbit in CelesTrak or GCAT and are not counted; GCAT records 119 of them as reentered or no longer in Earth orbit.",
   "46 objects that only GCAT lists in Earth orbit have no orbit in any source and are not counted (17 from launch 2026-235, 4 from launch 1968-118, 25 others)."
