@@ -104,14 +104,22 @@
 }
 
 .hero__eyebrow {
+  max-width: 50ch;
   font-family: var(--font-mono);
+  font-size: var(--step--1);
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+/* The name reads as the instrument label; the definition follows in sentence case. */
+.hero__name {
   font-size: var(--step--2);
   font-weight: 500;
-  line-height: 1.5;
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  color: var(--ink-2);
-  text-wrap: wrap;
+  color: var(--ink-1);
 }
 
 .hero__value {
@@ -400,7 +408,9 @@
   .hero__options { margin-top: var(--space-4); }
   .hero__option { padding-top: var(--space-3); padding-right: var(--space-3); }
   .hero__option + .hero__option { padding-left: var(--space-3); }
-  .hero__opt-desc { font-size: 0.75rem; line-height: 1.32; }
+  .hero__eyebrow { font-size: 0.75rem; line-height: 1.45; }
+  /* The definition line takes the room the option descriptions used; names and values stay. */
+  .hero__opt-desc { display: none; }
   .hero__meta { margin-top: var(--space-3); }
   .hero__cue { padding-top: 0; padding-bottom: var(--space-3); }
   .hero__cue-line { height: 18px; }
