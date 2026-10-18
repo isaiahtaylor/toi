@@ -16,7 +16,7 @@
   /* Ink */
   --ink-1: #e8ecf5;            /* primary text */
   --ink-2: #aab3c8;            /* secondary text */
-  --ink-3: #6e7892;            /* muted labels, axes */
+  --ink-3: #7e88a2;            /* muted labels, axes: >= 4.5:1 on every --sky surface */
   --rule: rgba(170, 190, 230, 0.14);
   --rule-strong: rgba(170, 190, 230, 0.30);
 

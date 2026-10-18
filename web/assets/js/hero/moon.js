@@ -75,7 +75,8 @@ export function renderMoon(diameterCss, dpr, color, seed = 1969) {
   const maria = MARIA.map(([lat, lon, r, k]) => {
     const la = lat * D2R;
     const lo = lon * D2R;
-    return [Math.cos(la) * Math.sin(lo), Math.sin(la), Math.cos(la) * Math.cos(lo), r * D2R, k];
+    // Caps grow a little so neighbouring maria join, as Imbrium does Procellarum.
+    return [Math.cos(la) * Math.sin(lo), Math.sin(la), Math.cos(la) * Math.cos(lo), r * 1.08 * D2R, k];
   });
   for (let py = 0; py < size; py++) {
     const v = (py + 0.5 - cy) / Rd;
@@ -93,8 +94,8 @@ export function renderMoon(diameterCss, dpr, color, seed = 1969) {
       // Maria: a soft union of caps (smooth minimum of signed angular distance), the
       // sphere point warped at low frequency so the caps lose their circular outlines.
       // Darkness comes from a separate smooth field so overlapping caps leave no seams.
-      const X = u + noise(sx * 1.6 + 3, sy * 1.6 + 1) * 0.032;
-      const Y = -v + noise(sx * 1.6 + 7, sy * 1.6 + 5) * 0.032;
+      const X = u + noise(sx * 1.6 + 3, sy * 1.6 + 1) * 0.05 + noise(sx * 4.2 + 1, sy * 4.2 + 9) * 0.014;
+      const Y = -v + noise(sx * 1.6 + 7, sy * 1.6 + 5) * 0.05 + noise(sx * 4.2 + 5, sy * 4.2 + 2) * 0.014;
       let acc = 0;
       let kw = 0;
       let ww = 0;
@@ -103,22 +104,25 @@ export function renderMoon(diameterCss, dpr, color, seed = 1969) {
         const dot = X * M[0] + Y * M[1] + z * M[2];
         if (dot < 0.55) continue;
         const ang = Math.acos(Math.min(1, dot));
-        acc += Math.exp(-(ang - M[3]) / 0.014);
+        acc += Math.exp(-(ang - M[3]) / 0.02);
         const wgt = Math.exp(-((ang / M[3]) ** 2));
         kw += wgt * M[4];
         ww += wgt;
       }
-      const dist = acc > 0 ? -0.014 * Math.log(acc) : 1;
-      const edgeN = noise(sx * 3.1 + 11, sy * 3.1 + 4) * 0.03 + noise(sx * 8, sy * 8 + 2) * 0.01;
+      const dist = acc > 0 ? -0.02 * Math.log(acc) : 1;
+      const edgeN = noise(sx * 3.1 + 11, sy * 3.1 + 4) * 0.036 + noise(sx * 8, sy * 8 + 2) * 0.014;
       const dark = ww > 1e-4 ? kw / ww : 0.85;
-      const mare = (1 - smoothstep(-0.03, 0.01, dist + edgeN)) * dark;
+      // Soft shores: the mare fades in over a few degrees, and deepens toward its middle.
+      const shore = 1 - smoothstep(-0.06, 0.025, dist + edgeN);
+      const depth = 0.72 + 0.28 * smoothstep(-0.02, -0.16, dist + edgeN * 0.5);
+      const mare = shore * dark * depth;
 
       const mottle = noise(sx, sy) * 0.5 + noise(sx * 2.3 + 3, sy * 2.3) * 0.3 + noise(sx * 5.1, sy * 5.1 + 4) * 0.2;
       const fine = noise(sx * 12 + 1, sy * 12 + 7) * 0.6 + noise(sx * 25, sy * 25 + 3) * 0.4;
       // Southern highlands are brighter; the limb regions a touch greyer.
       let L = 0.99 + mottle * 0.1 + fine * 0.05 * (1 - mare * 0.6) + smoothstep(0.1, 0.8, v) * 0.03;
       // Maria: darker, with their own internal variation (younger flows darker).
-      L -= mare * (0.3 + noise(sx * 2.7 + 13, sy * 2.7 + 1) * 0.14 + noise(sx * 8 + 3, sy * 8) * 0.04);
+      L -= mare * (0.3 + noise(sx * 2.7 + 13, sy * 2.7 + 1) * 0.2 + noise(sx * 6 + 3, sy * 6) * 0.07 + noise(sx * 14, sy * 14 + 5) * 0.03);
 
       for (let k = 0; k < rays.length; k++) {
         const cr = rays[k];
@@ -177,7 +181,7 @@ export function renderMoon(diameterCss, dpr, color, seed = 1969) {
 
   const levels = 34; // quantisation step for the ordered dither
   const hi = color;
-  const lo = [color[0] * 0.93, color[1] * 0.95, color[2] * 0.99]; // cooler, greyer maria
+  const lo = [color[0] * 0.95, color[1] * 0.965, color[2] * 0.99]; // slightly cooler maria
   for (let py = 0; py < size; py++) {
     const v = (py + 0.5 - cy) / Rd;
     const by = ((py / cell) | 0) & 7;

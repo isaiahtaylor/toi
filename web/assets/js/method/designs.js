@@ -1,5 +1,5 @@
 // The data section: coverage tables, status notes and the curated design table.
-import { el, intl, pct, trimNum, groupNum, confidenceChip, ORBIT_SRC_LABEL, AREA_SRC_LABEL } from './format.js';
+import { el, intl, pct, trimNum, groupNum, confidenceChip, prose, ORBIT_SRC_LABEL, AREA_SRC_LABEL } from './format.js';
 
 export function renderCoverage(root, latest) {
   const orbit = root.querySelector('[data-render="orbit-sources"] tbody');
@@ -8,7 +8,7 @@ export function renderCoverage(root, latest) {
     orbit.replaceChildren(...latest.coverage.orbit_source.map((r) => el('tr', {},
       el('th', { scope: 'row', text: ORBIT_SRC_LABEL[r.source] || r.source }),
       el('td', { class: 'num', text: intl(r.n) }),
-      el('td', { class: 'num', text: pct(r.n / total, 1) }),
+      el('td', { class: 'num', text: sharePct(r.n / total) }),
     )));
   }
   const area = root.querySelector('[data-render="area-sources"] tbody');
@@ -23,7 +23,7 @@ export function renderCoverage(root, latest) {
   const notes = root.querySelector('[data-render="status-notes"]');
   if (notes) {
     const items = [...(latest.status_notes || [])];
-    if (latest.status === 'degraded') items.unshift('CelesTrak could not be reached for this run, so the population and orbits come from GCAT alone.');
+    if (latest.status === 'degraded') items.unshift('The pipeline could not reach CelesTrak for this run, so the population and orbits come from GCAT alone.');
     if (!items.length) items.push('Nothing unusual this month.');
     notes.replaceChildren(...items.map((t) => el('li', { text: t })));
   }
@@ -72,9 +72,9 @@ export function renderDesigns(root, buses, latest) {
       el('td', { class: 'num', text: groupNum(b.A_fac_m2, 4) }),
       el('td', { class: 'num', text: groupNum(b.P_fac_m, 4) }),
       el('td', { class: 'num', text: intl(b.n_on_orbit) }),
-      el('td', { class: 'num', text: pct(share, share < 0.001 ? 2 : 1) }),
+      b.n_on_orbit ? el('td', { class: 'num', text: pct(share, share < 0.001 ? 2 : 1) }) : el('td', { class: 'num m-dim', title: 'None in orbit today; used for the history', text: 'history' }),
     );
-    const meta = [`Median altitude ${trimNum(b.median_alt_km, 4)} km`];
+    const meta = [Number.isFinite(b.median_alt_km) ? `Median altitude ${trimNum(b.median_alt_km, 4)} km` : 'None in orbit today; used for the reconstructed history'];
     if (b.area_model === 'gcat') meta.push('areas are medians over the matched objects');
     if (b.alt_history) {
       const ah = b.alt_history;
@@ -82,7 +82,7 @@ export function renderDesigns(root, buses, latest) {
     }
     const detail = el('tr', { class: 'm-designs__detail', id: detailId, hidden: true },
       el('td', { colspan: '7' },
-        el('p', { class: 'm-designs__notes', text: b.notes }),
+        el('p', { class: 'm-designs__notes', text: prose(b.notes) }),
         el('p', { class: 'm-designs__meta', text: meta.join(' · ') }),
         el('ol', { class: 'm-designs__sources' },
           ...b.sources.map((s) => el('li', {}, el('a', { href: s.url, rel: 'noopener', text: s.title })))),

@@ -409,7 +409,7 @@ def describe_exclusions(excluded):
                      f"counted object are counted through their host ({names}{more}).")
     hosts = excluded.get("stack_host", [])
     if hosts:
-        notes.append(f"{len(hosts)} objects that only GCAT lists carry a catalogued object attached to "
+        notes.append(f"{len(hosts)} objects that only GCAT lists carry a cataloged object attached to "
                      "them and are counted through that object.")
     tmp = excluded.get("tmp_unidentified", [])
     if tmp:

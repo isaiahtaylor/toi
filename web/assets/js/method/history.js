@@ -48,6 +48,8 @@ export function parseHistory(text) {
     toi_fac: +r[idx.toi_fac],
     toi_app: +r[idx.toi_app],
     n: +r[idx.n_objects],
+    // Optional column: "degraded" marks a run made from GCAT alone (CelesTrak unreachable).
+    degraded: idx.status != null && r[idx.status] === 'degraded',
   })).sort((a, b) => a.t - b.t);
 }
 
@@ -147,7 +149,7 @@ export function renderHistory(root, rows, latest) {
     for (const r of measured) {
       for (const ser of SERIES) {
         s.append(svg('circle', { cx: X(r.t), cy: Y(r[ser.col]), r: 6, class: 'h-ring-gap' }));
-        s.append(svg('circle', { cx: X(r.t), cy: Y(r[ser.col]), r: 4.5, class: `h-meas h-meas--${ser.key}`, style: `fill: var(--sky-1); stroke: ${COLOR[ser.key]}; stroke-width: 2` }));
+        s.append(svg('circle', { cx: X(r.t), cy: Y(r[ser.col]), r: 4.5, class: `h-meas h-meas--${ser.key}${r.degraded ? ' h-meas--degraded' : ''}`, style: `fill: var(--sky-1); stroke: ${COLOR[ser.key]}; stroke-width: 2${r.degraded ? '; stroke-dasharray: 2.4 2' : ''}` }));
       }
     }
     // end labels with leaders
@@ -188,7 +190,9 @@ export function renderHistory(root, rows, latest) {
       SERIES.forEach((ser, k) => {
         dots[k].setAttribute('cx', x); dots[k].setAttribute('cy', Y(r[ser.col])); dots[k].setAttribute('visibility', 'visible');
       });
-      const note = r.kind === 'measured' ? 'Measured run' : (r.date === '2024-10-01' ? 'Reconstructed. Isaiah estimated ~0.03 on 9 October 2024.' : 'Reconstructed');
+      const note = r.kind === 'measured'
+        ? (r.degraded ? 'Measured run from GCAT alone. CelesTrak was unreachable, and runs like this read high.' : 'Measured run')
+        : (r.date === '2024-10-01' ? 'Reconstructed. Isaiah estimated ~0.03 on 9 October 2024.' : 'Reconstructed');
       tip.show({
         title: fmtDate(r.date, r.kind),
         rows: [
@@ -236,6 +240,12 @@ export function renderHistory(root, rows, latest) {
     };
   }
 
+  // A legend entry for degraded runs, only when the file has one.
+  const legend = root.querySelector('#history .m-legend--row');
+  if (legend && measured.some((r) => r.degraded) && !legend.querySelector('.m-key--ring-degraded')) {
+    legend.append(el('li', {}, el('span', { class: 'm-key m-key--ring m-key--ring-degraded', 'aria-hidden': 'true' }), 'GCAT-only run'));
+  }
+
   draw();
   let lastW = host.clientWidth;
   new ResizeObserver(() => {
@@ -271,7 +281,7 @@ export function renderHistory(root, rows, latest) {
             el('th', { scope: 'col', class: 'num', text: 'Apparent' }), el('th', { scope: 'col', class: 'num', text: 'Objects' }))),
           el('tbody', {}, ...tableRows.map((r) => el('tr', {},
             el('th', { scope: 'row', text: r.date }),
-            el('td', { text: r.kind }),
+            el('td', { text: r.degraded ? 'measured, GCAT only' : r.kind }),
             el('td', { class: 'num', text: sig(r.toi_abs, 3) }),
             el('td', { class: 'num', text: sig(r.toi_fac, 3) }),
             el('td', { class: 'num', text: sig(r.toi_app, 3) }),

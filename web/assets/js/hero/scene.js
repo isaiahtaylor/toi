@@ -42,7 +42,7 @@ function readPalette() {
     moonGlow: get('--moon-glow', [255, 232, 179]),
     ink1: get('--ink-1', [232, 236, 245]),
     ink2: get('--ink-2', [170, 179, 200]),
-    ink3: get('--ink-3', [110, 120, 146]),
+    ink3: get('--ink-3', [126, 136, 162]),
   };
 }
 
@@ -64,8 +64,8 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
   let crestStyle = null;
   let fade = null;
   let fontsReady = false;
-  let selected = 'absolute';
-  const em = { absolute: 1, facing: 0, apparent: 0 };
+  let selected = KEYS.includes(hero.dataset.selected) ? hero.dataset.selected : 'facing';
+  const em = { absolute: 0, facing: 0, apparent: 0, [selected]: 1 };
   let tween = null; // { from, to, t0 }
   let raf = 0;
   let inView = true;
@@ -98,22 +98,28 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
     let horizonY;
     let vpX;
     const fs = narrow ? 9.5 : 10.5;
+    let gapK = 1; // gap between the Moon and the outer mark, in Moon diameters
     if (!narrow) {
-      horizonY = Math.round(H * 0.62);
-      D = clamp(Math.min(H * 0.235, W * 0.16), 120, 260);
+      const short = H <= 520; // phones on their side
+      horizonY = Math.round(H * (short ? 0.74 : 0.62));
+      D = clamp(Math.min(H * 0.235, W * 0.16), Math.min(120, H * 0.26), 260);
       const padR = Math.max(16, W * 0.05);
       const availL = roRight + W * 0.04;
       const availR = W - padR;
-      // Marks sit a gap of one Moon diameter to the Moon's left.
-      const span = (D) => D * 0.5 + D + D * 0.5 * sApp * 1.42 + D * 0.5 + D * 0.16;
-      if (span(D) > availR - availL) D = Math.max(90, D * ((availR - availL) / span(D)));
+      const avail = availR - availL;
+      // Marks sit a gap of one Moon diameter to the Moon's left. When space is short
+      // the gap closes first (to under half a diameter), then the Moon shrinks.
+      const span = (D) => D * 0.5 + D * gapK + D * 0.5 * sApp * 1.42 + D * 0.5 + D * 0.16;
+      if (span(D) > avail) gapK = Math.max(0.45, 1 - (span(D) - avail) / D);
+      if (span(D) > avail) D = Math.max(64, D * (avail / span(D)));
       const right = D * 0.66;
       const slack = Math.max(0, availR - availL - span(D));
       cx = availR - right - slack * 0.3;
       cy = clamp(H * 0.31, navH + D * 0.85, horizonY - D * 1.35);
       vpX = W * 0.56;
     } else {
-      D = clamp(W * 0.28, 84, 150);
+      // Must match the padding-top of .hero__body in the narrow block of hero.css.
+      D = clamp(Math.min(W * 0.28, H * 0.21), 84, 200);
       const padR = Math.max(16, W * 0.05);
       cx = W - padR - D * 0.62;
       cy = navH + D * 0.8;
@@ -122,15 +128,20 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
     }
     const R = D / 2;
     const geom = markGeometry({ R }, vals);
-    const gap = D; // one Moon diameter between the Moon's edge and the outer mark
+    const gap = D * gapK; // normally one Moon diameter between the Moon's edge and the outer mark
     const tx = cx - R - gap - geom.rApp;
     const ty = cy;
     const dimY = R + Math.max(16, R * 0.2);
     const labelDy = dimY + Math.round(fs * 1.9);
     const moon = { cx, cy, R, D, dimY, labelDy };
-    // On narrow screens the mark labels start one line lower, so they do not share a
-    // baseline with the Moon's label right beside them.
-    const labelY = cy + labelDy + (narrow ? Math.round(fs * 1.75) : 0);
+    // The mark labels start one line lower when they would otherwise run into the
+    // Moon's label on the same baseline (always on narrow screens, and on short
+    // landscape screens where the Moon sits close to the marks).
+    const labelX0 = tx + geom.rFac * Math.cos((76 * Math.PI) / 180) + Math.max(12, fs * 1.3);
+    const labelsRight = labelX0 + fs * 0.72 * 18;
+    const moonLabelLeft = cx - (fs * 0.72 * 17) / 2;
+    const dropLabels = narrow || labelsRight + fs > moonLabelLeft;
+    const labelY = cy + labelDy + (dropLabels ? Math.round(fs * 1.75) : 0);
     if (narrow) {
       // Let a band of ridges show between the label stack and the readout.
       const labelsBottom = labelY + Math.round(fs * 1.75) * 2 + 10;

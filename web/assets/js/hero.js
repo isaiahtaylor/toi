@@ -6,7 +6,9 @@ import { loadLatest, sig, intl, dateLong, prefersReducedMotion } from './toi.js'
 import { createScene } from './hero/scene.js';
 
 const KEYS = ['absolute', 'facing', 'apparent'];
-const NARROW = '(max-width: 899px), (max-aspect-ratio: 10/11)';
+// Must match the narrow media query in assets/css/hero.css. Short landscape screens
+// (phones on their side) keep the side-by-side layout so the number stays on screen.
+const NARROW = '(max-width: 599px), (max-width: 899px) and (min-height: 521px), (max-aspect-ratio: 10/11)';
 
 const hero = document.querySelector('.hero');
 if (hero) init(hero);
@@ -22,7 +24,7 @@ function arcsec(x) {
 function sentence(key, v, seeing) {
   const p = percentOfMoon(v[key]);
   if (key === 'facing') {
-    return `Facing the ground the way they actually fly, the same objects would cover ${p} of the full Moon.`;
+    return `Every tracked object in orbit, directly overhead and facing the ground the way it flies, would cover ${p} of the full Moon.`;
   }
   if (key === 'apparent') {
     return `Through the atmosphere’s ${arcsec(seeing)} blur, each object smears over a wider patch of sky, and together they touch ${p} of the full Moon.`;
@@ -50,7 +52,7 @@ function init(hero) {
   };
   let seeing = parseFloat(ds.seeing);
   let moonDeg = parseFloat(ds.moonDeg);
-  let selected = (radios.find((r) => r.getAttribute('aria-checked') === 'true') || radios[0])?.dataset.expr || 'absolute';
+  let selected = (radios.find((r) => r.getAttribute('aria-checked') === 'true') || radios[0])?.dataset.expr || 'facing';
 
   let scene = null;
   const canvas = hero.querySelector('.hero__canvas');
@@ -149,9 +151,9 @@ function init(hero) {
 
       const notes = [];
       if (latest.status === 'degraded') {
-        notes.push('CelesTrak could not be reached for this run, so the population and orbits come from GCAT alone.');
+        notes.push('The pipeline could not reach CelesTrak for this run, so the population and orbits come from GCAT alone.');
       }
-      if (latest.fixture) notes.push('Placeholder data: the monthly pipeline has not published a run yet.');
+      if (latest.fixture) notes.push('These are placeholder values. The monthly pipeline has not published a run yet.');
       const status = $('status');
       if (notes.length) {
         status.textContent = notes.join(' ');

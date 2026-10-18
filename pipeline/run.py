@@ -61,7 +61,7 @@ def celestrak_incomplete(cats):
     """Reason string if CelesTrak's SATCAT is much smaller than GCAT's S catalog, else None."""
     n_ct, n_s = len(cats.celestrak), _s_count(cats.cat)
     if n_ct < COMPLETE_RATIO * n_s:
-        return f"{n_ct:,} rows against {n_s:,} catalogued objects in GCAT"
+        return f"{n_ct:,} rows against {n_s:,} cataloged objects in GCAT"
     return None
 
 

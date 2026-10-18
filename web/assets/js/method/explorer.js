@@ -2,9 +2,9 @@
 // virtualized list with search, filters and sorting. Selecting a row opens the worked
 // calculation (calc.js) for that object.
 import { el, sig, intl, pct, trimNum, groupNum, bytes, micro } from './format.js';
-import { parseCSV } from './csv.js';
+import { parseCSVAsync, yieldToMain } from './csv.js';
 import { renderCalc } from './calc.js';
-import { whenKatex, renderFitted } from './math.js';
+import { whenKatex, renderFittedAll } from './math.js';
 import { getSeeing, onSeeing } from './state.js';
 import { setFileSize } from './verify.js';
 
@@ -19,13 +19,14 @@ const SORTS = {
   area: { head: 'Facing m²', cmp: (a, b) => b.aFac - a.aFac || a.i - b.i, val: (r) => groupNum(r.aFac, 4) },
 };
 
-function toRows(header, raw) {
+async function toRows(header, raw) {
   const ix = Object.fromEntries(header.map((h, i) => [h, i]));
   const need = ['name', 'alt_km', 'A_abs_m2', 'A_fac_m2', 'P_fac_m', 'toi_abs', 'toi_fac', 'group', 'type', 'area_src'];
   for (const k of need) if (!(k in ix)) throw new Error(`objects.csv has no ${k} column`);
   const get = (r, k) => (k in ix ? r[ix[k]] ?? '' : '');
   const rows = new Array(raw.length);
   for (let i = 0; i < raw.length; i++) {
+    if (i && i % 4000 === 0) await yieldToMain();
     const r = raw[i];
     const o = {
       i,
@@ -99,7 +100,8 @@ export function initExplorer(root, latest, busesPromise) {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const encoded = res.headers.get('content-encoding');
       const len = +res.headers.get('content-length') || 0;
-      const expected = !encoded && len ? len : latest.counts.total * AVG_ROW_BYTES;
+      const built = +root.querySelector(`[data-size="${csvPath}"]`)?.dataset.bytes || 0;
+      const expected = built || (!encoded && len ? len : latest.counts.total * AVG_ROW_BYTES);
       let text = '';
       let got = 0;
       if (res.body && res.body.getReader) {
@@ -124,13 +126,13 @@ export function initExplorer(root, latest, busesPromise) {
       progress.style.width = '100%';
       loadingText.textContent = 'Parsing…';
       await new Promise((r) => setTimeout(r, 0));
-      const { header, rows: raw } = parseCSV(text);
-      rows = toRows(header, raw);
+      const { header, rows: raw } = await parseCSVAsync(text);
+      rows = await toRows(header, raw);
       setFileSize(root, csvPath, got);
       ready();
     } catch (err) {
       setStatus('error');
-      loadingText.textContent = `The catalog could not be loaded (${err.message}). You can download objects.csv from the Verify section and open it in a spreadsheet.`;
+      loadingText.textContent = `The catalog did not load (${err.message}). You can download objects.csv from the Verify section and open it in a spreadsheet.`;
       loadBtn.textContent = 'Try again';
       loadBtn.hidden = false;
       status = 'idle';
@@ -148,7 +150,12 @@ export function initExplorer(root, latest, busesPromise) {
     list.append(inner);
     rowH = parseFloat(getComputedStyle(box).getPropertyValue('--row-h')) || 52;
     applyFilters();
-    if (pending) { const p = pending; pending = null; open(p); } else if (view.length) setActive(0, { select: true, scroll: false });
+    if (pending) { const p = pending; pending = null; open(p); return; }
+    // The first worked calculation renders when the page is idle, so a reader who is
+    // scrolling past while the catalog loads does not feel it.
+    const first = () => { if (!selected && view.length) setActive(0, { select: true, scroll: false }); };
+    if ('requestIdleCallback' in window) requestIdleCallback(first, { timeout: 1500 });
+    else setTimeout(first, 200);
   }
 
   if ('IntersectionObserver' in window) {
@@ -334,7 +341,7 @@ export function initExplorer(root, latest, busesPromise) {
 
   function paintTex() {
     if (!katex) return;
-    calc.querySelectorAll('[data-calc-tex]').forEach((n) => renderFitted(katex, n, n.dataset.calcTex));
+    renderFittedAll(katex, [...calc.querySelectorAll('[data-calc-tex]')].map((node) => ({ node, tex: node.dataset.calcTex })));
   }
 
   let seeRaf = 0;
