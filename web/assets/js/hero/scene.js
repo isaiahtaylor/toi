@@ -42,7 +42,7 @@ function readPalette() {
     moonGlow: get('--moon-glow', [255, 232, 179]),
     ink1: get('--ink-1', [232, 236, 245]),
     ink2: get('--ink-2', [170, 179, 200]),
-    ink3: get('--ink-3', [110, 120, 146]),
+    ink3: get('--ink-3', [126, 136, 162]),
   };
 }
 
@@ -64,8 +64,8 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
   let crestStyle = null;
   let fade = null;
   let fontsReady = false;
-  let selected = 'absolute';
-  const em = { absolute: 1, facing: 0, apparent: 0 };
+  let selected = KEYS.includes(hero.dataset.selected) ? hero.dataset.selected : 'facing';
+  const em = { absolute: 0, facing: 0, apparent: 0, [selected]: 1 };
   let tween = null; // { from, to, t0 }
   let raf = 0;
   let inView = true;

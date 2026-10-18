@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Taylor Occlusion Index</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="How much of the sky do human-made objects in orbit cover? Today: {{ toi.absolute | sig2 }} moons. Recomputed monthly from public satellite catalogs.">
+<meta name="description" content="How much of the sky do human-made objects in orbit cover? Today: {{ toi.facing | sig2 }} moons. Recomputed monthly from public satellite catalogs.">
 <meta name="theme-color" content="#03050b">
-<meta property="og:title" content="TOI: {{ toi.absolute | sig2 }} moons">
-<meta property="og:description" content="Every tracked object in Earth orbit, laid flat overhead, covers {{ toi.absolute | pct1 }} of the full Moon. Catalog of {{ catalog_date | date_long }}.">
+<meta property="og:title" content="TOI: {{ toi.facing | sig2 }} moons">
+<meta property="og:description" content="Every tracked object in Earth orbit, overhead and facing the ground the way it flies, covers {{ toi.facing | pct1 }} of the full Moon. Catalog of {{ catalog_date | date_long }}.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
