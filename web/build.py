@@ -8,6 +8,11 @@
   so the key numbers are in the HTML before any script runs. Unknown paths fail the build.
   `derived.*` paths are computed here from latest.json and history.csv (see derive()).
 - Copies web/assets/ to dist/assets/ and data/ to dist/data/.
+- Also renders web/src/og.html to dist/og-card.html: the 1200×630 social preview card
+  that web/og/render.py screenshots into data/og.png.
+- Social meta tags need absolute URLs. The site URL is $SITE_URL if set, else
+  https://$VERCEL_PROJECT_PRODUCTION_URL (set by Vercel at build time), else empty, and
+  then the tags fall back to relative paths (fine for local builds).
 - With --artifact, also writes dist/artifact.html: the same page without the
   doctype/html/head/body wrapper, for previewing as a claude.ai artifact.
 
@@ -18,6 +23,7 @@ import csv
 import datetime as dt
 import json
 import math
+import os
 import re
 import shutil
 import sys
@@ -117,6 +123,26 @@ def top_lead(latest):
     return s + "."
 
 
+def site_url(env=os.environ):
+    """The deployed site's origin without a trailing slash, or "" if unknown."""
+    url = env.get("SITE_URL", "").strip() or env.get("VERCEL_PROJECT_PRODUCTION_URL", "").strip()
+    if url and "://" not in url:
+        url = "https://" + url  # Vercel gives a bare host name
+    return url.rstrip("/")
+
+
+def social(latest, env=os.environ):
+    """URLs for the og:/twitter: tags. The image URL carries the catalog date, so
+    platforms that cache previews fetch the new image after each monthly update."""
+    base = site_url(env)
+    image = f"data/og.png?v={latest['catalog_date'][:10]}"
+    return {
+        "site_url": base,
+        "og_url": f"{base}/" if base else "./",
+        "og_image": f"{base}/{image}" if base else image,
+    }
+
+
 def derive(latest, data_dir):
     """Values the page shows that are not plain paths into latest.json. The front end
     computes the same numbers at run time (assets/js/method/); computing them here too
@@ -143,6 +169,7 @@ def derive(latest, data_dir):
         "oct2024_abs": float("nan"), "oct2024_fac": float("nan"),
     }
     d["top_lead"] = top_lead(latest)
+    d.update(social(latest))
     # Published file sizes, for the Verify table and the explorer's loading note.
     for key, name in (("latest", "latest.json"), ("objects", "objects.csv"),
                       ("buses", "buses.json"), ("history", "history.csv")):
@@ -208,12 +235,14 @@ def main():
     latest = json.loads((data_dir / "latest.json").read_text(encoding="utf-8"))
     context = {**latest, "derived": derive(latest, data_dir)}
     html = render((SRC / "index.html").read_text(encoding="utf-8"), context, "index.html")
+    card = render((SRC / "og.html").read_text(encoding="utf-8"), context, "og.html")
 
     if out.exists():
         shutil.rmtree(out)
     shutil.copytree(ASSETS, out / "assets")
     shutil.copytree(data_dir, out / "data")
     (out / "index.html").write_text(html, encoding="utf-8")
+    (out / "og-card.html").write_text(card, encoding="utf-8")
     (out / ".nojekyll").write_text("", encoding="utf-8")
     if args.artifact:
         (out / "artifact.html").write_text(artifact_variant(html), encoding="utf-8")

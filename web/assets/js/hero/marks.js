@@ -121,6 +121,7 @@ export function drawMarks(ctx, M, em, P, sprites, dpr) {
 
 // Leader lines and labels. Leaders leave each mark from its lower edge, drop to a
 // shared label column to the right, and the labels stack smallest disc first.
+// M.only, when set, lists the marks to label (the social card labels one).
 export function drawLabels(ctx, M, em, P, values, moon, moonDeg, fmt) {
   const { tx, ty } = M;
   const fs = M.fs;
@@ -135,7 +136,7 @@ export function drawLabels(ctx, M, em, P, values, moon, moonDeg, fmt) {
     { k: 'facing', r: M.rFac, ang: 76 },
     { k: 'absolute', r: M.rAbs, ang: 104 },
     { k: 'apparent', r: M.rApp, ang: 128 },
-  ].filter((it) => it.r > 0);
+  ].filter((it) => it.r > 0 && (!M.only || M.only.includes(it.k)));
 
   const anchorX = (it) => tx + it.r * Math.cos((it.ang * Math.PI) / 180);
   const xL = Math.max(...items.map(anchorX)) + Math.max(12, fs * 1.3);

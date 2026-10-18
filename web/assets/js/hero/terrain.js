@@ -47,16 +47,19 @@ function bake(N, period, seed, octaves, ridged) {
 function sampler(grid, N, L) {
   const s = N / L;
   return function sample(x, z) {
-    let fx = x * s;
-    let fz = z * s;
-    fx -= Math.floor(fx / N) * N;
-    fz -= Math.floor(fz / N) * N;
-    let i0 = fx | 0;
-    let j0 = fz | 0;
-    if (i0 >= N) i0 -= N;
-    if (j0 >= N) j0 -= N;
-    const tx = fx - i0;
-    const tz = fz - j0;
+    // Split into cell and fraction before wrapping: wrapping a tiny negative
+    // coordinate first rounds it up to exactly N, which used to leave a fraction of
+    // N instead of 0 and sent the interpolated height through the sky.
+    const fx = x * s;
+    const fz = z * s;
+    const cx = Math.floor(fx);
+    const cz = Math.floor(fz);
+    const tx = fx - cx;
+    const tz = fz - cz;
+    let i0 = cx % N;
+    let j0 = cz % N;
+    if (i0 < 0) i0 += N;
+    if (j0 < 0) j0 += N;
     const i1 = i0 + 1 === N ? 0 : i0 + 1;
     const r0 = j0 * N;
     const r1 = (j0 + 1 === N ? 0 : j0 + 1) * N;

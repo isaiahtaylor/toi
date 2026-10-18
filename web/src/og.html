@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200">
+<meta name="robots" content="noindex">
+<title>Taylor Occlusion Index social card</title>
+<!-- The social preview card: build.py renders this to dist/og-card.html and
+     web/og/render.py screenshots it at 1200×630 into data/og.png. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Newsreader:ital,opsz,wght@0,6..72,200..700;1,6..72,200..600&display=swap">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/og.css">
+</head>
+<body class="og">
+<main class="hero og-card" data-mode="card" data-selected="facing"
+  data-absolute="{{ toi.absolute }}" data-facing="{{ toi.facing }}" data-apparent="{{ toi.apparent }}"
+  data-seeing="{{ constants.default_seeing_arcsec }}" data-moon-deg="{{ constants.moon_angular_diameter_deg }}">
+  <canvas class="hero__canvas" aria-hidden="true"></canvas>
+  <div class="hero__readout og-card__readout">
+    <p class="og-card__eyebrow">Taylor Occlusion Index <span aria-hidden="true">·</span> {{ catalog_date | month }}</p>
+    <p class="og-card__value"><span class="og-card__num">{{ toi.facing | sig2 }}</span> <span class="og-card__unit">moons</span></p>
+    <p class="og-card__sentence">Every tracked object in orbit, overhead and facing the ground, would cover {{ toi.facing | pct1 }} of the full&nbsp;Moon.</p>
+  </div>
+</main>
+<script type="module" src="assets/js/og.js"></script>
+</body>
+</html>

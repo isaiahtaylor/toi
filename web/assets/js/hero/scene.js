@@ -1,6 +1,9 @@
 // The hero canvas: lays out the night survey for the current viewport, keeps the
 // static parts in an offscreen backdrop, and animates the rest. Pauses when the hero
 // is off screen or the tab is hidden; with reduced motion it renders one still frame.
+// With data-mode="card" on the hero (web/src/og.html) it renders the social preview
+// card instead: one still frame at a fixed size, a larger Moon, and a label on the
+// selected mark only.
 
 import { clamp, easeInOutCubic, rgba } from './noise.js';
 import { createTerrain, layoutTerrain, drawTerrain, TERRAIN_SPEED } from './terrain.js';
@@ -50,6 +53,9 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
   const ctx = canvas.getContext('2d', { alpha: false });
   if (!ctx) return null;
 
+  const card = hero.dataset.mode === 'card';
+  const still = reduced || card;
+
   const P = readPalette();
   const terrain = createTerrain(11);
   const sats = createSatellites(7);
@@ -71,7 +77,7 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
   let inView = true;
   let last = 0;
   let clock = 0; // animation time in seconds, advances only while running
-  const STILL_T = 37; // time used for the reduced-motion still frame
+  const STILL_T = 37; // time used for the still frame (reduced motion, card)
 
   function layout() {
     const rect = hero.getBoundingClientRect();
@@ -81,12 +87,14 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
     canvas.width = Math.round(W * dpr);
     canvas.height = Math.round(H * dpr);
     const narrow = narrowQuery.matches;
-    const navH = nav.getBoundingClientRect().bottom - rect.top;
+    const navH = nav ? nav.getBoundingClientRect().bottom - rect.top : 0;
     // Keep stars out from behind the nav text.
-    const navBoxes = [...nav.querySelectorAll('.hero__wordmark, .hero__links')].map((a) => {
-      const r = a.getBoundingClientRect();
-      return [r.left - rect.left - 8, r.top - rect.top - 6, r.right - rect.left + 8, r.bottom - rect.top + 6];
-    });
+    const navBoxes = nav
+      ? [...nav.querySelectorAll('.hero__wordmark, .hero__links')].map((a) => {
+          const r = a.getBoundingClientRect();
+          return [r.left - rect.left - 8, r.top - rect.top - 6, r.right - rect.left + 8, r.bottom - rect.top + 6];
+        })
+      : [];
     const ro = readout.getBoundingClientRect();
     const roRight = ro.right - rect.left;
     const roTop = ro.top - rect.top;
@@ -97,9 +105,24 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
     let cy;
     let horizonY;
     let vpX;
-    const fs = narrow ? 9.5 : 10.5;
+    const fs = card ? 15 : narrow ? 9.5 : 10.5;
     let gapK = 1; // gap between the Moon and the outer mark, in Moon diameters
-    if (!narrow) {
+    // Width from the Moon's right edge to the left edge of the marks' halo.
+    const span = (D) => D * 0.5 + D * gapK + D * 0.5 * sApp * 1.42 + D * 0.5 + D * 0.16;
+    if (card) {
+      // A fixed frame (1200×630): the Moon a third of the height, set high on the
+      // right, the marks between it and the readout, the land in the lower third.
+      horizonY = Math.round(H * 0.68);
+      D = Math.round(H * 0.32);
+      const availL = roRight + W * 0.05;
+      const availR = W - W * 0.06;
+      const avail = availR - availL;
+      if (span(D) > avail) gapK = Math.max(0.6, 1 - (span(D) - avail) / D);
+      if (span(D) > avail) D = Math.max(96, D * (avail / span(D)));
+      cx = availR - D * 0.5;
+      cy = Math.round(H * 0.34);
+      vpX = W * 0.56;
+    } else if (!narrow) {
       const short = H <= 520; // phones on their side
       horizonY = Math.round(H * (short ? 0.74 : 0.62));
       D = clamp(Math.min(H * 0.235, W * 0.16), Math.min(120, H * 0.26), 260);
@@ -109,7 +132,6 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
       const avail = availR - availL;
       // Marks sit a gap of one Moon diameter to the Moon's left. When space is short
       // the gap closes first (to under half a diameter), then the Moon shrinks.
-      const span = (D) => D * 0.5 + D * gapK + D * 0.5 * sApp * 1.42 + D * 0.5 + D * 0.16;
       if (span(D) > avail) gapK = Math.max(0.45, 1 - (span(D) - avail) / D);
       if (span(D) > avail) D = Math.max(64, D * (avail / span(D)));
       const right = D * 0.66;
@@ -174,10 +196,11 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
       vpX,
       moon,
       milkyWay: band,
-      marks: { tx, ty, ...geom, fs, dpr, labelY },
+      // The card labels only the selected mark, so it still reads at thumbnail size.
+      marks: { tx, ty, ...geom, fs, dpr, labelY, only: card ? [selected] : null },
     };
     const lh = Math.round(fs * 1.75);
-    L.still = reduced;
+    L.still = still;
     L.avoid = [
       [cx - R * 1.5, cy - R * 1.5, cx + R * 1.5, cy + labelDy + 12],
       [tx - geom.rApp * 1.6, ty - geom.rApp * 1.6, tx + geom.rApp + fs * 14, labelY + lh * 3],
@@ -253,7 +276,6 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
 
   function draw(now) {
     if (!L) return;
-    const still = reduced;
     updateEmphasis(now);
     const t = still ? STILL_T : clock;
     const { dpr } = L;
@@ -287,7 +309,7 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
     raf = 0;
     const dt = last ? Math.min(0.1, (now - last) / 1000) : 0;
     last = now;
-    if (!reduced) {
+    if (!still) {
       clock += dt;
       sats.update(dt);
     }
@@ -297,7 +319,7 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
   }
 
   function shouldRun() {
-    return !reduced && inView && !document.hidden;
+    return !still && inView && !document.hidden;
   }
 
   function kick() {
@@ -308,7 +330,7 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
     if (!KEYS.includes(key) || key === selected) return;
     selected = key;
     const to = { absolute: 0, facing: 0, apparent: 0, [key]: 1 };
-    if (reduced) {
+    if (still) {
       Object.assign(em, to);
       tween = null;
       draw(performance.now());
@@ -320,25 +342,29 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
 
   function relayout() {
     layout();
-    if (reduced || !raf) draw(performance.now());
+    if (still || !raf) draw(performance.now());
   }
 
-  let resizeTimer = 0;
-  const ro = new ResizeObserver(() => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(relayout, 150);
-  });
-  ro.observe(hero);
+  // The card has a fixed size and never animates, so it needs no observers. That also
+  // keeps its frame deterministic: it is laid out exactly once per call below.
+  if (!card) {
+    let resizeTimer = 0;
+    const ro = new ResizeObserver(() => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(relayout, 150);
+    });
+    ro.observe(hero);
 
-  const io = new IntersectionObserver((entries) => {
-    inView = entries[entries.length - 1].isIntersecting;
-    if (shouldRun()) kick();
-  });
-  io.observe(hero);
+    const io = new IntersectionObserver((entries) => {
+      inView = entries[entries.length - 1].isIntersecting;
+      if (shouldRun()) kick();
+    });
+    io.observe(hero);
 
-  document.addEventListener('visibilitychange', () => {
-    if (shouldRun()) kick();
-  });
+    document.addEventListener('visibilitychange', () => {
+      if (shouldRun()) kick();
+    });
+  }
 
   layout();
   draw(performance.now());
