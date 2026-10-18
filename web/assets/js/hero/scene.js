@@ -107,20 +107,21 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
     let vpX;
     const fs = card ? 15 : narrow ? 9.5 : 10.5;
     let gapK = 1; // gap between the Moon and the outer mark, in Moon diameters
-    // Width from the Moon's right edge to the left edge of the marks' halo.
+    // Horizontal room the Moon and the marks need, for a Moon of diameter D.
     const span = (D) => D * 0.5 + D * gapK + D * 0.5 * sApp * 1.42 + D * 0.5 + D * 0.16;
     if (card) {
       // A fixed frame (1200×630): the Moon a third of the height, set high on the
-      // right, the marks between it and the readout, the land in the lower third.
-      horizonY = Math.round(H * 0.68);
-      D = Math.round(H * 0.32);
+      // right, the marks between it and the readout, the land in the lower quarter
+      // so the ridges stay clear of the Moon's label.
+      horizonY = Math.round(H * 0.74);
+      D = Math.round(H * 0.33);
       const availL = roRight + W * 0.05;
       const availR = W - W * 0.06;
       const avail = availR - availL;
       if (span(D) > avail) gapK = Math.max(0.6, 1 - (span(D) - avail) / D);
       if (span(D) > avail) D = Math.max(96, D * (avail / span(D)));
       cx = availR - D * 0.5;
-      cy = Math.round(H * 0.34);
+      cy = Math.round(H * 0.35);
       vpX = W * 0.56;
     } else if (!narrow) {
       const short = H <= 520; // phones on their side
@@ -160,7 +161,8 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
     // Moon's label on the same baseline (always on narrow screens, and on short
     // landscape screens where the Moon sits close to the marks).
     const labelX0 = tx + geom.rFac * Math.cos((76 * Math.PI) / 180) + Math.max(12, fs * 1.3);
-    const labelsRight = labelX0 + fs * 0.72 * 18;
+    const labelW = fs * 0.72 * 18;
+    const labelsRight = labelX0 + labelW;
     const moonLabelLeft = cx - (fs * 0.72 * 17) / 2;
     const dropLabels = narrow || labelsRight + fs > moonLabelLeft;
     const labelY = cy + labelDy + (dropLabels ? Math.round(fs * 1.75) : 0);
@@ -208,7 +210,6 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
     ];
     // Stars stay out from behind the canvas labels.
     const xL = tx + geom.rFac * Math.cos((76 * Math.PI) / 180) + Math.max(12, fs * 1.3);
-    const labelW = fs * 0.72 * 18;
     const moonLabelW = fs * 0.72 * 17;
     L.navBoxes.push(
       [xL - 6, labelY - fs - 4, xL + labelW, labelY + lh * 2 + 4],

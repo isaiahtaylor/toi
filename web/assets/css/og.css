@@ -92,5 +92,6 @@ body.og {
   font-family: var(--font-serif);
   font-size: 31px;
   line-height: 1.36;
+  text-wrap: balance;
   color: var(--ink-2);
 }
