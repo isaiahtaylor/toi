@@ -3,7 +3,7 @@
 The monthly backend for the Taylor Occlusion Index. It downloads two public catalogs,
 computes the three TOI expressions (absolute, facing, apparent) and a reconstructed history
 back to 1957, and writes the files the site reads. It uses only the Python standard
-library (Python 3.11 or newer).
+library (Python 3.11 or newer; the workflow uses 3.13).
 
 - Specification: [`docs/methodology.md`](../docs/methodology.md)
 - Output schema: [`docs/data-contract.md`](../docs/data-contract.md)
@@ -61,22 +61,28 @@ the previous month's data in place.
 ## The monthly job
 
 [`.github/workflows/site.yml`](../.github/workflows/site.yml) runs at 07:23 UTC on the
-first of each month (and on demand from the Actions tab):
+first of each month, and on demand from the Actions tab:
 
 1. `update` job: run the tests, run the pipeline with the cache in the runner's temp
    directory, build the site as a smoke test, commit `data/` as `github-actions[bot]`
    with the message `data: monthly update <catalog_date>`, and publish a GitHub release
-   `data-YYYY-MM` with the input files and the output files attached.
-2. `deploy` job: check out the latest default branch (which now includes the data
-   commit), build `dist/` with `python3 web/build.py`, and deploy it to GitHub Pages.
+   `data-YYYY-MM` (the catalog month) tagged on that commit, with the input files, their
+   `.meta.json` sidecars and the output files attached. A second run in the same month
+   replaces that month's release. If the release cannot be published, the job still
+   succeeds so the new data is deployed.
+2. `deploy` job: check out the exact commit the update job pushed, build `dist/` with
+   `python3 web/build.py`, and deploy it to GitHub Pages.
+
+If GCAT is unavailable, the pipeline exits with status 2, the update job fails, nothing is
+committed and nothing is deployed, so the site keeps last month's data.
 
 A push to `main` that touches `web/`, `data/`, `pipeline/` or `docs/` runs only the
-deploy job. Run the workflow by hand from `main`.
+deploy job, from the pushed commit. Run the workflow by hand from the default branch; a
+manual run from any other branch does nothing.
 
 GitHub turns off scheduled workflows in public repositories after 60 days without
-activity. The monthly data commit counts as activity, so the schedule keeps itself alive
-as long as runs succeed. If GCAT is down for two months running, re-enable the workflow in
-the Actions tab.
+activity. If that happens (for example after GCAT is down for two months running),
+re-enable the workflow in the Actions tab.
 
 ### Enable GitHub Pages
 
@@ -105,7 +111,8 @@ Everything needed to check the headline values is in `data/`.
 3. **From the inputs.** Download the release `data-YYYY-MM`, which holds the exact input
    files with their `.meta.json` sidecars (the SHA-256 sums are also in `latest.json`),
    put them in one folder and run
-   `python3 -m pipeline.run --offline --cache <folder> --out /tmp/check --date <catalog_date>`.
+   `python3 -m pipeline.run --offline --cache <folder> --out /tmp/check --date <catalog_date>`
+   with the `pipeline/` code from the release's tagged commit.
    The output matches the published files apart from `generated_at`. (`history.csv` in
    the release holds earlier measured rows too; a fresh output folder has only this run's.)
 4. **The formulas.** `python3 -m unittest discover -s pipeline/tests` checks the Moon's

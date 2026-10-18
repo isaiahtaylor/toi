@@ -1,8 +1,8 @@
 name: site
 
 # Monthly data update (pipeline) and GitHub Pages deploy.
-# - schedule / workflow_dispatch: run the pipeline, commit data/, publish a data release,
-#   then deploy the site.
+# - schedule, or a manual run from the default branch: run the pipeline, commit data/,
+#   publish the month's data release, then deploy the site from the data commit.
 # - push to main touching the site, data, pipeline or docs: deploy only.
 
 on:
@@ -17,24 +17,39 @@ on:
       - 'pipeline/**'
       - 'docs/**'
 
+permissions:
+  contents: read
+
 jobs:
   update:
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    # Scheduled runs always use the default branch. Manual runs from another branch would
+    # commit data there while Pages serves the default branch, so they skip the update.
+    if: >-
+      github.event_name == 'schedule' ||
+      (github.event_name == 'workflow_dispatch' &&
+      github.ref_name == github.event.repository.default_branch)
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
       contents: write
+    concurrency:
+      group: toi-data-update
+      cancel-in-progress: false
     outputs:
       catalog_date: ${{ steps.pipeline.outputs.catalog_date }}
+      sha: ${{ steps.commit.outputs.sha }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
-          python-version: '3.12'
+          python-version: '3.13'
 
       - name: Test the pipeline
         run: python3 -m unittest discover -s pipeline/tests
 
+      # Exits with status 2 and writes nothing if GCAT is unavailable; the job then fails,
+      # nothing is committed or deployed, and the site keeps last month's data.
       - name: Run the pipeline
         id: pipeline
         run: |
@@ -46,6 +61,7 @@ jobs:
         run: python3 web/build.py
 
       - name: Commit data
+        id: commit
         env:
           CATALOG_DATE: ${{ steps.pipeline.outputs.catalog_date }}
         run: |
@@ -59,11 +75,17 @@ jobs:
             git pull --rebase origin "$GITHUB_REF_NAME"
             git push origin "HEAD:$GITHUB_REF_NAME"
           fi
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
+      # One release per catalog month, tagged on the data commit. A second run in the same
+      # month replaces the release, so its tag, inputs and outputs always belong together.
+      # The data is already pushed at this point, so a failure here must not block the deploy.
       - name: Publish data release
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
           CATALOG_DATE: ${{ steps.pipeline.outputs.catalog_date }}
+          SHA: ${{ steps.commit.outputs.sha }}
         run: |
           shopt -s nullglob
           tag="data-${CATALOG_DATE:0:7}"
@@ -71,17 +93,23 @@ jobs:
                  "$RUNNER_TEMP"/toi-inputs/*.meta.json
                  data/latest.json data/objects.csv data/buses.json data/history.csv)
           if gh release view "$tag" > /dev/null 2>&1; then
-            gh release upload "$tag" "${files[@]}" --clobber
-          else
-            gh release create "$tag" "${files[@]}" \
-              --title "TOI data $CATALOG_DATE" \
-              --notes "Inputs (GCAT, CelesTrak SATCAT) and outputs of the monthly TOI run for catalog date $CATALOG_DATE. Input checksums are listed in latest.json under sources. GCAT data: Jonathan C. McDowell, CC-BY-4.0. SATCAT: USSPACECOM via CelesTrak."
+            gh release delete "$tag" --yes --cleanup-tag
           fi
+          gh release create "$tag" "${files[@]}" --target "$SHA" \
+            --title "TOI data $CATALOG_DATE" \
+            --notes "Inputs (GCAT, CelesTrak SATCAT) and outputs of the monthly TOI run for catalog date $CATALOG_DATE. Input checksums are listed in latest.json under sources. GCAT data: Jonathan C. McDowell, CC-BY-4.0. SATCAT: USSPACECOM via CelesTrak."
 
   deploy:
     needs: update
-    if: ${{ !cancelled() && (needs.update.result == 'success' || needs.update.result == 'skipped') }}
+    # After a successful update, or when the update was skipped (push to main). Never
+    # from a manual run on another branch.
+    if: >-
+      !cancelled() &&
+      (needs.update.result == 'success' || needs.update.result == 'skipped') &&
+      (github.event_name != 'workflow_dispatch' ||
+      github.ref_name == github.event.repository.default_branch)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
       pages: write
@@ -93,24 +121,26 @@ jobs:
       group: pages
       cancel-in-progress: false
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
-          # the latest default branch, so a fresh data commit from the update job is included
-          ref: ${{ github.event.repository.default_branch }}
+          # The data commit the update job pushed. When the update was skipped this is the
+          # pushed commit. (github.event.repository is not set on scheduled runs, so the
+          # default branch cannot be named that way here.)
+          ref: ${{ needs.update.outputs.sha || github.sha }}
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
-          python-version: '3.12'
+          python-version: '3.13'
 
       - name: Build the site
         run: python3 web/build.py
 
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

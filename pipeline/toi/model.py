@@ -284,8 +284,10 @@ def build_current(cats, matcher):
         g = cats.cat.get(jcat)
         if not gcat_free_flyer_in_orbit(c, g):
             continue
-        letter = jcat[0]
+        letter = jcat[:1]
         if letter == "S":
+            if not jcat[1:].isdigit():
+                continue                     # malformed identifier
             if ct_numbers is not None and int(jcat[1:]) in ct_numbers:
                 continue
         elif letter == "A":

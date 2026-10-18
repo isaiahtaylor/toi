@@ -8,6 +8,8 @@ from .constants import (APPENDAGE_FACING_FACTOR, APPENDAGE_WIDTH_FACTOR, ARRAY_S
 SPHERE = re.compile(r"sphere|ball|\bico|geodesic")
 CYLINDER = re.compile(r"cyl|cone|frust|disk|disc|torus|tank|nozzle|rod|tube|ring|\bell|drum")
 PANEL = re.compile(r"pan|wing|array")
+# A tether is millimetres thick; when Shape mentions one, Span is the tether length.
+TETHER = re.compile(r"tether")
 
 
 def body_kind(otype, length, diameter, shape):
@@ -59,9 +61,10 @@ def generic_area(otype, length, diameter, span, shape):
         a_abs = a_fac = D * D / 2.0
         p_fac = 3.0 * D
         extent, width = D, D / 2.0
-    if otype != "R/B" and span and span > ARRAY_SPAN_MARGIN * extent:
+    shape_lc = (shape or "").lower()
+    if otype != "R/B" and span and span > ARRAY_SPAN_MARGIN * extent and not TETHER.search(shape_lc):
         e = span - extent
-        if PANEL.search((shape or "").lower()):
+        if PANEL.search(shape_lc):
             arr = e * width
             a_abs += arr
             a_fac += SUN_TRACKING_FACTOR * arr

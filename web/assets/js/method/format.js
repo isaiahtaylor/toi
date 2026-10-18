@@ -86,6 +86,7 @@ export const FORMATS = {
   tex5: (v) => texSci(+v, 5),
   texint: (v) => texInt(+v),
   micro: (v) => micro(+v),
+  fix6: (v) => (+v).toFixed(6),
 };
 
 export function resolvePath(obj, path) {
@@ -128,6 +129,15 @@ export function el(tag, attrs = {}, ...children) {
     node.append(c instanceof Node ? c : document.createTextNode(String(c)));
   }
   return node;
+}
+
+// Confidence of a curated design, as an ordinal pip meter plus its name.
+const CONFIDENCE_LEVEL = { published: 4, estimated: 3, assumed: 2, proxy: 1 };
+export function confidenceChip(conf) {
+  const level = CONFIDENCE_LEVEL[conf] || 0;
+  return el('span', { class: 'm-conf', 'data-level': String(level), title: `Confidence: ${conf}` },
+    el('span', { class: 'm-conf__pips', 'aria-hidden': 'true' }, el('i'), el('i'), el('i'), el('i')),
+    conf);
 }
 
 export const TYPE_LABEL = { PAY: 'Payload', 'R/B': 'Rocket body', DEB: 'Debris', UNK: 'Unknown' };

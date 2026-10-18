@@ -2,7 +2,7 @@
 import { apparentTerms, ARCSEC } from '../toi.js';
 import { sig, texSci, texInt, arcsec } from './format.js';
 import { getSeeing, setSeeing, onSeeing } from './state.js';
-import { whenKatex, renderInto } from './math.js';
+import { whenKatex, renderFitted } from './math.js';
 
 const MIN = 0.25;
 const MAX = 60;
@@ -39,8 +39,16 @@ export function initSeeing(root, latest) {
     const theta = getSeeing();
     const half = (theta * ARCSEC) / 2;
     const t = apparentTerms(sums, omega, theta);
-    const tex = `\\text{TOI}_\\text{app}(${sig(theta, 3)}^{\\prime\\prime}) = \\frac{1}{${texSci(omega, 5)}}\\Big[\\,${texSci(sums.fac_A_h2, 4)} + ${texSci(half, 4)}\\times${sig(sums.fac_P_h, 5)} + ${texInt(sums.n)}\\,\\pi\\,(${texSci(half, 4)})^2\\Big] = ${sig(t.area, 3)} + ${sig(t.rim, 3)} + ${sig(t.disc, 3)} = ${sig(t.area + t.rim + t.disc, 4)}`;
-    renderInto(katex, texNode, tex, true);
+    const th = arcsec(theta).replace('″', '');
+    const head = `\\text{TOI}_\\text{app}(${th}^{\\prime\\prime})`;
+    const inv = `\\frac{1}{${texSci(omega, 5)}}`;
+    const t1 = texSci(sums.fac_A_h2, 4);
+    const t2 = `${texSci(half, 4)}\\times${sig(sums.fac_P_h, 5)}`;
+    const t3 = `${texInt(sums.n)}\\,\\pi\\,(${texSci(half, 4)})^2`;
+    const sum = `${sig(t.area, 3)} + ${sig(t.rim, 3)} + ${sig(t.disc, 3)} = ${sig(t.area + t.rim + t.disc, 4)}\\ \\text{moons}`;
+    const tex = `\\begin{aligned}${head} &= ${inv}\\Big[\\,${t1} + ${t2} + ${t3}\\Big] \\\\ &= ${sum}\\end{aligned}`;
+    const narrow = `\\begin{aligned}${head} = {}&${inv}\\Big[\\,${t1} \\\\ &+ ${t2} \\\\ &+ ${t3}\\Big] \\\\ = {}&${sig(t.area, 3)} + ${sig(t.rim, 3)} + ${sig(t.disc, 3)} \\\\ = {}&${sig(t.area + t.rim + t.disc, 4)}\\ \\text{moons}\\end{aligned}`;
+    renderFitted(katex, texNode, tex, narrow);
   }
 
   function paint(theta) {

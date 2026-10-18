@@ -23,18 +23,25 @@ export function renderSources(root, latest) {
   }));
 }
 
-export async function fillFileSizes(root) {
-  const cells = [...root.querySelectorAll('[data-size]')];
-  await Promise.all(cells.map(async (cell) => {
-    try {
-      const res = await fetch(cell.dataset.size, { method: 'HEAD', cache: 'no-cache' });
-      const len = +res.headers.get('content-length');
-      if (!res.ok || !len) return;
-      if (res.headers.get('content-encoding')) cell.textContent = `${bytes(len)} compressed`;
-      else cell.textContent = bytes(len);
-      cell.title = `${intl(len)} bytes`;
-    } catch { /* leave the dash */ }
-  }));
+// Published file sizes. Files the page has fetched report their exact size through the
+// Resource Timing API; objects.csv is sized by the explorer once it loads.
+export function setFileSize(root, path, n, approx = false) {
+  const cell = root.querySelector(`[data-size="${path}"]`);
+  if (!cell || !Number.isFinite(n) || n <= 0) return;
+  cell.textContent = approx ? `about ${bytes(n)}` : bytes(n);
+  cell.title = approx ? 'Estimated from the row count until the catalog loads' : `${intl(n)} bytes`;
+}
+
+export function fillFileSizes(root, latest) {
+  const entries = performance.getEntriesByType ? performance.getEntriesByType('resource') : [];
+  root.querySelectorAll('[data-size]').forEach((cell) => {
+    const path = cell.dataset.size;
+    const hit = entries.filter((e) => new URL(e.name).pathname.endsWith(`/${path}`) && e.decodedBodySize > 0).pop();
+    if (hit) setFileSize(root, path, hit.decodedBodySize);
+    else if (path === (latest.files?.objects_csv || 'data/objects.csv') && cell.textContent.trim() === '–') {
+      setFileSize(root, path, latest.counts.total * 176, true);
+    }
+  });
 }
 
 async function copyText(text) {

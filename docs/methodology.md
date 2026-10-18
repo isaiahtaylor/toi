@@ -106,7 +106,19 @@ Details of the rules as implemented:
   catalogued object are represented by that object.
 - GCAT types map to `PAY` (P), `R/B` (R), `DEB` (C and D).
 - CelesTrak decides for every object it carries: an object CelesTrak lists as decayed is not
-  counted even if GCAT still lists it in orbit.
+  counted even if GCAT still lists it in orbit. An object CelesTrak lists in orbit with a
+  perigee and apogee is counted even if GCAT records it as reentered.
+- A stack of joined objects counts once. GCAT's latest phase also records dockings and
+  attachments ("Docked with …", "Attached to …"), including some CelesTrak has not yet
+  recorded in `ORBIT_CENTER`. Following these links up to the free-flying object of the
+  stack: a CelesTrak object whose stack leads to another counted CelesTrak object is left
+  out and represented by it (for example a cargo ship docked to the ISS that CelesTrak still
+  lists with its own orbit). When the free-flying object is one only GCAT lists, the
+  catalogued object represents the stack and the GCAT-only object is left out.
+- GCAT's temporary catalog holds objects that are waiting for a US catalog number. When
+  CelesTrak already lists at least as many unidentified pieces from the same launch (names
+  ending in `OBJECT A`, `OBJECT AB` and so on) as GCAT has temporary objects in orbit from
+  it, the temporary objects are most likely among those pieces and are left out.
 
 ## Altitude
 
@@ -115,8 +127,9 @@ Details of the rules as implemented:
 prefix). Floor of 100 km. CelesTrak's perigee and apogee are used whenever present,
 including for objects whose element sets are not public (`DATA_STATUS_CODE` NEA). A
 perigee or apogee that is missing or 0 counts as no orbit. The launch-mate fallback takes
-the median perigee and the median apogee of the counted objects from the same launch. Objects with no orbit from any source are excluded and counted
-in `status_notes`. Eccentric orbits are represented by their mean altitude; HEO objects
+the median perigee and the median apogee of the counted objects from the same launch. It is
+not applied to objects that GCAT records as having come down or left Earth orbit. Objects
+with no orbit from any source are excluded and counted in `status_notes`. Eccentric orbits are represented by their mean altitude; HEO objects
 contribute about 0.01% so this choice does not matter at the reported precision.
 
 Orbit regimes (for the breakdown only): LEO has apogee ≤ 2,000 km; GEO has mean altitude
@@ -218,9 +231,12 @@ As implemented:
   altitude by `ramp_until`. Starlink v1 uses 550 km and V2 Mini 530 km (the FCC's Gen2
   shells are 525, 530 and 535 km) until 1 January 2026, reaching current altitudes by
   1 October 2026; the direct-to-cell satellites use 360 km.
-- Objects docked today (CelesTrak `ORBIT_CENTER` not `EA`) are left out of the history,
-  as they are from today's count. Visiting vehicles that have since come down are counted as free objects
-  from launch to decay. GCAT-only objects that have come down are not included.
+- Objects left out of today's count because they are docked or attached (CelesTrak
+  `ORBIT_CENTER` not `EA`, or joined to another object in GCAT) are left out of the history
+  too. Visiting vehicles that have since come down are counted as free objects from launch
+  to decay, so the months when one was docked count it twice; at a few tens of square
+  metres per vehicle against the station's 4,300 m², this changes no month by more than
+  about 0.1%. GCAT-only objects that have come down are not included.
 - In degraded mode the decayed objects come from GCAT's S catalog (latest status reentered,
   deorbited, landed, crashed or exploded on Earth).
 

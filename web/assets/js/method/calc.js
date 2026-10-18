@@ -1,12 +1,14 @@
 // The worked calculation for one object: the area model ported from pipeline/toi/areas.py
 // and designs.py, with this object's numbers substituted into each formula.
 import { ARCSEC } from '../toi.js';
-import { el, sig, intl, pct, texSci, texNum, trimNum, groupNum, arcsec, TYPE_LABEL, ORBIT_SRC_LABEL } from './format.js';
+import { el, sig, intl, pct, texSci, texNum, trimNum, groupNum, arcsec, confidenceChip, TYPE_LABEL, ORBIT_SRC_LABEL } from './format.js';
 
 // --- Model (keep identical to pipeline/toi/areas.py) ------------------------------------
 const SPHERE = /sphere|ball|\bico|geodesic/;
 const CYLINDER = /cyl|cone|frust|disk|disc|torus|tank|nozzle|rod|tube|ring|\bell|drum/;
 const PANEL = /pan|wing|array/;
+// A tether is millimeters thick; when the shape mentions one, the span is the tether length.
+const TETHER = /tether/;
 const ARRAY_SPAN_MARGIN = 1.05;
 const APPENDAGE_WIDTH_FACTOR = 0.1;
 const APPENDAGE_FACING_FACTOR = 0.5;
@@ -64,9 +66,11 @@ export function genericArea(type, L, D, span, shape) {
     steps.push(`P_\\text{fac} = 3D = ${n(pFac)}\\ \\text{m}`);
   }
   let append = null;
-  if (type !== 'R/B' && span && span > ARRAY_SPAN_MARGIN * extent) {
+  const shapeLc = (shape || '').toLowerCase();
+  const tether = TETHER.test(shapeLc);
+  if (type !== 'R/B' && span && span > ARRAY_SPAN_MARGIN * extent && !tether) {
     const e = span - extent;
-    const isPanel = PANEL.test((shape || '').toLowerCase());
+    const isPanel = PANEL.test(shapeLc);
     if (isPanel) {
       const arr = e * width;
       const dP = 2 * (e + SUN_TRACKING_FACTOR * width) - 2 * Math.min(SUN_TRACKING_FACTOR * width, width);
@@ -84,7 +88,7 @@ export function genericArea(type, L, D, span, shape) {
       aAbs += arr; aFac += APPENDAGE_FACING_FACTOR * arr; pFac += dP;
     }
   }
-  return { kind, why, steps, append, extent, width, A_abs: aAbs, A_fac: aFac, P_fac: pFac };
+  return { kind, why, steps, append, tether: tether && span > ARRAY_SPAN_MARGIN * extent, extent, width, A_abs: aAbs, A_fac: aFac, P_fac: pFac };
 }
 
 export function flatPanel(design) {
@@ -173,7 +177,7 @@ export function renderCalc(container, obj, ctx) {
   const areaKids = [];
   let model = null;
   if (obj.area_src === 'curated' && design) {
-    const chip = el('span', { class: `m-chip m-chip--${design.confidence}`, text: design.confidence });
+    const chip = confidenceChip(design.confidence);
     areaKids.push(el('p', {}, 'Curated design ', el('a', { href: `#design-${design.id}`, text: design.label }), ' ', chip));
     if (design.body || design.arrays) {
       const fp = flatPanel(design);
@@ -216,6 +220,8 @@ export function renderCalc(container, obj, ctx) {
         areaKids.push(el('p', { text: g.append.panel
           ? 'The span exceeds the body by more than 5% and the shape mentions panels, so the extra length counts as solar arrays.'
           : 'The span exceeds the body by more than 5% with no panels in the shape, so the extra length counts as a thin appendage.' }));
+      } else if (g.tether) {
+        areaKids.push(el('p', { text: 'The shape names a tether, so the span is the tether’s length. A tether is millimeters thick, so nothing is added for it.' }));
       } else if (obj.type !== 'R/B' && span) {
         areaKids.push(el('p', { text: 'The span does not exceed the body by more than 5%, so nothing is added for appendages.' }));
       }
@@ -251,7 +257,7 @@ export function renderCalc(container, obj, ctx) {
   const contrib = [
     texLine(`\\text{abs} = \\frac{A_\\text{abs}}{h^2\\,\\Omega_\\moon} = \\frac{${texNum(aAbs)}}{${hTex}\\times${texSci(omega, 5)}} = ${texSci(cAbs, 4)}\\ \\text{moons}`),
     texLine(`\\text{fac} = \\frac{A_\\text{fac}}{h^2\\,\\Omega_\\moon} = \\frac{${texNum(aFac)}}{${hTex}\\times${texSci(omega, 5)}} = ${texSci(cFac, 4)}\\ \\text{moons}`),
-    texLine(`\\text{app}(${sig(seeing, 3)}^{\\prime\\prime}) = \\frac{1}{\\Omega_\\moon}\\Big[\\frac{A_\\text{fac}}{h^2} + \\frac{\\theta}{2}\\frac{P_\\text{fac}}{h} + \\pi\\Big(\\frac{\\theta}{2}\\Big)^2\\Big] = \\frac{${texSci(aFac / (hm * hm), 4)} + ${texSci(half * pFac / hm, 4)} + ${texSci(Math.PI * half * half, 4)}}{${texSci(omega, 5)}} = ${texSci(cApp, 4)}`),
+    texLine(`\\text{app}(${arcsec(seeing).replace('″', '')}^{\\prime\\prime}) = \\frac{1}{\\Omega_\\moon}\\Big[\\frac{A_\\text{fac}}{h^2} + \\frac{\\theta}{2}\\frac{P_\\text{fac}}{h} + \\pi\\Big(\\frac{\\theta}{2}\\Big)^2\\Big] = \\frac{${texSci(aFac / (hm * hm), 4)} + ${texSci(half * pFac / hm, 4)} + ${texSci(Math.PI * half * half, 4)}}{${texSci(omega, 5)}} = ${texSci(cApp, 4)}`),
   ];
   const res = (series, label, v, total) => el('div', { class: 'm-calc__res', 'data-series': series },
     el('span', { class: 'label', text: label }),

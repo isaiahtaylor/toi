@@ -4,8 +4,9 @@
 import { el, sig, intl, pct, trimNum, groupNum, bytes, micro } from './format.js';
 import { parseCSV } from './csv.js';
 import { renderCalc } from './calc.js';
-import { whenKatex, renderInto } from './math.js';
+import { whenKatex, renderFitted } from './math.js';
 import { getSeeing, onSeeing } from './state.js';
+import { setFileSize } from './verify.js';
 
 const OVERSCAN = 8;
 const AVG_ROW_BYTES = 176; // for the progress bar when the server compresses the file
@@ -15,7 +16,7 @@ const SORTS = {
   fac: { head: 'Fac. µmoon', cmp: (a, b) => b.tFac - a.tFac || a.i - b.i, val: (r) => micro(r.tFac) },
   'alt-asc': { head: 'Abs. µmoon', cmp: (a, b) => a.alt - b.alt || a.i - b.i, val: (r) => micro(r.tAbs) },
   'alt-desc': { head: 'Abs. µmoon', cmp: (a, b) => b.alt - a.alt || a.i - b.i, val: (r) => micro(r.tAbs) },
-  area: { head: 'A_fac m²', cmp: (a, b) => b.aFac - a.aFac || a.i - b.i, val: (r) => groupNum(r.aFac, 4) },
+  area: { head: 'Facing m²', cmp: (a, b) => b.aFac - a.aFac || a.i - b.i, val: (r) => groupNum(r.aFac, 4) },
 };
 
 function toRows(header, raw) {
@@ -125,8 +126,7 @@ export function initExplorer(root, latest, busesPromise) {
       await new Promise((r) => setTimeout(r, 0));
       const { header, rows: raw } = parseCSV(text);
       rows = toRows(header, raw);
-      const sizeCell = root.querySelector(`[data-size="${csvPath}"]`);
-      if (sizeCell) sizeCell.textContent = bytes(got);
+      setFileSize(root, csvPath, got);
       ready();
     } catch (err) {
       setStatus('error');
@@ -182,7 +182,7 @@ export function initExplorer(root, latest, busesPromise) {
       if (head.length) out = head.concat(out.filter((r) => !exact(r)));
     }
     view = out;
-    valHead.textContent = sort.head;
+    valHead.replaceChildren(...sort.head.split(/(µ)/).filter(Boolean).map((part) => (part === 'µ' ? el('span', { class: 'm-nocase', text: 'µ' }) : part)));
     inner.style.height = `${view.length * rowH}px`;
     for (const node of live.values()) node.remove();
     live.clear();
@@ -334,10 +334,15 @@ export function initExplorer(root, latest, busesPromise) {
 
   function paintTex() {
     if (!katex) return;
-    calc.querySelectorAll('[data-calc-tex]').forEach((n) => renderInto(katex, n, n.dataset.calcTex, true));
+    calc.querySelectorAll('[data-calc-tex]').forEach((n) => renderFitted(katex, n, n.dataset.calcTex));
   }
 
-  onSeeing(() => { if (selected) showCalc(selected); });
+  let seeRaf = 0;
+  onSeeing(() => {
+    if (!selected) return;
+    cancelAnimationFrame(seeRaf);
+    seeRaf = requestAnimationFrame(() => showCalc(selected));
+  });
 
   // ---- Open an object from elsewhere on the page ------------------------------------
   function open(target) {

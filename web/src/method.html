@@ -1,4 +1,5 @@
 <main class="method" id="method">
+  <p class="m-load-error" data-load-error role="alert" hidden></p>
 
   <!-- 1 · The idea ===================================================== -->
   <section class="m-section m-section--idea" aria-labelledby="idea-title">
@@ -108,8 +109,8 @@
     <div class="m-col">
       <p class="m-kicker"><span class="m-kicker__num">01</span> The unit</p>
       <h2 class="m-h2" id="unit-title">One Moon</h2>
-      <p>The unit is the full Moon seen from Earth at its mean distance. Its radius R☾ is 1,737.4 km and its mean distance d☾ is 384,400 km, so its edge sits a small angle α from its centre.</p>
-      <div class="m-math" data-tex="\alpha = \arcsin\frac{R_\moon}{d_\moon} = \arcsin\frac{1737.4\ \text{km}}{384\,400\ \text{km}} = 0.0045198\ \text{rad} = 0.25896^\circ">α = arcsin(R☾ / d☾) = arcsin(1737.4 km / 384,400 km) = 0.0045198 rad = 0.25896°</div>
+      <p>The unit is the full Moon seen from Earth at its mean distance. Its radius R☾ is 1,737.4 km and its mean distance d☾ is 384,400 km, so its edge sits a small angle α from its center.</p>
+      <div class="m-math" data-tex-narrow="\begin{aligned}\alpha &= \arcsin\frac{R_\moon}{d_\moon} = \arcsin\frac{1737.4\ \text{km}}{384\,400\ \text{km}} \\ &= 0.0045198\ \text{rad} = 0.25896^\circ\end{aligned}" data-tex="\alpha = \arcsin\frac{R_\moon}{d_\moon} = \arcsin\frac{1737.4\ \text{km}}{384\,400\ \text{km}} = 0.0045198\ \text{rad} = 0.25896^\circ">α = arcsin(R☾ / d☾) = arcsin(1737.4 km / 384,400 km) = 0.0045198 rad = 0.25896°</div>
       <p>The patch of sky inside a cone of half-angle α is a solid angle, measured in steradians. The Moon covers</p>
       <div class="m-math" data-tex="\Omega_\moon = 2\pi\,(1-\cos\alpha) = 6.4178\times10^{-5}\ \text{sr}">Ω☾ = 2π (1 − cos α) = 6.4178 × 10⁻⁵ sr</div>
       <p>That is one Moon. The whole sky holds about 195,800 of them, and the half above any horizon about 97,900. The Moon’s angular diameter is 0.518°, or 31.1 arcminutes.</p>
@@ -145,7 +146,7 @@
           <circle cx="48" cy="130" r="4" class="d-observer"></circle>
           <text x="48" y="158" class="d-label" text-anchor="middle">You</text>
         </svg>
-        <figcaption id="cone-cap"><span class="label">Fig. 2</span> The cone from an observer to the Moon’s edge. R☾ meets the line of sight at a right angle, so sin α = R☾/d☾. Not to scale: the real cone is 0.52° across, about 35 times narrower than drawn.</figcaption>
+        <figcaption id="cone-cap"><span class="label">Fig. 2</span> The cone from an observer to the Moon’s edge. R☾ meets the line of sight at a right angle, so sin α = R☾/d☾. Not to scale. The real cone is 0.52° across, about 35 times narrower than drawn.</figcaption>
       </figure>
     </div>
 
@@ -184,13 +185,13 @@
     <!-- Absolute -->
     <div class="m-col">
       <h3 class="m-h3" id="absolute"><span class="m-key m-key--abs" aria-hidden="true"></span>Absolute</h3>
-      <p>The absolute TOI gives each object its largest silhouette. For a flat satellite that means the body and every solar array, all face&#8209;on to the observer. This is the question in the quoted post: how large would the hardware look if it were laid out flat in the sky?</p>
+      <p>The absolute TOI gives each object its largest silhouette. For a flat satellite that means the body and every solar array, all face&#8209;on to the observer. It answers the quoted post’s question about how large the hardware would look packed flat into one disc.</p>
     </div>
     <div class="m-wide">
       <figure class="m-fig m-diagram" aria-labelledby="abs-cap">
         <div class="m-abs-panels">
           <div class="m-abs-panel">
-            <svg class="m-svg" viewBox="0 0 200 210" role="img" aria-label="A Starlink V2 Mini, 116 square metres, laid flat 480 kilometres overhead">
+            <svg class="m-svg" viewBox="0 0 200 210" role="img" aria-label="A Starlink V2 Mini, 116 square meters, laid flat 480 kilometers overhead">
               <polygon points="100,196 90.3,105 109.7,105" class="d-cone"></polygon>
               <line x1="100" y1="196" x2="90.3" y2="105" class="d-coneline"></line>
               <line x1="100" y1="196" x2="109.7" y2="105" class="d-coneline"></line>
@@ -207,7 +208,7 @@
           </div>
           <p class="m-abs-op" aria-hidden="true">+</p>
           <div class="m-abs-panel">
-            <svg class="m-svg" viewBox="0 0 200 210" role="img" aria-label="The International Space Station, 4,300 square metres, laid flat 420 kilometres overhead">
+            <svg class="m-svg" viewBox="0 0 200 210" role="img" aria-label="The International Space Station, 4,300 square meters, laid flat 420 kilometers overhead">
               <polygon points="100,196 41,117 159,117" class="d-cone"></polygon>
               <line x1="100" y1="196" x2="41" y2="117" class="d-coneline"></line>
               <line x1="100" y1="196" x2="159" y2="117" class="d-coneline"></line>
@@ -224,7 +225,7 @@
           </div>
           <p class="m-abs-op" aria-hidden="true">+</p>
           <div class="m-abs-panel">
-            <svg class="m-svg" viewBox="0 0 200 210" role="img" aria-label="An SL-16 upper stage, 45 square metres, 830 kilometres overhead">
+            <svg class="m-svg" viewBox="0 0 200 210" role="img" aria-label="An SL-16 upper stage, 45 square meters, 830 kilometers overhead">
               <polygon points="100,196 94,40 106,40" class="d-cone"></polygon>
               <line x1="100" y1="196" x2="94" y2="40" class="d-coneline"></line>
               <line x1="100" y1="196" x2="106" y2="40" class="d-coneline"></line>
@@ -246,9 +247,9 @@
     </div>
     <div class="m-col">
       <p>A Starlink V2 Mini has a 2.7 × 4.1 m body and two 4.1 × 12.8 m solar arrays, 116.03 m² in all. At 480 km it covers</p>
-      <div class="m-math" data-tex="\Omega = \frac{116.03\ \text{m}^2}{(480\,000\ \text{m})^2} = 5.04\times10^{-10}\ \text{sr} = 7.85\times10^{-6}\ \text{moons}">Ω = 116.03 m² / (480,000 m)² = 5.04 × 10⁻¹⁰ sr = 7.85 × 10⁻⁶ moons</div>
+      <div class="m-math" data-tex-narrow="\begin{aligned}\Omega &= \frac{116.03\ \text{m}^2}{(480\,000\ \text{m})^2} = 5.04\times10^{-10}\ \text{sr} \\ &= 7.85\times10^{-6}\ \text{moons}\end{aligned}" data-tex="\Omega = \frac{116.03\ \text{m}^2}{(480\,000\ \text{m})^2} = 5.04\times10^{-10}\ \text{sr} = 7.85\times10^{-6}\ \text{moons}">Ω = 116.03 m² / (480,000 m)² = 5.04 × 10⁻¹⁰ sr = 7.85 × 10⁻⁶ moons</div>
       <p>About 127,000 of them would cover the Moon. Altitude enters squared, so the same satellite at 350 km counts 1.9 times as much as at 480 km. Summed over every object,</p>
-      <div class="m-math" data-tex="\text{TOI}_\text{abs} = \frac{1}{\Omega_\moon}\sum_i\frac{A_{\text{abs},i}}{h_i^2} = \frac{ {%sums.abs_A_h2|tex4%}\ \text{sr}}{ {%constants.omega_moon_sr|tex5%}\ \text{sr}} = {%toi.absolute|sig4%}\ \text{moons}">TOI_abs = (1/Ω☾) Σ A_abs/h² = {{ sums.abs_A_h2 | sci }} sr / {{ constants.omega_moon_sr | sci }} sr = {{ toi.absolute | sig4 }} moons</div>
+      <div class="m-math" data-tex-narrow="\begin{aligned}\text{TOI}_\text{abs} &= \frac{1}{\Omega_\moon}\sum_i\frac{A_{\text{abs},i}}{h_i^2} \\ &= \frac{ {%sums.abs_A_h2|tex4%}\ \text{sr}}{ {%constants.omega_moon_sr|tex5%}\ \text{sr}} \\ &= {%toi.absolute|sig4%}\ \text{moons}\end{aligned}" data-tex="\text{TOI}_\text{abs} = \frac{1}{\Omega_\moon}\sum_i\frac{A_{\text{abs},i}}{h_i^2} = \frac{ {%sums.abs_A_h2|tex4%}\ \text{sr}}{ {%constants.omega_moon_sr|tex5%}\ \text{sr}} = {%toi.absolute|sig4%}\ \text{moons}">TOI_abs = (1/Ω☾) Σ A_abs/h² = {{ sums.abs_A_h2 | sci }} sr / {{ constants.omega_moon_sr | sci }} sr = {{ toi.absolute | sig4 }} moons</div>
     </div>
 
     <!-- Facing -->
@@ -304,13 +305,13 @@
     </div>
     <div class="m-col">
       <p>The one half comes from averaging |cos ψ| over all directions on the sphere:</p>
-      <div class="m-math" data-tex="\langle|\cos\psi|\rangle = \frac{1}{4\pi}\int_0^{2\pi}\!\!\int_0^{\pi}|\cos\psi|\,\sin\psi\,d\psi\,d\phi = \frac{1}{2}">⟨|cos ψ|⟩ = (1/4π) ∫∫ |cos ψ| sin ψ dψ dφ = ½</div>
+      <div class="m-math" data-tex-narrow="\begin{aligned}\langle|\cos\psi|\rangle &= \frac{1}{4\pi}\int_0^{2\pi}\!\!\int_0^{\pi}|\cos\psi|\,\sin\psi\,d\psi\,d\phi \\ &= \frac{1}{2}\end{aligned}" data-tex="\langle|\cos\psi|\rangle = \frac{1}{4\pi}\int_0^{2\pi}\!\!\int_0^{\pi}|\cos\psi|\,\sin\psi\,d\psi\,d\phi = \frac{1}{2}">⟨|cos ψ|⟩ = (1/4π) ∫∫ |cos ψ| sin ψ dψ dφ = ½</div>
       <p>For a flat-panel design with a body face a × b and n arrays of L × w, each seen at a factor f (½ for Sun-tracking, 1 for Earth-facing),</p>
-      <div class="m-math" data-tex="A_\text{abs} = ab + nLw \qquad A_\text{fac} = ab + f\,nLw">A_abs = ab + nLw     A_fac = ab + f·nLw</div>
+      <div class="m-math" data-tex-narrow="\begin{aligned}A_\text{abs} &= ab + nLw \\ A_\text{fac} &= ab + f\,nLw\end{aligned}" data-tex="A_\text{abs} = ab + nLw \qquad A_\text{fac} = ab + f\,nLw">A_abs = ab + nLw     A_fac = ab + f·nLw</div>
       <p>For the V2 Mini that gives</p>
-      <div class="m-math" data-tex="A_\text{fac} = 2.7\times4.1 + \tfrac12\times2\times12.8\times4.1 = 11.07 + 52.48 = 63.55\ \text{m}^2">A_fac = 2.7×4.1 + ½×2×12.8×4.1 = 11.07 + 52.48 = 63.55 m²</div>
+      <div class="m-math" data-tex-narrow="\begin{aligned}A_\text{fac} &= 2.7\times4.1 + \tfrac12\times2\times12.8\times4.1 \\ &= 11.07 + 52.48 = 63.55\ \text{m}^2\end{aligned}" data-tex="A_\text{fac} = 2.7\times4.1 + \tfrac12\times2\times12.8\times4.1 = 11.07 + 52.48 = 63.55\ \text{m}^2">A_fac = 2.7×4.1 + ½×2×12.8×4.1 = 11.07 + 52.48 = 63.55 m²</div>
       <p>a little over half its absolute area. Summed over every object,</p>
-      <div class="m-math" data-tex="\text{TOI}_\text{fac} = \frac{1}{\Omega_\moon}\sum_i\frac{A_{\text{fac},i}}{h_i^2} = \frac{ {%sums.fac_A_h2|tex4%}\ \text{sr}}{ {%constants.omega_moon_sr|tex5%}\ \text{sr}} = {%toi.facing|sig4%}\ \text{moons}">TOI_fac = (1/Ω☾) Σ A_fac/h² = {{ sums.fac_A_h2 | sci }} sr / {{ constants.omega_moon_sr | sci }} sr = {{ toi.facing | sig4 }} moons</div>
+      <div class="m-math" data-tex-narrow="\begin{aligned}\text{TOI}_\text{fac} &= \frac{1}{\Omega_\moon}\sum_i\frac{A_{\text{fac},i}}{h_i^2} \\ &= \frac{ {%sums.fac_A_h2|tex4%}\ \text{sr}}{ {%constants.omega_moon_sr|tex5%}\ \text{sr}} \\ &= {%toi.facing|sig4%}\ \text{moons}\end{aligned}" data-tex="\text{TOI}_\text{fac} = \frac{1}{\Omega_\moon}\sum_i\frac{A_{\text{fac},i}}{h_i^2} = \frac{ {%sums.fac_A_h2|tex4%}\ \text{sr}}{ {%constants.omega_moon_sr|tex5%}\ \text{sr}} = {%toi.facing|sig4%}\ \text{moons}">TOI_fac = (1/Ω☾) Σ A_fac/h² = {{ sums.fac_A_h2 | sci }} sr / {{ constants.omega_moon_sr | sci }} sr = {{ toi.facing | sig4 }} moons</div>
     </div>
 
     <!-- Apparent -->
@@ -318,7 +319,7 @@
       <h3 class="m-h3" id="apparent"><span class="m-key m-key--app" aria-hidden="true"></span>Apparent</h3>
       <p>Light from space crosses turbulent air before it reaches the ground, and the turbulence smears every point into a small disc. Astronomers call its width the seeing and quote it as a full width at half maximum, θ. At a good mountain site θ is under 1″. At a typical site it is about 2″.</p>
       <p>A satellite’s silhouette gets the same treatment. Blurring a shape of area A and perimeter P by a disc of radius ρ adds a strip of width ρ along every edge and a rounded piece at every corner. For a convex shape, Steiner’s formula gives the new area exactly.</p>
-      <div class="m-math" data-tex="A_\text{app} = A + P\rho + \pi\rho^2, \qquad \rho = h\,\frac{\theta}{2}">A_app = A + Pρ + πρ²,  ρ = h·θ/2</div>
+      <div class="m-math" data-tex-narrow="\begin{aligned}A_\text{app} &= A + P\rho + \pi\rho^2 \\ \rho &= h\,\frac{\theta}{2}\end{aligned}" data-tex="A_\text{app} = A + P\rho + \pi\rho^2, \qquad \rho = h\,\frac{\theta}{2}">A_app = A + Pρ + πρ²,  ρ = h·θ/2</div>
     </div>
     <div class="m-wide">
       <div class="m-fig-pair">
@@ -418,7 +419,7 @@
       <p>Substituting ρ = hθ/2 and dividing by h² splits each object’s apparent solid angle into three terms:</p>
       <div class="m-math" data-tex="\frac{A_\text{app}}{h^2} = \frac{A_\text{fac}}{h^2} + \frac{\theta}{2}\,\frac{P_\text{fac}}{h} + \pi\left(\frac{\theta}{2}\right)^2">A_app/h² = A_fac/h² + (θ/2)·P_fac/h + π(θ/2)²</div>
       <p>Summed over all objects, with P<sub>fac</sub> the perimeter of the facing outline,</p>
-      <div class="m-math" data-tex="\text{TOI}_\text{app}(\theta) = \frac{1}{\Omega_\moon}\left[\,\sum_i\frac{A_{\text{fac},i}}{h_i^2} + \frac{\theta}{2}\sum_i\frac{P_{\text{fac},i}}{h_i} + N\pi\left(\frac{\theta}{2}\right)^2\right]">TOI_app(θ) = (1/Ω☾) · [ Σ A_fac/h² + (θ/2) · Σ P_fac/h + N·π(θ/2)² ]</div>
+      <div class="m-math" data-tex-narrow="\begin{aligned}\text{TOI}_\text{app}(\theta) = \frac{1}{\Omega_\moon}\Bigg[&\sum_i\frac{A_{\text{fac},i}}{h_i^2} + \frac{\theta}{2}\sum_i\frac{P_{\text{fac},i}}{h_i} \\ &+ N\pi\left(\frac{\theta}{2}\right)^2\,\Bigg]\end{aligned}" data-tex="\text{TOI}_\text{app}(\theta) = \frac{1}{\Omega_\moon}\left[\,\sum_i\frac{A_{\text{fac},i}}{h_i^2} + \frac{\theta}{2}\sum_i\frac{P_{\text{fac},i}}{h_i} + N\pi\left(\frac{\theta}{2}\right)^2\right]">TOI_app(θ) = (1/Ω☾) · [ Σ A_fac/h² + (θ/2) · Σ P_fac/h + N·π(θ/2)² ]</div>
       <p>The first term is the facing TOI. The second adds the blurred rims; it falls off only as 1/h, so distant objects weigh more in it than in the area term. The third adds one seeing disc per object, whatever its size or distance. At 2″ each disc is worth 1.15 millionths of a Moon. The data file publishes all three sums, so anyone can recompute the apparent TOI for any seeing.</p>
     </div>
 
@@ -482,7 +483,7 @@
         <li class="m-source">
           <p class="m-source__n label">Population and orbits</p>
           <h3 class="m-source__title"><a href="https://celestrak.org/satcat/">CelesTrak SATCAT</a></h3>
-          <p>The satellite catalog kept by the US Space Force (USSPACECOM) and published through Space-Track.org. CelesTrak redistributes it as one file. It lists every catalogued object with its status, perigee, apogee and, for many older objects, a radar cross-section.</p>
+          <p>The satellite catalog kept by the US Space Force (USSPACECOM) and published through Space-Track.org. CelesTrak redistributes it as one file. It lists every cataloged object with its status, perigee, apogee and, for many older objects, a radar cross-section.</p>
           <p class="m-source__stat"><span class="num" data-fill="orbit.celestrak|int">{{ coverage.orbit_source[0].n | int }}</span> orbits</p>
         </li>
         <li class="m-source">
@@ -503,8 +504,8 @@
     <div class="m-col">
       <h3 class="m-h3">Who counts</h3>
       <ol class="m-steps">
-        <li>Every object in CelesTrak’s catalog that has not decayed and orbits Earth. Docked modules and visiting vehicles carry their host’s catalog number, so the ISS and Tiangong count once each, as whole stations.</li>
-        <li>Objects GCAT lists in Earth orbit that CelesTrak does not carry, such as batches GCAT catalogued before public orbits appeared. Aliases, placeholders and duplicate entries are left out. When the two catalogs disagree about whether an object has come down, CelesTrak decides.</li>
+        <li>Every object in CelesTrak’s catalog that has not decayed and orbits Earth. Docked modules and visiting vehicles carry their host’s catalog number, so the ISS and Tiangong count once each, as whole stations. GCAT’s records of dockings catch the few joined objects CelesTrak has not marked yet, so a stack always counts once.</li>
+        <li>Objects GCAT lists in Earth orbit that CelesTrak does not carry, such as batches GCAT cataloged before public orbits appeared. Aliases, placeholders and duplicate entries are left out. When the two catalogs disagree about whether an object has come down, CelesTrak decides.</li>
         <li>If CelesTrak cannot be reached, the pipeline falls back to GCAT alone and marks the month as degraded.</li>
       </ol>
       <p>This month that gives {{ counts.total | int }} objects: {{ counts.payload | int }} payloads, {{ counts.rocket_body | int }} rocket bodies, {{ counts.debris | int }} pieces of debris and {{ counts.unknown | int }} of unknown type.</p>
@@ -553,7 +554,7 @@
               </tbody>
             </table>
           </div>
-          <p>The facing area of a box or cylinder of unknown attitude is a quarter of its surface area (Cauchy’s theorem), and its perimeter is π times its mean width (Barbier’s theorem). When the span exceeds the body by more than 5% and the shape mentions a panel, wing or array, the extra length e becomes solar arrays of area e × w, with w the body width; they count in full in A<sub>abs</sub>, at one half in A<sub>fac</sub>, and add 2e to P<sub>fac</sub>. Other appendages such as booms and antennas add 0.1 × e × min(L,D), at one half in A<sub>fac</sub>.</p>
+          <p>The facing area of a box or cylinder of unknown attitude is a quarter of its surface area (Cauchy’s theorem), and its perimeter is π times its mean width (Barbier’s theorem). When the span exceeds the body by more than 5% and the shape mentions a panel, wing or array, the extra length e becomes solar arrays of area e × w, with w the body width; they count in full in A<sub>abs</sub>, at one half in A<sub>fac</sub>, and add 2e to P<sub>fac</sub>. Other appendages such as booms and antennas add 0.1 × e × min(L,D), at one half in A<sub>fac</sub>. When the shape names a tether, the span is the tether’s length and adds nothing.</p>
           <p>Objects with no dimensions, which covers almost all debris, use CelesTrak’s radar cross-section as both areas, with the perimeter of a circle of that area. Without that, a default applies: 0.1 m² for debris and unknown objects, 1 m² for payloads and 10 m² for rocket bodies.</p>
         </div>
       </details>
@@ -562,7 +563,7 @@
     <div class="m-col">
       <h3 class="m-h3" id="designs">Curated designs</h3>
       <p>The designs below carry <span data-fill="area.curated.share_abs|pct1">{{ coverage.area_source[0].share_abs | pct1 }}</span> of the absolute TOI. A flat-panel design with a body face a × b and n arrays of L × w attached along the b sides has</p>
-      <div class="m-math" data-tex="P_\text{fac} = 2(a+b) + 2n\,(L + f w) - 2n\min(f w,\ b)">P_fac = 2(a + b) + 2n(L + f·w) − 2n·min(f·w, b)</div>
+      <div class="m-math" data-tex-narrow="\begin{aligned}P_\text{fac} = {}&2(a+b) + 2n\,(L + f w) \\ &- 2n\min(f w,\ b)\end{aligned}" data-tex="P_\text{fac} = 2(a+b) + 2n\,(L + f w) - 2n\min(f w,\ b)">P_fac = 2(a + b) + 2n(L + f·w) − 2n·min(f·w, b)</div>
       <p>as the perimeter of its facing outline, with the shared edges between body and arrays removed. The space stations are given directly, from their documented parts. Open a row to read the notes and sources.</p>
     </div>
     <div class="m-wide">
@@ -571,9 +572,7 @@
           <thead>
             <tr>
               <th scope="col">Design</th>
-              <th scope="col">Confidence</th>
-              <th scope="col">Body, a × b</th>
-              <th scope="col">Arrays</th>
+              <th scope="col">Dimensions</th>
               <th scope="col" class="num">A<sub>abs</sub> m²</th>
               <th scope="col" class="num">A<sub>fac</sub> m²</th>
               <th scope="col" class="num">P<sub>fac</sub> m</th>
@@ -581,10 +580,15 @@
               <th scope="col" class="num">Share of facing</th>
             </tr>
           </thead>
-          <tbody><tr><td colspan="9" class="m-empty">Loading the design table…</td></tr></tbody>
+          <tbody><tr><td colspan="7" class="m-empty">Loading the design table…</td></tr></tbody>
         </table>
       </div>
-      <p class="m-chips-legend"><span class="m-chip m-chip--published">published</span> dimensions stated by the operator or a peer-reviewed source · <span class="m-chip m-chip--estimated">estimated</span> derived from published figures · <span class="m-chip m-chip--assumed">assumed</span> taken equal to a sister design · <span class="m-chip m-chip--proxy">proxy</span> stands in until figures appear</p>
+      <ul class="m-conf-legend" aria-label="Confidence levels">
+        <li><span class="m-conf" data-level="4"><span class="m-conf__pips" aria-hidden="true"><i></i><i></i><i></i><i></i></span>published</span> stated by the operator or a peer-reviewed source</li>
+        <li><span class="m-conf" data-level="3"><span class="m-conf__pips" aria-hidden="true"><i></i><i></i><i></i><i></i></span>estimated</span> derived from published figures</li>
+        <li><span class="m-conf" data-level="2"><span class="m-conf__pips" aria-hidden="true"><i></i><i></i><i></i><i></i></span>assumed</span> taken equal to a sister design</li>
+        <li><span class="m-conf" data-level="1"><span class="m-conf__pips" aria-hidden="true"><i></i><i></i><i></i><i></i></span>proxy</span> stands in until figures appear</li>
+      </ul>
     </div>
 
     <div class="m-col">
@@ -598,7 +602,7 @@
     <div class="m-col">
       <p class="m-kicker"><span class="m-kicker__num">04</span> Breakdown</p>
       <h2 class="m-h2" id="breakdown-title">Where the area is</h2>
-      <p>Starlink satellites, including the Starshield satellites built on the same bus, carry <span data-fill="derived.starlinkShare|pct1">almost all</span> of the facing TOI. Large flat panels in low orbits dominate everything else: a satellite with 60 m² facing the ground at 470 km counts as much as about 2,000 pieces of 0.1 m² debris at 850 km.</p>
+      <p>Starlink satellites, including the Starshield satellites built on the same bus, carry <span data-fill="derived.starlinkShare|pct1">almost all</span> of the facing TOI. Large flat panels in low orbits dominate. A satellite with 60 m² facing the ground at 470 km counts as much as about 2,000 pieces of 0.1 m² debris at 850 km.</p>
     </div>
     <div class="m-wide">
       <figure class="m-fig m-chart" aria-labelledby="groups-title">
@@ -626,14 +630,15 @@
     </div>
     <div class="m-wide">
       <div class="m-table-wrap" tabindex="0" role="region" aria-label="Top objects by absolute contribution">
-        <table class="m-table m-table--num m-top" data-render="top-objects">
+        <table class="m-table m-table--num m-top" data-render="top-objects" id="top-objects-table">
           <caption>Top 25 objects by absolute contribution. 1 µmoon is one millionth of a Moon.</caption>
           <thead>
-            <tr><th scope="col" class="num">#</th><th scope="col">Object</th><th scope="col">Group</th><th scope="col" class="num">Altitude km</th><th scope="col" class="num">A<sub>abs</sub> m²</th><th scope="col" class="num">A<sub>fac</sub> m²</th><th scope="col" class="num">Absolute µmoon</th><th scope="col" class="num">Facing µmoon</th></tr>
+            <tr><th scope="col" class="num">#</th><th scope="col">Object</th><th scope="col">Group</th><th scope="col" class="num">Altitude km</th><th scope="col" class="num">A<sub>abs</sub> m²</th><th scope="col" class="num">A<sub>fac</sub> m²</th><th scope="col" class="num">Absolute <span class="m-nocase">µ</span>moon</th><th scope="col" class="num">Facing <span class="m-nocase">µ</span>moon</th></tr>
           </thead>
           <tbody></tbody>
         </table>
       </div>
+      <button type="button" class="m-btn m-more" data-top-toggle aria-expanded="false" aria-controls="top-objects-table">Show all 25</button>
     </div>
 
     <div class="m-wide">
@@ -646,7 +651,7 @@
               <tbody></tbody>
             </table>
           </div>
-          <p class="m-small">Debris is 37% of the objects and almost none of the area. In the apparent TOI each piece still adds a full seeing disc, so debris matters more there.</p>
+          <p class="m-small">Debris is <span data-fill="derived.debrisShare|pct0">{{ counts.debris | int }} objects, over a third</span> of the objects and almost none of the area. In the apparent TOI each piece still adds a full seeing disc, so debris matters more there.</p>
         </div>
         <div>
           <h3 class="m-h3 m-h3--small">By orbit</h3>
@@ -674,7 +679,7 @@
         <div class="m-chart__head">
           <div>
             <h3 class="m-chart__title" id="hist-title">TOI since 1957</h3>
-            <p class="m-chart__sub">Moons, logarithmic scale. Lines are reconstructed; rings are measured runs.</p>
+            <p class="m-chart__sub">Moons, logarithmic scale. The lines are reconstructed month by month; rings mark measured runs.</p>
           </div>
           <div class="m-chart__tools">
             <div class="m-seg" role="group" aria-label="Time range">
@@ -685,17 +690,20 @@
           </div>
         </div>
         <ul class="m-legend m-legend--row" aria-label="Legend">
+          <li class="m-legend__group">Reconstructed</li>
           <li><span class="m-key m-key--abs m-key--line" aria-hidden="true"></span>Absolute</li>
           <li><span class="m-key m-key--fac m-key--line" aria-hidden="true"></span>Facing</li>
           <li><span class="m-key m-key--app m-key--line" aria-hidden="true"></span>Apparent at {{ constants.default_seeing_arcsec | arcsec }}</li>
-          <li><span class="m-key m-key--ring" aria-hidden="true"></span>Measured run</li>
+          <li class="m-legend__group">Measured</li>
+          <li><span class="m-key m-key--ring" aria-hidden="true"></span>Monthly run</li>
+          <li class="m-legend__group">October 2024</li>
           <li><span class="m-key m-key--estimate" aria-hidden="true"></span>Isaiah’s estimate</li>
         </ul>
         <div class="m-chart__body" data-view="chart">
           <div class="m-hist" id="history-chart" tabindex="0" role="img" aria-label="Line chart of the TOI from 1957 to today. Use the left and right arrow keys to read values month by month."><p class="m-empty">Loading…</p></div>
         </div>
         <div class="m-chart__body" data-view="table" id="history-table" hidden></div>
-        <figcaption class="m-chart__foot">Steps you can see: the Echo balloon satellites from 1960, the ISS from November 1998 (counted at full size from its first module), and the Starlink build-up from 2019. Full monthly data in <a href="data/history.csv">history.csv</a>.</figcaption>
+        <figcaption class="m-chart__foot">The steps come from the Echo balloon satellites in the early 1960s, the ISS in November 1998 (counted at full size from its first module) and the Starlink build-up since 2019. Full monthly data in <a href="data/history.csv">history.csv</a>.</figcaption>
       </figure>
     </div>
     <div class="m-col">
@@ -744,11 +752,11 @@
           <div class="m-field">
             <label class="label" for="ex-sort">Sort by</label>
             <select id="ex-sort" disabled>
-              <option value="abs">Absolute contribution</option>
-              <option value="fac">Facing contribution</option>
-              <option value="alt-asc">Altitude, lowest first</option>
-              <option value="alt-desc">Altitude, highest first</option>
-              <option value="area">Facing area, largest first</option>
+              <option value="abs">Absolute TOI</option>
+              <option value="fac">Facing TOI</option>
+              <option value="alt-asc">Lowest first</option>
+              <option value="alt-desc">Highest first</option>
+              <option value="area">Facing area</option>
             </select>
           </div>
         </form>
@@ -756,7 +764,7 @@
 
         <div class="m-explorer__grid">
           <div class="m-explorer__list">
-            <div class="m-vlist-head" aria-hidden="true"><span class="m-vrow__rank">#</span><span>Object</span><span class="m-vrow__alt">Alt. km</span><span class="m-vrow__val" data-ex="val-head">Abs. µmoon</span></div>
+            <div class="m-vlist-head" aria-hidden="true"><span class="m-vrow__rank">#</span><span>Object</span><span class="m-vrow__alt">Alt. km</span><span class="m-vrow__val" data-ex="val-head">Abs. <span class="m-nocase">µ</span>moon</span></div>
             <div class="m-vlist" data-ex="list" role="listbox" tabindex="0" aria-label="Objects" aria-describedby="ex-help">
               <div class="m-vlist__loading" data-ex="loading">
                 <p data-ex="loading-text">The catalog loads when this section comes into view.</p>
@@ -806,33 +814,34 @@
       <div class="m-code-pair">
         <div class="m-code">
           <div class="m-code__bar"><span class="label">toi_check.py</span><button type="button" class="m-btn m-btn--small" data-copy="#snippet-code">Copy</button></div>
-<pre id="snippet-code"><code># Recompute the TOI from objects.csv and compare with latest.json. Python 3, stdlib only.
+<pre id="snippet-code"><code># toi_check.py: recompute the TOI from objects.csv (Python 3, stdlib only)
 import csv, json, math
 
-R, D = 1737.4, 384400.0                                  # Moon radius, mean distance (km)
-omega = 2 * math.pi * (1 - math.cos(math.asin(R / D)))   # one Moon, in steradians
-half = math.radians(2 / 3600) / 2                        # half the seeing width (2″)
-n, sa, sf, sp = 0, 0.0, 0.0, 0.0
+R, D = 1737.4, 384400.0                  # Moon radius, mean distance (km)
+moon = 2 * math.pi * (1 - math.cos(math.asin(R / D)))   # one Moon (sr)
+half = math.radians(2 / 3600) / 2        # half the 2 arcsec seeing (rad)
+n = sa = sf = sp = 0
 with open("objects.csv", newline="", encoding="utf-8") as f:
     for row in csv.DictReader(f):
-        h = float(row["alt_km"]) * 1000                  # altitude in metres
+        h = float(row["alt_km"]) * 1000  # altitude (m)
         n += 1
         sa += float(row["A_abs_m2"]) / h**2
         sf += float(row["A_fac_m2"]) / h**2
         sp += float(row["P_fac_m"]) / h
-apparent = (sf + half * sp + n * math.pi * half**2) / omega
-published = json.load(open("latest.json", encoding="utf-8"))["toi"]
-print(f"objects   {n}")
-for name, value in (("absolute", sa / omega), ("facing", sf / omega), ("apparent", apparent)):
-    print(f"{name:&lt;9} {value:.6f}   published {published[name]:.6f}")</code></pre>
+toi = json.load(open("latest.json", encoding="utf-8"))["toi"]
+mine = {"absolute": sa / moon, "facing": sf / moon,
+        "apparent": (sf + half * sp + n * math.pi * half**2) / moon}
+print(f"{'objects':&lt;9} {n}")
+for k, v in mine.items():
+    print(f"{k:&lt;9} {v:.6f}   published {toi[k]:.6f}")</code></pre>
         </div>
         <div class="m-code m-code--out">
           <div class="m-code__bar"><span class="label">Expected output</span></div>
-<pre data-expected-output><code>objects   35537
-absolute  0.082503   published 0.082503
-facing    0.045736   published 0.045736
-apparent  0.199881   published 0.199881</code></pre>
-          <p class="m-code__note">Areas in objects.csv are rounded to six significant figures, so the recomputed values agree with the published ones to about one part in ten million.</p>
+<pre data-expected-output><code>objects   <span data-fill="counts.total|raw">{{ counts.total }}</span>
+absolute  <span data-fill="toi.absolute|fix6">0.082503</span>   published <span data-fill="toi.absolute|fix6">0.082503</span>
+facing    <span data-fill="toi.facing|fix6">0.045736</span>   published <span data-fill="toi.facing|fix6">0.045736</span>
+apparent  <span data-fill="toi.apparent|fix6">0.199881</span>   published <span data-fill="toi.apparent|fix6">0.199881</span></code></pre>
+          <p class="m-code__note">The file rounds areas to six significant figures. The recomputed values still match the published ones to within one part in ten million.</p>
         </div>
       </div>
     </div>
@@ -857,8 +866,8 @@ apparent  0.199881   published 0.199881</code></pre>
         <div class="m-code__bar"><span class="label">Shell</span><button type="button" class="m-btn m-btn--small" data-copy="#cmd-code">Copy</button></div>
 <pre id="cmd-code"><code>git clone https://github.com/isaiahtaylor/toi
 cd toi
-python3 -m pipeline.run                          # download the catalogs, write data/
-python3 -m unittest discover -s pipeline/tests   # check the formulas and rules</code></pre>
+python3 -m pipeline.run       # download the catalogs, write data/
+python3 -m unittest discover -s pipeline/tests</code></pre>
       </div>
       <p>To reproduce a month exactly, download that month’s <a href="https://github.com/isaiahtaylor/toi/releases">data release</a>, which holds the input files, and run <code>python3 -m pipeline.run --offline --cache &lt;folder&gt; --out /tmp/check --date {{ catalog_date }}</code>. The output matches the published files apart from the generation time.</p>
       <ul class="m-links">
@@ -875,8 +884,8 @@ python3 -m unittest discover -s pipeline/tests   # check the formulas and rules<
     <div class="m-col">
       <p class="m-kicker"><span class="m-kicker__num">08</span> Limits</p>
       <h2 class="m-h2" id="limits-title">What this is and is not</h2>
-      <p>The TOI is an aggregate area index. It adds up how much sky the hardware would cover if every object sat overhead at once. Nothing in orbit shows to the naked eye as a dark silhouette: the eye resolves about 60″, and a 30 m Starlink at 480 km spans 13″. At any moment only the objects above your horizon count, and they are farther away than straight up. The sky actually covered above one observer right now is about 250 times smaller than the absolute TOI.</p>
-      <h3 class="m-h3">Modelled, not measured</h3>
+      <p>The TOI is an aggregate area index. It adds up how much sky the hardware would cover if every object sat overhead at once. Nothing in orbit shows to the naked eye as a dark silhouette. The eye resolves about 60″, and a 30 m Starlink at 480 km spans 13″. At any moment only the objects above your horizon count, and they are farther away than straight up. The sky actually covered above one observer right now is about 250 times smaller than the absolute TOI.</p>
+      <h3 class="m-h3">Assumptions and approximations</h3>
       <ul class="m-limits">
         <li><strong>Assumed array sizes.</strong> SpaceX has not published dimensions for the V2 Mini Optimized or the direct-to-cell satellites, which together carry more than half the index. Both are taken equal to the V2 Mini. If the Optimized arrays were 25% smaller, the facing TOI would fall by about 10%.</li>
         <li><strong>Proxies.</strong> Starlink V3 uses the full-size Gen2 satellite from SpaceX’s 2022 FCC filing. Starshield uses the V2 Mini envelope.</li>

@@ -95,12 +95,23 @@ def reconstruct(current, decayed, last_day):
     return rows
 
 
+def _well_formed(r):
+    """True for an earlier history row whose date and numbers parse (damaged rows are dropped)."""
+    try:
+        dt.date.fromisoformat(r.get("date") or "")
+        for k in ("toi_abs", "toi_fac", "toi_app", "n_objects"):
+            float(r.get(k) or "")
+    except (TypeError, ValueError):
+        return False
+    return True
+
+
 def read_existing(path):
     p = Path(path)
     if not p.exists():
         return []
     with open(p, encoding="utf-8", newline="") as f:
-        return list(csv.DictReader(f))
+        return [r for r in csv.DictReader(f) if _well_formed(r)]
 
 
 def merge_history(reconstructed, existing, measured_row, status="ok"):

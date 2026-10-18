@@ -124,14 +124,24 @@ export function renderHistory(root, rows, latest) {
       const d = rv.map((r, i) => `${i ? 'L' : 'M'}${X(r.t).toFixed(1)},${Y(r[ser.col]).toFixed(1)}`).join('');
       s.append(svg('path', { d, class: `h-line h-line--${ser.key}` }));
     }
-    // Isaiah's estimate
+    // Isaiah's estimate: a dashed ring at ~0.03, labelled above the lines with a leader.
     const tx = X(t(TWEET.date));
     const ty = Y(TWEET.value);
     s.append(svg('circle', { cx: tx, cy: ty, r: 6.5, class: 'h-estimate' }));
-    const est = svg('text', { x: tx - 12, y: ty - 10, 'text-anchor': 'end', class: 'h-note' });
-    est.textContent = narrow ? '~0.03, Oct 2024' : 'Isaiah’s estimate, Oct 2024: ~0.03';
-    s.append(est);
-    // measured runs
+    const ly = narrow ? m.top + 24 : Math.max(m.top + 12, Y(10 ** (hi - 0.35)));
+    s.append(svg('line', { x1: tx, x2: tx, y1: ty - 8, y2: ly + 6, class: 'h-leader' }));
+    const est = svg('text', { x: tx - 6, y: ly, 'text-anchor': 'end', class: 'h-note' });
+    est.textContent = 'Isaiah’s estimate';
+    const est2 = svg('text', { x: tx - 6, y: ly + 14, 'text-anchor': 'end', class: 'h-note h-note--soft' });
+    est2.textContent = '~0.03, 9 Oct 2024';
+    s.append(est, est2);
+    // measured runs (on narrow screens, name the latest one at the top)
+    if (narrow && measured.length) {
+      const lastM = measured[measured.length - 1];
+      const lab = svg('text', { x: X(lastM.t) - 8, y: m.top + 4, 'text-anchor': 'end', class: 'h-note' });
+      lab.textContent = `Measured ${fmtDate(lastM.date, 'measured')}`;
+      s.append(lab, svg('line', { x1: X(lastM.t), x2: X(lastM.t), y1: m.top + 8, y2: Y(lastM.toi_app) - 8, class: 'h-leader' }));
+    }
     for (const r of measured) {
       for (const ser of SERIES) {
         s.append(svg('circle', { cx: X(r.t), cy: Y(r[ser.col]), r: 6, class: 'h-ring-gap' }));
@@ -142,6 +152,11 @@ export function renderHistory(root, rows, latest) {
     if (!narrow) {
       const last = measured.length ? measured[measured.length - 1] : rv[rv.length - 1];
       const lx = X(last.t);
+      const head = svg('text', { x: width - m.right + 14, y: m.top + 4, class: 'h-note' });
+      head.textContent = measured.length ? 'Measured' : 'Latest month';
+      const head2 = svg('text', { x: width - m.right + 14, y: m.top + 18, class: 'h-note h-note--soft' });
+      head2.textContent = fmtDate(last.date, last.kind);
+      s.append(head, head2);
       const labels = SERIES.map((ser) => ({ ser, y: Y(last[ser.col]), v: last[ser.col] })).sort((a, b) => a.y - b.y);
       for (let i = 1; i < labels.length; i++) labels[i].ly = Math.max(labels[i].y, (labels[i - 1].ly ?? labels[i - 1].y) + 15);
       labels[0].ly = labels[0].y;

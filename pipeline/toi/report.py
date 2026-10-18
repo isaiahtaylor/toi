@@ -201,8 +201,8 @@ def object_rows(objs):
     for o in objs:
         yield [
             "" if o["norad"] is None else str(o["norad"]), o["name"], o["cospar"], o["type"],
-            o["owner"], o["launch_date"], o["group"], o["bus"], _f(o["peri"], "{:g}"),
-            _f(o["apo"], "{:g}"), _f(o["h_km"], "{:.1f}"), o["orbit_src"], _g(o, "Length"),
+            o["owner"], o["launch_date"], o["group"], o["bus"], _f(o["peri"], "{:.10g}"),
+            _f(o["apo"], "{:.10g}"), _f(o["h_km"], "{:.10g}"), o["orbit_src"], _g(o, "Length"),
             _g(o, "Diameter"), _g(o, "Span"), _g(o, "Shape"), o["area_src"], _f(o["A_abs"]),
             _f(o["A_fac"]), _f(o["P_fac"]), _f(o["toi_abs"]), _f(o["toi_fac"]), o["jcat"], o["regime"],
         ]

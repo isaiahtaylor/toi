@@ -285,6 +285,43 @@ url = "https://spaceflightnow.com/2022/07/24/wentian-science-module-docks-with-c
 title = "McDowell, General Catalog of Artificial Space Objects (GCAT)"
 url = "https://planet4589.org/space/gcat/"
 
+[[design]]
+id = "space-shuttle"
+label = "Space Shuttle orbiter"
+family = "Crewed vehicles"
+confidence = "estimated"
+match = { gcat_bus = ["STS OV"], norad = [] }
+direct = { A_abs_m2 = 300.0, A_fac_m2 = 300.0, P_fac_m = 102.0 }
+notes = """
+The orbiter flew from 1981 to 2011, so it appears only in the reconstructed history.
+NASA gives a length of 122 ft (37.2 m) and a wingspan of 78 ft (23.8 m). The wing
+reference area of 2,690 sq ft (249.9 m2) already includes the part of the wing inside the
+fuselage. The nose section ahead of the wing and the body flap behind it add about 50 m2,
+so the outline seen from above or below is about 300 m2. The orbiter's attitude varied
+from mission to mission, so the facing area is taken as the same. The perimeter of the
+outline, taken as a triangle 37.2 m long and 23.8 m across the base, is about 102 m.
+GCAT records the orbiter as a 37.3 x 23.8 x 23.8 m box, which the generic model would
+turn into 1,377 m2, more than the whole ISS at the orbiter's lower altitude.
+"""
+[[design.sources]]
+title = "NASA, The Space Shuttle"
+url = "https://www.nasa.gov/reference/the-space-shuttle/"
+[[design.sources]]
+title = "ESA, Shuttle technical facts"
+url = "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Space_Shuttle/Shuttle_technical_facts"
+[[design.sources]]
+title = "Wikipedia, Space Shuttle orbiter (specifications: wing area)"
+url = "https://en.wikipedia.org/wiki/Space_Shuttle_orbiter"
+[[design.sources]]
+title = "Xinhua via Belt and Road Studies Network, China's space lab module powered by huge flexible solar panels (16 August 2022)"
+url = "https://www.brsn.net/Latest%20News/20220816/20623_Chinas-space-lab-module-powered-by-huge-flexible-solar-panels.html"
+[[design.sources]]
+title = "Spaceflight Now, Wentian science module docks with China's space station (24 July 2022)"
+url = "https://spaceflightnow.com/2022/07/24/wentian-science-module-docks-with-chinas-space-station/"
+[[design.sources]]
+title = "McDowell, General Catalog of Artificial Space Objects (GCAT)"
+url = "https://planet4589.org/space/gcat/"
+
 # ------------------------------------------------------------------ Other constellations
 [[design]]
 id = "amazon-leo"

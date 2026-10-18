@@ -4,11 +4,12 @@ import { loadLatest } from '../toi.js';
 import { fillAll } from './format.js';
 import { whenKatex, renderAll } from './math.js';
 import { initSeeing } from './seeing.js';
-import { renderCoverage, renderDesigns } from './designs.js';
+import { renderCoverage, renderDesigns, openDesign } from './designs.js';
 import { renderGroups, renderTopObjects, renderSummaries } from './breakdown.js';
 import { parseHistory, renderHistory } from './history.js';
 import { initExplorer } from './explorer.js';
 import { renderSources, fillFileSizes, initCopy } from './verify.js';
+import { moonScale } from './scale.js';
 
 function attempt(name, fn) {
   try { return fn(); } catch (err) {
@@ -34,7 +35,7 @@ function context(latest) {
     ...latest,
     area,
     orbit,
-    derived: { starlinkShare: starlink / latest.toi.facing },
+    derived: { starlinkShare: starlink / latest.toi.facing, debrisShare: latest.counts.debris / latest.counts.total },
   };
 }
 
@@ -85,11 +86,19 @@ async function main() {
   attempt('sources', () => renderSources(root, latest));
   const explorer = attempt('explorer', () => initExplorer(root, latest, busesPromise)) || { open() {} };
   attempt('top objects', () => renderTopObjects(root, latest, (o) => explorer.open(o)));
-  fillFileSizes(root);
+  attempt('scale', () => moonScale(root, latest));
 
   whenKatex()
     .then((katex) => attempt('math', () => renderAll(katex, root, ctx)))
     .catch(() => { /* fallback text stays */ });
+
+  // Links to a curated design open its notes as well as scrolling to it.
+  root.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#design-"]');
+    if (a) openDesign(root, a.getAttribute('href').slice('#design-'.length));
+  });
+
+  Promise.allSettled([busesPromise, historyPromise]).then(() => setTimeout(() => fillFileSizes(root, latest), 0));
 
   busesPromise
     .then((buses) => attempt('designs', () => renderDesigns(root, buses, latest)))

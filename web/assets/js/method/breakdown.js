@@ -1,16 +1,19 @@
 // Breakdown: group bar chart (absolute and facing), top objects, by type and by regime.
-import { el, sig, intl, pct, micro, groupNum, trimNum, TYPE_KEY_LABEL } from './format.js';
+import { el, sig, sci, intl, pct, micro, groupNum, trimNum, TYPE_KEY_LABEL } from './format.js';
 import { createTooltip } from './tooltip.js';
 
 const COLORS = { abs: 'var(--s-abs)', fac: 'var(--s-fac)', app: 'var(--s-app)' };
 
-function niceStep(max, target = 4) {
-  const raw = max / target;
-  const mag = 10 ** Math.floor(Math.log10(raw));
-  const f = raw / mag;
-  const step = f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10;
-  return step * mag;
+// The smallest 1-2-2.5-5 step that spans max in at most maxTicks intervals.
+function niceStep(max, maxTicks = 5) {
+  const mag = 10 ** Math.floor(Math.log10(max / maxTicks));
+  for (const f of [1, 2, 2.5, 5, 10, 20]) {
+    if (Math.ceil(max / (f * mag) - 1e-9) <= maxTicks) return f * mag;
+  }
+  return 20 * mag;
 }
+
+const objects = (n) => `${intl(n)} ${n === 1 ? 'object' : 'objects'}`;
 
 export function renderGroups(root, latest) {
   const host = root.querySelector('#groups-chart');
@@ -21,28 +24,28 @@ export function renderGroups(root, latest) {
   const absolute = latest.toi.absolute;
   const maxAbs = Math.max(...groups.map((g) => g.toi_abs));
   const step = niceStep(maxAbs);
-  const domain = Math.ceil(maxAbs / step) * step;
+  const domain = Math.ceil(maxAbs / step - 1e-9) * step;
   const ticks = [];
   for (let t = 0; t <= domain + step / 2; t += step) ticks.push(t);
   const x = (v) => `${((v / domain) * 100).toFixed(3)}%`;
 
   const wrap = el('div', { class: 'm-bars' });
   const tickRow = el('div', { class: 'm-bars__ticks', 'aria-hidden': 'true' },
-    ...ticks.map((t) => el('span', { style: `left:${x(t)}`, text: t === 0 ? '0' : sig(t, 2) })));
+    ...ticks.map((t) => el('span', { style: `left:${x(t)}`, text: t === 0 ? '0' : trimNum(t, 3) })));
   wrap.append(el('div', { class: 'm-bars__axis' }, el('span'), tickRow, el('span')));
 
   const list = el('ul', { class: 'm-bars__rows', role: 'list', 'aria-label': 'TOI by group; use arrow keys to move between groups' });
   const tip = createTooltip(host);
   const items = groups.map((g, i) => {
     const share = g.toi_fac / facing;
-    const label = `${g.label}: absolute ${sig(g.toi_abs, 3)} moons, facing ${sig(g.toi_fac, 3)} moons, ${pct(share, 1)} of the facing total, ${intl(g.n)} objects`;
+    const label = `${g.label}: absolute ${sig(g.toi_abs, 3)} moons, facing ${sig(g.toi_fac, 3)} moons, ${pct(share, share < 0.001 ? 2 : 1)} of the facing total, ${objects(g.n)}`;
     const track = el('div', { class: 'm-bars__track' },
       ...ticks.slice(1).map((t) => el('span', { class: 'm-bars__grid', style: `left:${x(t)}`, 'aria-hidden': 'true' })),
       el('span', { class: 'm-bars__bar m-bars__bar--abs', style: `width:${x(g.toi_abs)}` }),
       el('span', { class: 'm-bars__bar m-bars__bar--fac', style: `width:${x(g.toi_fac)}` }),
     );
     const li = el('li', { class: 'm-bars__row', tabindex: i === 0 ? '0' : '-1', 'aria-label': label },
-      el('div', { class: 'm-bars__label' }, g.label, el('small', { text: `${intl(g.n)} objects · ${trimNum(g.median_alt_km, 4)} km` })),
+      el('div', { class: 'm-bars__label' }, g.label, el('small', { text: `${objects(g.n)} · median ${trimNum(g.median_alt_km, 4)} km` })),
       track,
       el('div', { class: 'm-bars__val', text: share < 0.001 ? pct(share, 2) : pct(share, 1) }),
     );
@@ -109,16 +112,29 @@ export function renderGroups(root, latest) {
   }
 }
 
+const TOP_SHOWN = 10;
+
 export function renderTopObjects(root, latest, onOpen) {
   const tbody = root.querySelector('[data-render="top-objects"] tbody');
   if (!tbody) return;
+  const toggle = root.querySelector('[data-top-toggle]');
+  if (toggle) {
+    toggle.textContent = `Show all ${latest.top_objects.length}`;
+    toggle.hidden = latest.top_objects.length <= TOP_SHOWN;
+    toggle.onclick = () => {
+      const open = toggle.getAttribute('aria-expanded') !== 'true';
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.textContent = open ? `Show the top ${TOP_SHOWN}` : `Show all ${latest.top_objects.length}`;
+      tbody.querySelectorAll('.m-top__more').forEach((tr) => { tr.hidden = !open; });
+    };
+  }
   const labels = Object.fromEntries(latest.groups.map((g) => [g.id, g.label]));
   tbody.replaceChildren(...latest.top_objects.map((o, i) => {
     const key = o.norad != null ? String(o.norad) : o.cospar;
     const name = el('button', { type: 'button', class: 'm-linkbtn', text: o.name, 'data-open': key });
     name.addEventListener('click', () => onOpen && onOpen({ norad: o.norad, cospar: o.cospar, name: o.name }));
     const ids = [o.norad != null ? o.norad : null, o.cospar].filter(Boolean).join(' · ');
-    return el('tr', {},
+    return el('tr', { class: i >= TOP_SHOWN ? 'm-top__more' : null, hidden: i >= TOP_SHOWN },
       el('td', { class: 'num m-dim', text: String(i + 1) }),
       el('th', { scope: 'row' }, name, el('small', { class: 'm-top__ids', text: ids })),
       el('td', { text: labels[o.group] || o.group }),
@@ -135,7 +151,7 @@ const REGIME_LABEL = { LEO: 'Low Earth orbit', MEO: 'Medium Earth orbit', GEO: '
 
 function smallTOI(x) {
   if (x >= 0.001) return sig(x, 3);
-  return sig(x, 2);
+  return sci(x, 2);
 }
 
 export function renderSummaries(root, latest) {
