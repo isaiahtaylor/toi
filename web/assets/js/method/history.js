@@ -128,8 +128,10 @@ export function renderHistory(root, rows, latest) {
     const tx = X(t(TWEET.date));
     const ty = Y(TWEET.value);
     s.append(svg('circle', { cx: tx, cy: ty, r: 6.5, class: 'h-estimate' }));
-    const ly = narrow ? m.top + 24 : Math.max(m.top + 12, Y(10 ** (hi - 0.35)));
-    s.append(svg('line', { x1: tx, x2: tx, y1: ty - 8, y2: ly + 6, class: 'h-leader' }));
+    // Above the lines on wide charts; in the empty band below them on narrow ones.
+    const ly = narrow ? Y(10 ** (lo + (hi - lo) * 0.36)) : Math.max(m.top + 12, Y(10 ** (hi - 0.35)));
+    if (narrow) s.append(svg('line', { x1: tx, x2: tx, y1: ty + 8, y2: ly - 12, class: 'h-leader' }));
+    else s.append(svg('line', { x1: tx, x2: tx, y1: ty - 8, y2: ly + 6, class: 'h-leader' }));
     const est = svg('text', { x: tx - 6, y: ly, 'text-anchor': 'end', class: 'h-note' });
     est.textContent = 'Isaiah’s estimate';
     const est2 = svg('text', { x: tx - 6, y: ly + 14, 'text-anchor': 'end', class: 'h-note h-note--soft' });

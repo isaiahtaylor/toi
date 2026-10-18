@@ -17,7 +17,7 @@ BUSES = Path(__file__).resolve().parents[1] / "buses.toml"
 class MoonTests(unittest.TestCase):
     def test_solid_angle(self):
         # 2*pi*(1 - cos(asin(1737.4 / 384400))) = 6.41778e-5 sr
-        self.assertAlmostEqual(C.OMEGA_MOON_SR, 6.4177e-5, delta=0.0001e-5)
+        self.assertAlmostEqual(C.OMEGA_MOON_SR, 6.41778e-5, delta=0.00001e-5)
         self.assertAlmostEqual(C.OMEGA_MOON_SR, 6.41778e-5, delta=0.000005e-5)
         self.assertAlmostEqual(C.MOON_ANGULAR_DIAMETER_DEG, 0.5179, places=4)
 
@@ -57,6 +57,17 @@ class CuratedFormulaTests(unittest.TestCase):
     def test_arrays_only(self):
         a_abs, a_fac, p_fac = flat_panel_areas(0.0, 0.0, 1, 8.0, 8.0, "earth")
         self.assertEqual((a_abs, a_fac, p_fac), (64.0, 64.0, 32.0))
+
+    def test_space_shuttle_is_curated_for_the_history(self):
+        from pipeline.toi.designs import Matcher
+        designs = load_designs(BUSES)
+        m = Matcher(designs)
+        d = m.match("PAY", 37371, "STS OV", ("STS 133", "Discovery (STS-133)"))
+        self.assertIsNotNone(d)
+        self.assertEqual(d.id, "space-shuttle")
+        self.assertEqual((d.A_abs_m2, d.A_fac_m2), (300.0, 300.0))
+        # the generic box model would give GCAT's 37.3 x 23.8 x 23.8 m box over 1,300 m2
+        self.assertGreater(generic_area("PAY", 37.3, 23.8, 37.3, "Box + 2 Wing + Fin")[0], 1300)
 
     def test_buses_toml_loads_and_v2_mini_entry(self):
         designs = {d.id: d for d in load_designs(BUSES)}
@@ -130,6 +141,14 @@ class GenericRowTests(unittest.TestCase):
         self.assertAlmostEqual(a_abs - body[0], 0.1 * e * 0.8)
         self.assertAlmostEqual(a_fac - body[1], 0.5 * 0.1 * e * 0.8)
         self.assertAlmostEqual(p - body[2], 2 * e)
+
+    def test_tether_span_adds_nothing(self):
+        # TSS-1R as GCAT records it: a 1.6 m sphere at the end of a 19.7 km tether.
+        body = generic_area("PAY", 1.6, 1.6, None, "Sphere")
+        tethered = generic_area("PAY", 1.6, 1.6, 19695.0, "Sphere + Tether")
+        self.assertEqual(body, tethered)
+        self.assertEqual(generic_area("PAY", 0.3, 0.6, 1000.0, "Box+box+tether")[:3],
+                         generic_area("PAY", 0.3, 0.6, None, "Box+box")[:3])
 
     def test_missing_dimensions(self):
         self.assertIsNone(generic_area("DEB", 0.0, 0.0, 0.0, "-"))

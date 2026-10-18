@@ -301,7 +301,7 @@ so the outline seen from above or below is about 300 m2. The orbiter's attitude 
 from mission to mission, so the facing area is taken as the same. The perimeter of the
 outline, taken as a triangle 37.2 m long and 23.8 m across the base, is about 102 m.
 GCAT records the orbiter as a 37.3 x 23.8 x 23.8 m box, which the generic model would
-turn into 1,377 m2, more than the whole ISS at the orbiter's lower altitude.
+turn into 1,377 m2, so that each flight counted about as much as the whole ISS.
 """
 [[design.sources]]
 title = "NASA, The Space Shuttle"
@@ -312,15 +312,6 @@ url = "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Spa
 [[design.sources]]
 title = "Wikipedia, Space Shuttle orbiter (specifications: wing area)"
 url = "https://en.wikipedia.org/wiki/Space_Shuttle_orbiter"
-[[design.sources]]
-title = "Xinhua via Belt and Road Studies Network, China's space lab module powered by huge flexible solar panels (16 August 2022)"
-url = "https://www.brsn.net/Latest%20News/20220816/20623_Chinas-space-lab-module-powered-by-huge-flexible-solar-panels.html"
-[[design.sources]]
-title = "Spaceflight Now, Wentian science module docks with China's space station (24 July 2022)"
-url = "https://spaceflightnow.com/2022/07/24/wentian-science-module-docks-with-chinas-space-station/"
-[[design.sources]]
-title = "McDowell, General Catalog of Artificial Space Objects (GCAT)"
-url = "https://planet4589.org/space/gcat/"
 
 # ------------------------------------------------------------------ Other constellations
 [[design]]

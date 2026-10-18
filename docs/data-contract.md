@@ -143,11 +143,18 @@ first draft of this contract; nothing above was renamed or removed.
   GCAT does not have the object) and `regime` (`LEO`, `MEO`, `GEO`, `HEO`). For GCAT-only
   objects `cospar` is GCAT's piece designation, which for temporary-catalog objects is only
   the launch designation; `jcat` then identifies the object.
+- `objects.csv`: `perigee_km`, `apogee_km` and `alt_km` are written exactly (up to 10
+  significant figures); areas and contributions to 6 significant figures.
 - `buses.json`: `area_model`, `median_alt_km`, `alt_history`. For `area_model = "gcat"`,
   `body` and `arrays` are `null` and `A_abs_m2`, `A_fac_m2`, `P_fac_m` are the medians over
-  the matched objects. Designs given directly (the stations) have `body` and `arrays`
-  `null`.
-- `history.csv`: values are written to 6 significant figures.
+  the matched objects. Designs given directly (the stations, the Space Shuttle orbiter)
+  have `body` and `arrays` `null`. A design with nothing in orbit today (the Space Shuttle
+  orbiter, which matters only for the reconstructed history) has `n_on_orbit` 0, `toi_abs`
+  and `toi_fac` 0, and `median_alt_km` `null`; it has no entry in `latest.json` `groups`.
+- `history.csv`: values are written to 6 significant figures. One column is appended after
+  `n_objects`: `status`, the status of the run that wrote the row (`ok` or `degraded`, as in
+  `latest.json`). Reconstructed rows carry the current run's status; each measured row keeps
+  the status of its own run (empty for rows written before this column existed).
 
 ## `data/history.csv`
 
@@ -158,8 +165,10 @@ date,kind,toi_abs,toi_fac,toi_app,n_objects
 ```
 
 `kind` is `reconstructed` (regenerated every run, first of each month from 1957-11) or
-`measured` (one row appended per monthly run, never rewritten). `toi_app` uses the default
-seeing.
+`measured` (one row per run date, dated with `catalog_date`; a rerun on the same date
+replaces that date's row, and rows from earlier dates are never rewritten). `toi_app` uses
+the default seeing. A measured row from a degraded run has `status` `degraded` (see the
+additions above); its values come from GCAT alone and run high.
 
 ## `data/snapshots/YYYY-MM.json`
 

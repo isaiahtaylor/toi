@@ -171,7 +171,10 @@ class PipelineRunTests(unittest.TestCase):
         self.assertEqual(len(rows) - 1, s["n"])
         with open(out / "history.csv", newline="") as f:
             hist = list(csv.DictReader(f))
-        self.assertEqual(list(hist[0].keys()), contract_header("## `data/history.csv`"))
+        header = contract_header("## `data/history.csv`")
+        self.assertEqual(list(hist[0].keys())[:len(header)], header)
+        self.assertEqual(list(hist[0].keys())[len(header):], ["status"])
+        self.assertEqual({r["status"] for r in hist}, {"ok"})
         self.assertEqual(hist[0]["date"], "1957-11-01")
         self.assertEqual(hist[-1]["kind"], "measured")
         buses = json.loads((out / "buses.json").read_text())
@@ -193,7 +196,28 @@ class PipelineRunTests(unittest.TestCase):
             measured = [r for r in csv.DictReader(f) if r["kind"] == "measured"]
         self.assertEqual([r["date"] for r in measured], ["2026-09-18", "2026-10-18"])
         self.assertEqual(measured[0]["toi_abs"], "0.08")
+        self.assertEqual(measured[0]["status"], "")       # written before the status column
         self.assertNotEqual(measured[1]["toi_abs"], "1")
+        self.assertEqual(measured[1]["status"], "ok")
+        # a second run on the same day replaces its own row and keeps the others
+        run_mod.run(args_for(cache, out), log=quiet)
+        with open(out / "history.csv", newline="") as f:
+            again = [r for r in csv.DictReader(f) if r["kind"] == "measured"]
+        self.assertEqual(again, measured)
+
+    def test_damaged_history_rows_are_dropped(self):
+        cache = fixtures.write_cache(self.dir / "cache")
+        out = self.dir / "out"
+        out.mkdir()
+        (out / "history.csv").write_text(
+            "date,kind,toi_abs,toi_fac,toi_app,n_objects,status\n"
+            "2026-08-01,measured,0.07,0.04,0.18,35000,ok\n"
+            "2026-09-01,measured,0.08\n"
+            "garbage,measured,x,y,z,w,ok\n")
+        self.assertEqual(run_mod.run(args_for(cache, out), log=quiet), 0)
+        with open(out / "history.csv", newline="") as f:
+            measured = [r["date"] for r in csv.DictReader(f) if r["kind"] == "measured"]
+        self.assertEqual(measured, ["2026-08-01", "2026-10-18"])
 
     def _serving_opener(self, celestrak_error=None, gcat_error=None, calls=None):
         contents = fixtures.file_contents()
@@ -222,6 +246,8 @@ class PipelineRunTests(unittest.TestCase):
         self.assertEqual(latest["status"], "degraded")
         self.assertTrue(any("CelesTrak" in n and "403" in n for n in latest["status_notes"]))
         self.assertNotIn("celestrak-satcat", {s["id"] for s in latest["sources"]})
+        with open(out / "history.csv", newline="") as f:
+            self.assertEqual({r["status"] for r in csv.DictReader(f)}, {"degraded"})
         # GCAT-only population: the ISS composite is still counted once, docked modules are not
         names = {o["norad"] for o in latest["top_objects"]}
         self.assertIn(25544, names)
@@ -277,6 +303,10 @@ class PipelineRunTests(unittest.TestCase):
             f.write("SHORT ROW,2020-009A\n")
         with open(cache / "gcat_currentcat.tsv", "a") as f:
             f.write("A99999\tjunk\n\n")
+            # malformed identifiers on rows that otherwise look like objects in orbit
+            for jcat in ("Sxyz", "", "S"):
+                f.write(f"{jcat}\t-\t-\t-\t-\tP\tJunk\t2020 Jan  1\t-\tXX\tXX\t2020 Jan  1\t"
+                        "In Earth orbit\t-\t2020 Jan  1\t95\t500\t \t510\t \t53\n")
         out = self.dir / "out"
         self.assertEqual(run_mod.run(args_for(cache, out), log=quiet), 0)
         latest = json.loads((out / "latest.json").read_text())

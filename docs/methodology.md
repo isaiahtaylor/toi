@@ -143,7 +143,10 @@ band).
 
 The designs that dominate the index (Starlink versions, AST SpaceMobile, ISS, Tiangong,
 and others) have published or estimated dimensions in `pipeline/buses.toml`, each with
-citations and a confidence level (`published`, `estimated`, `assumed`, `proxy`). For a
+citations and a confidence level (`published`, `estimated`, `assumed`, `proxy`). The Space
+Shuttle orbiter is also curated, for the reconstructed history only: GCAT records it as a
+37 × 24 × 24 m box, which the generic model would turn into a spike in every month that
+began with a shuttle in orbit. For a
 flat-panel design with body face `a × b` and `n` arrays of `L × w`:
 
     A_abs = a·b + n·L·w + extra
@@ -181,7 +184,9 @@ random projection of a convex body is π times its mean width.
 **Solar arrays** (Shape mentions a panel, wing or array): extension `e = Span − body
 extent` when Span exceeds the body by more than 5%; array area `e × w` with `w` the body
 width; counted fully in `A_abs`, at ½ in `A_fac`; added to `P_fac` per the union formula.
-**Other appendages** (antennas, booms): area `0.1 × e × min(L,D)`.
+**Other appendages** (antennas, booms): area `0.1 × e × min(L,D)`. When Shape mentions a
+tether, Span is the tether's length and adds no area, because a tether is only a few
+millimetres thick (the 20 km tether of TSS-1R would otherwise add over 3,000 m²).
 
 As implemented: the body extent is `max(L, D)` (`L` for a box, `D` for a flat panel); the
 body width `w` is `D`, or `D/2` for a flat panel. The arrays attach along a body side as

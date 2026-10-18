@@ -155,22 +155,27 @@ export function renderCalc(container, obj, ctx) {
   nodes.push(el('p', { class: 'm-calc__ids' }, ids, el('br'), meta));
 
   // 1 · Orbit
-  const peri = +obj.perigee_km; const apo = +obj.apogee_km; const h = +obj.alt_km;
+  const hasOrbit = obj.perigee_km !== '' && obj.apogee_km !== '' && Number.isFinite(+obj.perigee_km) && Number.isFinite(+obj.apogee_km);
+  const peri = +obj.perigee_km; const apo = +obj.apogee_km;
+  const mean = (peri + apo) / 2;
+  // The altitude used: the mean of perigee and apogee (as the pipeline computes it, before
+  // the file rounds alt_km), raised to the 100 km floor.
+  const h = hasOrbit ? Math.max(100, mean) : +obj.alt_km;
   const orbitText = {
     celestrak: 'Perigee and apogee from CelesTrak’s catalog.',
     gcat: 'CelesTrak has no orbit for this object, so GCAT’s current orbit is used.',
     'launch-mates': `Neither catalog has an orbit, so the median perigee and apogee of the counted objects from launch ${obj.cospar ? obj.cospar.slice(0, 8) : 'mates'} stand in.`,
   }[obj.orbit_src] || `Orbit from ${obj.orbit_src}.`;
   const orbitKids = [el('p', { text: orbitText })];
-  if (Number.isFinite(peri) && Number.isFinite(apo)) {
-    const mean = (peri + apo) / 2;
+  if (hasOrbit) {
     let tex = `h = \\frac{${texNum(peri)} + ${texNum(apo)}}{2} = ${texNum(mean)}\\ \\text{km}`;
-    if (Math.abs(mean - h) > 1e-6 && h === 100) tex += `\\ \\to\\ 100\\ \\text{km (floor)}`;
+    if (mean < 100) tex += `\\ \\to\\ 100\\ \\text{km (floor)}`;
     orbitKids.push(texLine(tex));
   } else {
     orbitKids.push(texLine(`h = ${texNum(h)}\\ \\text{km}`));
   }
-  orbitKids.push(el('p', { class: 'm-calc__check', 'data-check': 'alt', 'data-file': obj.alt_km }, `Altitude used: `, el('b', { text: `${obj.alt_km} km` }), ` · source: ${ORBIT_SRC_LABEL[obj.orbit_src] || obj.orbit_src}`));
+  orbitKids.push(el('p', { class: 'm-calc__check', 'data-check': 'alt', 'data-model': String(h), 'data-file': obj.alt_km, 'data-ok': String(agrees(h, +obj.alt_km, 1e-3)) },
+    'Altitude used: ', el('b', { text: `${trimNum(h, 8)} km` }), ` · file alt_km ${obj.alt_km} · source: ${ORBIT_SRC_LABEL[obj.orbit_src] || obj.orbit_src}`));
   nodes.push(step('1', 'Orbit', ...orbitKids));
 
   // 2 · Area

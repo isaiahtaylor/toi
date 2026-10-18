@@ -1,21 +1,14 @@
 name: site
 
-# Monthly data update (pipeline) and GitHub Pages deploy.
+# Monthly data update. Vercel deploys the site on every push to main (see vercel.json),
+# including the data commit this job pushes, so there is no deploy job here.
 # - schedule, or a manual run from the default branch: run the pipeline, commit data/,
-#   publish the month's data release, then deploy the site from the data commit.
-# - push to main touching the site, data, pipeline or docs: deploy only.
+#   and publish the month's data release.
 
 on:
   schedule:
     - cron: '23 7 1 * *'
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'web/**'
-      - 'data/**'
-      - 'pipeline/**'
-      - 'docs/**'
 
 permissions:
   contents: read
@@ -23,7 +16,7 @@ permissions:
 jobs:
   update:
     # Scheduled runs always use the default branch. Manual runs from another branch would
-    # commit data there while Pages serves the default branch, so they skip the update.
+    # commit data there while Vercel serves the default branch, so they skip the update.
     if: >-
       github.event_name == 'schedule' ||
       (github.event_name == 'workflow_dispatch' &&
@@ -79,7 +72,7 @@ jobs:
 
       # One release per catalog month, tagged on the data commit. A second run in the same
       # month replaces the release, so its tag, inputs and outputs always belong together.
-      # The data is already pushed at this point, so a failure here must not block the deploy.
+      # The data is already pushed at this point, so a failure here must not fail the run.
       - name: Publish data release
         continue-on-error: true
         env:
@@ -98,49 +91,3 @@ jobs:
           gh release create "$tag" "${files[@]}" --target "$SHA" \
             --title "TOI data $CATALOG_DATE" \
             --notes "Inputs (GCAT, CelesTrak SATCAT) and outputs of the monthly TOI run for catalog date $CATALOG_DATE. Input checksums are listed in latest.json under sources. GCAT data: Jonathan C. McDowell, CC-BY-4.0. SATCAT: USSPACECOM via CelesTrak."
-
-  deploy:
-    needs: update
-    # After a successful update, or when the update was skipped (push to main). Never
-    # from a manual run on another branch.
-    if: >-
-      !cancelled() &&
-      (needs.update.result == 'success' || needs.update.result == 'skipped') &&
-      (github.event_name != 'workflow_dispatch' ||
-      github.ref_name == github.event.repository.default_branch)
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    concurrency:
-      group: pages
-      cancel-in-progress: false
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          # The data commit the update job pushed. When the update was skipped this is the
-          # pushed commit. (github.event.repository is not set on scheduled runs, so the
-          # default branch cannot be named that way here.)
-          ref: ${{ needs.update.outputs.sha || github.sha }}
-
-      - uses: actions/setup-python@v7
-        with:
-          python-version: '3.13'
-
-      - name: Build the site
-        run: python3 web/build.py
-
-      - uses: actions/configure-pages@v6
-
-      - uses: actions/upload-pages-artifact@v5
-        with:
-          path: dist
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
