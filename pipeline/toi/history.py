@@ -5,7 +5,9 @@ from pathlib import Path
 
 from .constants import DEFAULT_SEEING_ARCSEC, FIRST_HISTORY_MONTH, MIN_ALTITUDE_KM, OMEGA_MOON_SR, apparent_toi
 
-HEADER = ("date", "kind", "toi_abs", "toi_fac", "toi_app", "n_objects")
+HEADER = ("date", "kind", "toi_abs", "toi_fac", "toi_app", "n_objects",
+          # addition to the contract (appended): status of the run that wrote the row
+          "status")
 
 
 def month_starts(last_day):
@@ -101,11 +103,12 @@ def read_existing(path):
         return list(csv.DictReader(f))
 
 
-def merge_history(reconstructed, existing, measured_row):
+def merge_history(reconstructed, existing, measured_row, status="ok"):
     """Reconstructed rows (regenerated), plus existing measured rows, plus this run's
-    measured row (replacing any measured row with the same date)."""
+    measured row (replacing any measured row with the same date). This run's rows carry
+    `status` ("ok" or "degraded"); earlier measured rows keep the status they were written with."""
     keep = [r for r in existing if r.get("kind") == "measured" and r.get("date") != measured_row["date"]]
-    rows = list(reconstructed) + keep + [measured_row]
+    rows = [dict(r, status=status) for r in reconstructed] + keep + [dict(measured_row, status=status)]
     rows.sort(key=lambda r: (r["date"], 0 if r["kind"] == "reconstructed" else 1))
     return rows
 
@@ -113,4 +116,5 @@ def merge_history(reconstructed, existing, measured_row):
 def format_row(r):
     def f(v):
         return v if isinstance(v, str) else f"{v:.6g}"
-    return [r["date"], r["kind"], f(r["toi_abs"]), f(r["toi_fac"]), f(r["toi_app"]), str(int(float(r["n_objects"])))]
+    return [r["date"], r["kind"], f(r["toi_abs"]), f(r["toi_fac"]), f(r["toi_app"]),
+            str(int(float(r["n_objects"]))), r.get("status") or ""]

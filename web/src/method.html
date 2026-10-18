@@ -145,7 +145,7 @@
           <circle cx="48" cy="130" r="4" class="d-observer"></circle>
           <text x="48" y="158" class="d-label" text-anchor="middle">You</text>
         </svg>
-        <figcaption id="cone-cap"><span class="label">Fig. 2</span> The cone from an observer to the Moon’s edge. R☾ meets the line of sight at a right angle, so sin α = R☾/d☾. Not to scale: the real cone is 0.52° across, about 25 times narrower than drawn.</figcaption>
+        <figcaption id="cone-cap"><span class="label">Fig. 2</span> The cone from an observer to the Moon’s edge. R☾ meets the line of sight at a right angle, so sin α = R☾/d☾. Not to scale: the real cone is 0.52° across, about 35 times narrower than drawn.</figcaption>
       </figure>
     </div>
 
@@ -483,19 +483,19 @@
           <p class="m-source__n label">Population and orbits</p>
           <h3 class="m-source__title"><a href="https://celestrak.org/satcat/">CelesTrak SATCAT</a></h3>
           <p>The satellite catalog kept by the US Space Force (USSPACECOM) and published through Space-Track.org. CelesTrak redistributes it as one file. It lists every catalogued object with its status, perigee, apogee and, for many older objects, a radar cross-section.</p>
-          <p class="m-source__stat"><span class="num" data-fill="orbit.celestrak|int">–</span> orbits</p>
+          <p class="m-source__stat"><span class="num" data-fill="orbit.celestrak|int">{{ coverage.orbit_source[0].n | int }}</span> orbits</p>
         </li>
         <li class="m-source">
           <p class="m-source__n label">Physical size</p>
           <h3 class="m-source__title"><a href="https://planet4589.org/space/gcat/">GCAT</a></h3>
           <p>Jonathan McDowell’s General Catalog of Artificial Space Objects. It records each object’s length, diameter, span across appendages and shape, its satellite bus, and objects the public catalog has not released yet. Licensed CC BY 4.0.</p>
-          <p class="m-source__stat"><span class="num" data-fill="area.gcat.n|int">–</span> areas from GCAT dimensions</p>
+          <p class="m-source__stat"><span class="num" data-fill="area.gcat.n|int">{{ coverage.area_source[1].n | int }}</span> areas from GCAT dimensions</p>
         </li>
         <li class="m-source">
           <p class="m-source__n label">Dominant designs</p>
           <h3 class="m-source__title"><a href="https://github.com/isaiahtaylor/toi/blob/main/pipeline/buses.toml">Curated designs</a></h3>
           <p>A table of the satellite designs that dominate the index, with dimensions from operators, FCC filings and published papers. Every entry carries citations and a confidence level.</p>
-          <p class="m-source__stat"><span class="num" data-fill="area.curated.n|int">–</span> objects, <span class="num" data-fill="area.curated.share_abs|pct1">–</span> of the absolute TOI</p>
+          <p class="m-source__stat"><span class="num" data-fill="area.curated.n|int">{{ coverage.area_source[0].n | int }}</span> objects, <span class="num" data-fill="area.curated.share_abs|pct1">{{ coverage.area_source[0].share_abs | pct1 }}</span> of the absolute TOI</p>
         </li>
       </ol>
     </div>
@@ -598,7 +598,7 @@
     <div class="m-col">
       <p class="m-kicker"><span class="m-kicker__num">04</span> Breakdown</p>
       <h2 class="m-h2" id="breakdown-title">Where the area is</h2>
-      <p>Starlink satellites, including the Starshield satellites built on the same bus, carry <span data-fill="derived.starlinkShare|pct1">almost all</span> of the facing TOI. Large flat panels in low orbits dominate everything else: a satellite with 60 m² facing the ground at 470 km counts as much as about 6,000 pieces of 0.1 m² debris at 850 km.</p>
+      <p>Starlink satellites, including the Starshield satellites built on the same bus, carry <span data-fill="derived.starlinkShare|pct1">almost all</span> of the facing TOI. Large flat panels in low orbits dominate everything else: a satellite with 60 m² facing the ground at 470 km counts as much as about 2,000 pieces of 0.1 m² debris at 850 km.</p>
     </div>
     <div class="m-wide">
       <figure class="m-fig m-chart" aria-labelledby="groups-title">
@@ -756,6 +756,7 @@
 
         <div class="m-explorer__grid">
           <div class="m-explorer__list">
+            <div class="m-vlist-head" aria-hidden="true"><span class="m-vrow__rank">#</span><span>Object</span><span class="m-vrow__alt">Alt. km</span><span class="m-vrow__val" data-ex="val-head">Abs. µmoon</span></div>
             <div class="m-vlist" data-ex="list" role="listbox" tabindex="0" aria-label="Objects" aria-describedby="ex-help">
               <div class="m-vlist__loading" data-ex="loading">
                 <p data-ex="loading-text">The catalog loads when this section comes into view.</p>
@@ -765,7 +766,8 @@
             </div>
             <p class="visually-hidden" id="ex-help">Use the up and down arrow keys to move through the list. The worked calculation updates as you move.</p>
           </div>
-          <article class="m-calc" data-ex="calc" aria-live="polite" aria-labelledby="calc-title">
+          <p class="visually-hidden" aria-live="polite" data-ex="announce"></p>
+          <article class="m-calc" data-ex="calc" aria-labelledby="calc-title">
             <h3 class="m-calc__title" id="calc-title">Worked calculation</h3>
             <p class="m-calc__empty">Select an object to see how its contribution is computed.</p>
           </article>

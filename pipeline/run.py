@@ -118,7 +118,7 @@ def run(args, opener=None, sleep=time.sleep, log=print, now=None):
     measured = {"date": catalog_date.isoformat(), "kind": "measured",
                 "toi_abs": latest["toi"]["absolute"], "toi_fac": latest["toi"]["facing"],
                 "toi_app": latest["toi"]["apparent"], "n_objects": latest["sums"]["n"]}
-    history_rows = merge_history(hist, read_existing(Path(args.out) / "history.csv"), measured)
+    history_rows = merge_history(hist, read_existing(Path(args.out) / "history.csv"), measured, status)
     buses = build_buses(designs, current)
 
     written = write_all(args.out, render_all(latest, buses, current, history_rows))
