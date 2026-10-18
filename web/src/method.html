@@ -476,7 +476,7 @@
   <section class="m-section" id="data" aria-labelledby="data-title">
     <div class="m-col">
       <p class="m-kicker"><span class="m-kicker__num">03</span> The data</p>
-      <h2 class="m-h2" id="data-title">Where the numbers come from</h2>
+      <h2 class="m-h2" id="data-title">The data</h2>
       <p>This page is sourced from two public catalogs and one hand-built table. On the first of each month the pipeline downloads the catalogs and recomputes everything from scratch with a Github Action. This run used the catalogs of {{ catalog_date | date_long }}.</p>
     </div>
 
@@ -603,7 +603,7 @@
   <section class="m-section" id="breakdown" aria-labelledby="breakdown-title">
     <div class="m-col">
       <p class="m-kicker"><span class="m-kicker__num">04</span> Breakdown</p>
-      <h2 class="m-h2" id="breakdown-title">Where the area is</h2>
+      <h2 class="m-h2" id="breakdown-title">Data insights</h2>
       <p>Starlink satellites, including the Starshield satellites built on the same bus, carry <span data-fill="derived.starlinkShare|pct1">{{ derived.starlink_share | pct1 }}</span> of the facing TOI. Large flat panels in low orbits dominate. A satellite with 60 m² facing the ground at 470 km counts as much as about 2,000 pieces of 0.1 m² debris at 850 km.</p>
     </div>
     <div class="m-wide">
@@ -673,7 +673,7 @@
   <section class="m-section" id="history" aria-labelledby="history-title">
     <div class="m-col">
       <p class="m-kicker"><span class="m-kicker__num">05</span> History</p>
-      <h2 class="m-h2" id="history-title">How we got here</h2>
+      <h2 class="m-h2" id="history-title">Historical context/h2>
       <p>The pipeline rebuilds the index for the first of every month back to November 1957, from each object’s launch and decay dates and today’s area model. Objects that have since come down use their early orbits from GCAT. Starlink satellites sit at their original shells until the 2026 lowering. This is a reconstruction, and the chart labels it as one. Each monthly run also records one measured value; those points start in October 2026 and will build up month by month.</p>
     </div>
     <div class="m-wide">
@@ -717,7 +717,7 @@
   <section class="m-section" id="explore" aria-labelledby="explore-title">
     <div class="m-col">
       <p class="m-kicker"><span class="m-kicker__num">06</span> Explorer</p>
-      <h2 class="m-h2" id="explore-title">Every object, one by one</h2>
+      <h2 class="m-h2" id="explore-title">Object index</h2>
       <p>All {{ counts.total | int }} objects, with the inputs behind each one. Search by name, NORAD catalog number or COSPAR designation, then select an object to see its contribution worked out from its dimensions and orbit.</p>
     </div>
     <div class="m-wide">
