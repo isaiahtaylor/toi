@@ -2,9 +2,9 @@
 
 How much of the sky do human-made objects in orbit cover, measured in full Moons?
 
-Isaiah Taylor [coined the index](https://x.com/isaiah_p_taylor/status/1844164374845587514)
-in October 2024. This repository computes it every month from public satellite catalogs
-and publishes it as a static site with the full method, data and math open for checking.
+I [coined the index](https://x.com/isaiah_p_taylor/status/1844164374845587514) in October
+2024. This repository computes it every month from public satellite catalogs and
+publishes it as a static site with the full method, data and math open for checking.
 
 The index places every tracked object in Earth orbit directly overhead at its own
 altitude, adds up the patches of sky they cover, and divides by the patch the full Moon

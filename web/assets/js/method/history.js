@@ -126,7 +126,7 @@ export function renderHistory(root, rows, latest) {
       const d = rv.map((r, i) => `${i ? 'L' : 'M'}${X(r.t).toFixed(1)},${Y(r[ser.col]).toFixed(1)}`).join('');
       s.append(svg('path', { d, class: `h-line h-line--${ser.key}` }));
     }
-    // Isaiah's estimate: a dashed ring at ~0.03, labelled above the lines with a leader.
+    // My October 2024 estimate: a dashed ring at ~0.03, labelled above the lines with a leader.
     const tx = X(t(TWEET.date));
     const ty = Y(TWEET.value);
     s.append(svg('circle', { cx: tx, cy: ty, r: 6.5, class: 'h-estimate' }));
@@ -135,7 +135,7 @@ export function renderHistory(root, rows, latest) {
     if (narrow) s.append(svg('line', { x1: tx, x2: tx, y1: ty + 8, y2: ly - 12, class: 'h-leader' }));
     else s.append(svg('line', { x1: tx, x2: tx, y1: ty - 8, y2: ly + 6, class: 'h-leader' }));
     const est = svg('text', { x: tx - 6, y: ly, 'text-anchor': 'end', class: 'h-note' });
-    est.textContent = 'Isaiah’s estimate';
+    est.textContent = 'My estimate';
     const est2 = svg('text', { x: tx - 6, y: ly + 14, 'text-anchor': 'end', class: 'h-note h-note--soft' });
     est2.textContent = '~0.03, 9 Oct 2024';
     s.append(est, est2);
@@ -192,7 +192,7 @@ export function renderHistory(root, rows, latest) {
       });
       const note = r.kind === 'measured'
         ? (r.degraded ? 'Measured run from GCAT alone. CelesTrak was unreachable, and runs like this read high.' : 'Measured run')
-        : (r.date === '2024-10-01' ? 'Reconstructed. Isaiah estimated ~0.03 on 9 October 2024.' : 'Reconstructed');
+        : (r.date === '2024-10-01' ? 'Reconstructed. I estimated ~0.03 on 9 October 2024.' : 'Reconstructed');
       tip.show({
         title: fmtDate(r.date, r.kind),
         rows: [

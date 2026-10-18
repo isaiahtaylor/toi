@@ -16,11 +16,11 @@
             <p>If you put every single satellite currently in LEO right next to each other in the shape of a disc (perfect packing, no gaps), how large would that disc appear in the sky?</p>
           </blockquote>
         </blockquote>
-        <figcaption><a href="https://x.com/isaiah_p_taylor/status/1844164374845587514">Isaiah Taylor, 9 October 2024</a></figcaption>
+        <figcaption><a href="https://x.com/isaiah_p_taylor/status/1844164374845587514">My post on X, 9 October 2024</a></figcaption>
       </figure>
 
-      <p class="m-lead">This site computes that number from public satellite catalogs and updates it on the first of every month. Take every tracked object in Earth orbit, place it directly overhead at its own altitude, and add up the patches of sky the objects cover. Divide by the patch the full Moon covers. The result is the TOI, in moons.</p>
-      <p>How you count each object’s area changes the answer, so the site reports three expressions. The headline at the top of the page is Facing: the area the hardware presents to the ground as it flies. On {{ catalog_date | date_long }} the catalogs held {{ counts.total | int }} objects.</p>
+      <p class="m-lead">I built this site to compute that number from public satellite catalogs. It updates on the first of every month. Take every tracked object in Earth orbit, place it directly overhead at its own altitude, and add up the patches of sky the objects cover. Divide by the patch the full Moon covers. The result is the TOI, in moons.</p>
+      <p>How you count each object’s area changes the answer, so I report three expressions. The headline at the top of the page is Facing: the area the hardware presents to the ground as it flies. On {{ catalog_date | date_long }} the catalogs held {{ counts.total | int }} objects.</p>
     </div>
 
     <div class="m-wide">
@@ -186,7 +186,7 @@
     <!-- Absolute -->
     <div class="m-col">
       <h3 class="m-h3" id="absolute"><span class="m-key m-key--abs" aria-hidden="true"></span>Absolute</h3>
-      <p>The absolute TOI gives each object its largest silhouette. For a flat satellite that means the body and every solar array, all face&#8209;on to the observer. It answers the quoted post’s question about how large the hardware would look packed flat into one disc.</p>
+      <p>The absolute TOI gives each object its largest silhouette. For a flat satellite that means the body and every solar array, all face&#8209;on to the observer. It answers the question from my earlier post about how large the hardware would look packed flat into one disc.</p>
     </div>
     <div class="m-wide">
       <figure class="m-fig m-diagram" aria-labelledby="abs-cap">
@@ -698,7 +698,7 @@
           <li class="m-legend__group">Measured</li>
           <li><span class="m-key m-key--ring" aria-hidden="true"></span>Monthly run</li>
           <li class="m-legend__group">October 2024</li>
-          <li><span class="m-key m-key--estimate" aria-hidden="true"></span>Isaiah’s estimate</li>
+          <li><span class="m-key m-key--estimate" aria-hidden="true"></span>My estimate</li>
         </ul>
         <div class="m-chart__body" data-view="chart">
           <div class="m-hist" id="history-chart" tabindex="0" role="img" aria-label="Line chart of the TOI from 1957 to today. Use the left and right arrow keys to read values month by month."><p class="m-empty">Loading…</p></div>
@@ -708,7 +708,7 @@
       </figure>
     </div>
     <div class="m-col">
-      <p>When Isaiah posted in October 2024 he put the index at about 0.03 moons. The reconstruction gives <span data-fill="derived.oct2024abs|sig2">{{ derived.oct2024_abs | sig2 }}</span> for the absolute TOI and <span data-fill="derived.oct2024fac|sig2">{{ derived.oct2024_fac | sig2 }}</span> for the facing TOI on 1 October 2024. The absolute TOI is now {{ derived.growth_abs | sig2 }} times its October 2024 value, mostly from V2 Mini satellites and the move to lower shells.</p>
+      <p>When I posted in October 2024, I put the index at about 0.03 moons. The reconstruction gives <span data-fill="derived.oct2024abs|sig2">{{ derived.oct2024_abs | sig2 }}</span> for the absolute TOI and <span data-fill="derived.oct2024fac|sig2">{{ derived.oct2024_fac | sig2 }}</span> for the facing TOI on 1 October 2024. The absolute TOI is now {{ derived.growth_abs | sig2 }} times its October 2024 value, mostly from V2 Mini satellites and the move to lower shells.</p>
     </div>
   </section>
 
@@ -902,7 +902,7 @@ python3 -m unittest discover -s pipeline/tests</code></pre>
 
   <footer class="m-footer">
     <div class="m-col m-footer__inner">
-      <p class="m-footer__concept">Concept: <a href="https://x.com/isaiah_p_taylor/status/1844164374845587514">Isaiah Taylor</a></p>
+      <p class="m-footer__concept">By <a href="https://x.com/isaiah_p_taylor">Isaiah Taylor</a></p>
       <p>Orbital data: USSPACECOM via Space-Track.org, distributed by CelesTrak.</p>
       <p>Physical dimensions: GCAT, Jonathan C. McDowell, <a href="https://planet4589.org/space/gcat/">planet4589.org/space/gcat</a> (CC BY 4.0), with modified areas for the dominant designs.</p>
       <p class="m-footer__meta label">Catalog of {{ catalog_date | date_long }} · recomputed on the first of each month · next update {{ next_update | date_long }}</p>

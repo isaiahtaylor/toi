@@ -10,9 +10,9 @@ it. If the code and this document disagree, one of them is a bug.
 > cumulative amount of occlusion caused by manmade satellites in earth orbit. The unit
 > is moons. Right now we're at .~03 moons.
 >
-> Isaiah Taylor, 9 October 2024
+> My post on X, 9 October 2024
 
-It quoted an earlier question (5 October 2024): "If you put every single satellite
+It quoted my earlier question (5 October 2024): "If you put every single satellite
 currently in LEO right next to each other in the shape of a disc (perfect packing, no
 gaps), how large would that disc appear in the sky?"
 
@@ -37,7 +37,7 @@ There are three expressions. They differ only in which area enters the sum.
 
 | Expression | Area per object | Question it answers |
 |---|---|---|
-| **Absolute** | `A_abs`: the largest silhouette the object can present. For flat satellites, body plus every solar array, face-on. | Isaiah's packed disc: how much sky would the hardware cover if every piece were laid flat and faced us? |
+| **Absolute** | `A_abs`: the largest silhouette the object can present. For flat satellites, body plus every solar array, face-on. | The packed disc from my question: how much sky would the hardware cover if every piece were laid flat and faced us? |
 | **Facing** | `A_fac`: the orbit-averaged area actually presented to the ground, given how objects are oriented. | How much sky does the hardware cover as it really faces Earth? |
 | **Apparent** | `A_app = A_fac + P_fac·ρ + πρ²`, where ρ is the atmospheric blur radius at the object's distance. | How much sky does each satellite appear to touch once the atmosphere smears its silhouette? |
 
