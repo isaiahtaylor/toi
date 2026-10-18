@@ -57,13 +57,39 @@ function showError(root, err) {
   const note = root.querySelector('[data-load-error]');
   if (note) {
     note.hidden = false;
-    note.textContent = `The data files could not be loaded (${err.message}). The numbers in the text are from the build; the charts and tables need data/latest.json.`;
+    note.textContent = `The page could not load its data files (${err.message}). The numbers in the text come from the last build. The charts and tables need data/latest.json.`;
   }
+}
+
+// A deep link (#explore, #verify, …) resolves before the data-driven blocks above its
+// target render, and they then push the target thousands of pixels down. While the page
+// settles, keep the target aligned each time the methodology changes size; let go as
+// soon as the reader scrolls, clicks or types, or after ten seconds.
+function keepHashTarget(root) {
+  if (!('ResizeObserver' in window)) return;
+  let target = null;
+  let until = 0;
+  const pick = () => {
+    const id = decodeURIComponent(location.hash.slice(1));
+    target = id ? document.getElementById(id) : null;
+    until = performance.now() + 10000;
+  };
+  const release = () => { target = null; };
+  for (const type of ['wheel', 'touchstart', 'keydown', 'mousedown']) {
+    window.addEventListener(type, release, { passive: true, capture: true });
+  }
+  window.addEventListener('hashchange', pick);
+  pick();
+  new ResizeObserver(() => {
+    if (!target || !target.isConnected || performance.now() > until) return;
+    target.scrollIntoView({ block: 'start', behavior: 'instant' });
+  }).observe(root);
 }
 
 async function main() {
   const root = document.getElementById('method');
   if (!root) return;
+  keepHashTarget(root);
   initCopy(root);
   initViewToggles(root);
 
@@ -104,7 +130,7 @@ async function main() {
     .then((buses) => attempt('designs', () => renderDesigns(root, buses, latest)))
     .catch((err) => {
       const cell = root.querySelector('[data-render="designs"] .m-empty');
-      if (cell) cell.textContent = `The design table could not be loaded (${err.message}).`;
+      if (cell) cell.textContent = `The design table did not load (${err.message}).`;
     });
 
   historyPromise
@@ -118,7 +144,7 @@ async function main() {
     })
     .catch((err) => {
       const host = root.querySelector('#history-chart');
-      if (host) host.textContent = `The history could not be loaded (${err.message}).`;
+      if (host) host.textContent = `The history did not load (${err.message}).`;
     });
 }
 

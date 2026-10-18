@@ -19,7 +19,7 @@
         <figcaption><a href="https://x.com/isaiah_p_taylor/status/1844164374845587514">Isaiah Taylor, 9 October 2024</a></figcaption>
       </figure>
 
-      <p class="m-lead">This site computes that number from public satellite catalogs and recomputes it on the first of every month. Take every tracked object in Earth orbit, place it directly overhead at its own altitude, and add up the patches of sky the objects cover. Divide by the patch the full Moon covers. The result is the TOI, in moons.</p>
+      <p class="m-lead">This site computes that number from public satellite catalogs and updates it on the first of every month. Take every tracked object in Earth orbit, place it directly overhead at its own altitude, and add up the patches of sky the objects cover. Divide by the patch the full Moon covers. The result is the TOI, in moons.</p>
       <p>How you count each object’s area changes the answer, so the site reports three expressions. On {{ catalog_date | date_long }} the catalogs held {{ counts.total | int }} objects.</p>
     </div>
 
@@ -33,7 +33,7 @@
         <li class="m-expr-card" data-series="fac">
           <p class="m-expr-card__name"><span class="m-key m-key--fac" aria-hidden="true"></span>Facing</p>
           <p class="m-expr-card__value"><span data-fill="toi.facing|sig3">{{ toi.facing | sig3 }}</span> <span class="m-unit">moons</span></p>
-          <p class="m-expr-card__desc">Each object as it actually faces the ground. Solar arrays that track the Sun count at half their area.</p>
+          <p class="m-expr-card__desc">Each object as it faces the ground in flight. Solar arrays that track the Sun count at half their area.</p>
         </li>
         <li class="m-expr-card" data-series="app">
           <p class="m-expr-card__name"><span class="m-key m-key--app" aria-hidden="true"></span>Apparent</p>
@@ -84,7 +84,7 @@
             <p class="m-scale__label"><span class="label"><span class="m-key m-key--fac" aria-hidden="true"></span>Facing</span><span class="m-scale__val" data-fill="toi.facing|sig3">{{ toi.facing | sig3 }}</span></p>
           </div>
         </div>
-        <figcaption id="scale-cap"><span class="label">Fig. 1</span> At scale. Each disc covers the same fraction of the Moon’s area as the expression it stands for. The faint ring marks the Moon’s outline.</figcaption>
+        <figcaption id="scale-cap"><span class="label">Fig. 1</span> Drawn to scale. Each disc covers the same fraction of the Moon’s area as the expression it stands for. The faint ring marks the Moon’s outline.</figcaption>
       </figure>
     </div>
 
@@ -110,7 +110,7 @@
     <div class="m-col">
       <p class="m-kicker"><span class="m-kicker__num">01</span> The unit</p>
       <h2 class="m-h2" id="unit-title">One Moon</h2>
-      <p>The unit is the full Moon seen from Earth at its mean distance. Its radius R☾ is 1,737.4 km and its mean distance d☾ is 384,400 km, so its edge sits a small angle α from its center.</p>
+      <p>The unit is the full Moon seen from Earth at its mean distance. Its radius R<sub class="m-moon">☾</sub> is 1,737.4&nbsp;km and its mean distance d<sub class="m-moon">☾</sub> is 384,400&nbsp;km, so its edge sits a small angle α from its center.</p>
       <div class="m-math" data-tex-narrow="\begin{aligned}\alpha &= \arcsin\frac{R_\moon}{d_\moon} = \arcsin\frac{1737.4\ \text{km}}{384\,400\ \text{km}} \\ &= 0.0045198\ \text{rad} = 0.25896^\circ\end{aligned}" data-tex="\alpha = \arcsin\frac{R_\moon}{d_\moon} = \arcsin\frac{1737.4\ \text{km}}{384\,400\ \text{km}} = 0.0045198\ \text{rad} = 0.25896^\circ">α = arcsin(R☾ / d☾) = arcsin(1737.4 km / 384,400 km) = 0.0045198 rad = 0.25896°</div>
       <p>The patch of sky inside a cone of half-angle α is a solid angle, measured in steradians. The Moon covers</p>
       <div class="m-math" data-tex="\Omega_\moon = 2\pi\,(1-\cos\alpha) = 6.4178\times10^{-5}\ \text{sr}">Ω☾ = 2π (1 − cos α) = 6.4178 × 10⁻⁵ sr</div>
@@ -141,20 +141,20 @@
           <polyline points="433.96,68.08 435.23,75.98 443.13,74.71" class="d-right"></polyline>
           <path d="M138,130 A90,90 0 0 0 136.86,115.74" class="d-arc"></path>
           <text x="160" y="126" class="d-label d-label--math">α</text>
-          <text x="457" y="106" class="d-label d-label--dark">R☾</text>
-          <text x="250" y="152" class="d-label" text-anchor="middle">d☾</text>
-          <text x="300" y="122" class="d-label d-label--soft" text-anchor="middle">Ω☾</text>
+          <text x="457" y="106" class="d-label d-label--dark">R<tspan class="d-sub" dy="4">☾</tspan></text>
+          <text x="250" y="152" class="d-label" text-anchor="middle">d<tspan class="d-sub" dy="4">☾</tspan></text>
+          <text x="300" y="122" class="d-label d-label--soft" text-anchor="middle">Ω<tspan class="d-sub" dy="4">☾</tspan></text>
           <circle cx="48" cy="130" r="4" class="d-observer"></circle>
           <text x="48" y="158" class="d-label" text-anchor="middle">You</text>
         </svg>
-        <figcaption id="cone-cap"><span class="label">Fig. 2</span> The cone from an observer to the Moon’s edge. R☾ meets the line of sight at a right angle, so sin α = R☾/d☾. Not to scale. The real cone is 0.52° across, about 35 times narrower than drawn.</figcaption>
+        <figcaption id="cone-cap"><span class="label">Fig. 2</span> The cone from an observer to the Moon’s edge. R<sub class="m-moon">☾</sub> meets the line of sight at a right angle, so sin&nbsp;α = R<sub class="m-moon">☾</sub>/d<sub class="m-moon">☾</sub>. Not to scale. The real cone is 0.52° across, about 35 times narrower than drawn.</figcaption>
       </figure>
     </div>
 
     <div class="m-col">
       <p>An object much smaller than its distance covers a solid angle equal to its area divided by its distance squared. A flat plate of area A seen face&#8209;on from a distance h covers</p>
       <div class="m-math" data-tex="\Omega \approx \frac{A}{h^2}">Ω ≈ A / h²</div>
-      <p>The rest of the method rests on that one approximation. For anything in orbit it is accurate to better than one part in a hundred million.</p>
+      <p>Everything else in the method builds on this approximation. For anything in orbit it is accurate to better than one part in a hundred million.</p>
     </div>
   </section>
 
@@ -176,7 +176,7 @@
           </thead>
           <tbody>
             <tr><th scope="row"><span class="m-key m-key--abs" aria-hidden="true"></span>Absolute</th><td>The largest silhouette the object can present. For flat satellites, the body plus every solar array, face&#8209;on.</td><td>How much sky would the hardware cover if every piece were laid flat and faced us?</td></tr>
-            <tr><th scope="row"><span class="m-key m-key--fac" aria-hidden="true"></span>Facing</th><td>The orbit-averaged area actually presented to the ground, given how the object is oriented.</td><td>How much sky does the hardware cover as it really faces Earth?</td></tr>
+            <tr><th scope="row"><span class="m-key m-key--fac" aria-hidden="true"></span>Facing</th><td>The orbit-averaged area the object presents to the ground, given how it is pointed.</td><td>How much sky does the hardware cover as it faces Earth in flight?</td></tr>
             <tr><th scope="row"><span class="m-key m-key--app" aria-hidden="true"></span>Apparent</th><td>The facing area grown by the atmosphere’s blur at the object’s distance.</td><td>How much sky does each satellite appear to touch once the air smears its silhouette?</td></tr>
           </tbody>
         </table>
@@ -256,12 +256,12 @@
     <!-- Facing -->
     <div class="m-col">
       <h3 class="m-h3" id="facing"><span class="m-key m-key--fac" aria-hidden="true"></span>Facing</h3>
-      <p>The facing TOI uses the area each object actually presents to the ground, averaged over its orbit. It depends on how the object is pointed.</p>
+      <p>The facing TOI uses the area each object presents to the ground, averaged over its orbit. It depends on how the object is pointed.</p>
       <ul class="m-rules">
         <li><strong>Flat-panel satellites</strong> such as Starlink and most megaconstellations point their broad face at Earth, where the user antennas are. The whole body face counts.</li>
         <li><strong>Sun-tracking solar arrays</strong> turn toward the Sun. Seen from directly below, an array of area A presents A·|cos ψ|, where ψ is the angle between the Sun and the local vertical. Averaged over every Sun direction this comes to one half, so these arrays count at half their area.</li>
         <li><strong>Earth-facing arrays</strong> count in full. AST SpaceMobile’s BlueWalker and BlueBird satellites carry their solar cells on the back of an antenna that faces Earth.</li>
-        <li><strong>Objects of unknown attitude</strong>, such as generic boxes, tumbling rocket bodies and debris, use Cauchy’s theorem. A convex body turned every which way shows on average one quarter of its surface area, S/4.</li>
+        <li><strong>Objects of unknown attitude</strong>, such as generic boxes, tumbling rocket bodies and debris, use Cauchy’s theorem. A convex body seen from every direction shows on average one quarter of its surface area, S/4.</li>
       </ul>
     </div>
     <div class="m-col m-col--fig">
@@ -416,7 +416,7 @@
       </div>
     </div>
     <div class="m-col">
-      <p>Packing is the whole difference. If every satellite were pushed edge to edge into one disc, only the disc’s outer edge would blur. Spread across the sky, every satellite carries its own blurred rim. The total light blocked stays the same, and that is the facing TOI. What grows is the area of sky whose light the satellites touch.</p>
+      <p>Packing is the whole difference. If every satellite were pushed edge to edge into one disc, only the disc’s outer edge would blur. Spread across the sky, every satellite carries its own blurred rim. The total light blocked stays the same, and that is the facing TOI. Scattering grows the area of sky whose light the satellites touch.</p>
       <p>Substituting ρ = hθ/2 and dividing by h² splits each object’s apparent solid angle into three terms:</p>
       <div class="m-math" data-tex="\frac{A_\text{app}}{h^2} = \frac{A_\text{fac}}{h^2} + \frac{\theta}{2}\,\frac{P_\text{fac}}{h} + \pi\left(\frac{\theta}{2}\right)^2">A_app/h² = A_fac/h² + (θ/2)·P_fac/h + π(θ/2)²</div>
       <p>Summed over all objects, with P<sub>fac</sub> the perimeter of the facing outline,</p>
@@ -466,7 +466,7 @@
           </div>
         </div>
         <div class="m-math m-math--live" data-seeing-tex aria-hidden="true"></div>
-        <p class="m-seeing__foot">Total light blocked does not change with the seeing; that stays the facing TOI. The area of sky touched does. As θ shrinks toward zero the apparent TOI falls to the facing TOI.</p>
+        <p class="m-seeing__foot">The seeing changes how much sky the satellites touch. The light they block stays the same, and that is the facing TOI. As θ shrinks toward zero the apparent TOI falls to the facing TOI.</p>
       </figure>
     </div>
   </section>
@@ -662,7 +662,7 @@
               <tbody></tbody>
             </table>
           </div>
-          <p class="m-small">A geostationary satellite 35,786 km up counts about 5,800 times less than the same satellite at 470 km. LEO has apogee below 2,000 km; GEO is the band within 1,000 km of geostationary altitude.</p>
+          <p class="m-small">A geostationary satellite 35,786 km up counts for about 1/5,800 of what the same satellite counts at 470 km. LEO orbits have apogee below 2,000 km. GEO orbits sit within 1,000 km of geostationary altitude and are nearly circular. MEO covers the other near-circular orbits below that band, and HEO the eccentric and more distant ones.</p>
         </div>
       </div>
     </div>
@@ -708,7 +708,7 @@
       </figure>
     </div>
     <div class="m-col">
-      <p>When Isaiah posted in October 2024 he put the index at about 0.03 moons. The reconstruction gives <span data-fill="derived.oct2024abs|sig2">{{ derived.oct2024_abs | sig2 }}</span> for the absolute TOI and <span data-fill="derived.oct2024fac|sig2">{{ derived.oct2024_fac | sig2 }}</span> for the facing TOI on 1 October 2024. Since then the index has roughly tripled, mostly from V2 Mini satellites and the move to lower shells.</p>
+      <p>When Isaiah posted in October 2024 he put the index at about 0.03 moons. The reconstruction gives <span data-fill="derived.oct2024abs|sig2">{{ derived.oct2024_abs | sig2 }}</span> for the absolute TOI and <span data-fill="derived.oct2024fac|sig2">{{ derived.oct2024_fac | sig2 }}</span> for the facing TOI on 1 October 2024. The absolute TOI is now {{ derived.growth_abs | sig2 }} times its October 2024 value, mostly from V2 Mini satellites and the move to lower shells.</p>
     </div>
   </section>
 
@@ -885,7 +885,7 @@ python3 -m unittest discover -s pipeline/tests</code></pre>
     <div class="m-col">
       <p class="m-kicker"><span class="m-kicker__num">08</span> Limits</p>
       <h2 class="m-h2" id="limits-title">What this is and is not</h2>
-      <p>The TOI is an aggregate area index. It adds up how much sky the hardware would cover if every object sat overhead at once. Nothing in orbit shows to the naked eye as a dark silhouette. The eye resolves about 60″, and a 30 m Starlink at 480 km spans 13″. At any moment only the objects above your horizon count, and they are farther away than straight up. The sky actually covered above one observer right now is about 250 times smaller than the absolute TOI.</p>
+      <p>The TOI is an aggregate area index. It adds up how much sky the hardware would cover if every object sat overhead at once. Nothing in orbit shows to the naked eye as a dark silhouette. The eye resolves about 60″, and a 30 m Starlink at 480 km spans 13″. At any moment only the objects above your horizon count, and they are farther away than straight up. At any moment the sky covered above one observer is about 1/250 of the absolute TOI.</p>
       <h3 class="m-h3">Assumptions and approximations</h3>
       <ul class="m-limits">
         <li><strong>Assumed array sizes.</strong> SpaceX has not published dimensions for the V2 Mini Optimized or the direct-to-cell satellites, which together carry more than half the index. Both are taken equal to the V2 Mini. If the Optimized arrays were 25% smaller, the facing TOI would fall by about 10%.</li>

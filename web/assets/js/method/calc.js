@@ -163,7 +163,7 @@ export function renderCalc(container, obj, ctx) {
   const h = hasOrbit ? Math.max(100, mean) : +obj.alt_km;
   const orbitText = {
     celestrak: 'Perigee and apogee from CelesTrak’s catalog.',
-    gcat: 'CelesTrak has no orbit for this object, so GCAT’s current orbit is used.',
+    gcat: 'CelesTrak has no orbit for this object, so the pipeline uses GCAT’s current orbit.',
     'launch-mates': `Neither catalog has an orbit, so the median perigee and apogee of the counted objects from launch ${obj.cospar ? obj.cospar.slice(0, 8) : 'mates'} stand in.`,
   }[obj.orbit_src] || `Orbit from ${obj.orbit_src}.`;
   const orbitKids = [el('p', { text: orbitText })];
@@ -226,9 +226,9 @@ export function renderCalc(container, obj, ctx) {
           ? 'The span exceeds the body by more than 5% and the shape mentions panels, so the extra length counts as solar arrays.'
           : 'The span exceeds the body by more than 5% with no panels in the shape, so the extra length counts as a thin appendage.' }));
       } else if (g.tether) {
-        areaKids.push(el('p', { text: 'The shape names a tether, so the span is the tether’s length. A tether is millimeters thick, so nothing is added for it.' }));
+        areaKids.push(el('p', { text: 'The shape names a tether, so the span is the tether’s length. A tether is millimeters thick, so it adds no area.' }));
       } else if (obj.type !== 'R/B' && span) {
-        areaKids.push(el('p', { text: 'The span does not exceed the body by more than 5%, so nothing is added for appendages.' }));
+        areaKids.push(el('p', { text: 'The span is within 5% of the body, so appendages add nothing.' }));
       }
       areaKids.push(texLine(`A_\\text{abs} = ${texNum(g.A_abs)},\\quad A_\\text{fac} = ${texNum(g.A_fac)},\\quad P_\\text{fac} = ${texNum(g.P_fac)}`));
     }

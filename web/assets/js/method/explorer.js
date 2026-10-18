@@ -132,7 +132,7 @@ export function initExplorer(root, latest, busesPromise) {
       ready();
     } catch (err) {
       setStatus('error');
-      loadingText.textContent = `The catalog could not be loaded (${err.message}). You can download objects.csv from the Verify section and open it in a spreadsheet.`;
+      loadingText.textContent = `The catalog did not load (${err.message}). You can download objects.csv from the Verify section and open it in a spreadsheet.`;
       loadBtn.textContent = 'Try again';
       loadBtn.hidden = false;
       status = 'idle';

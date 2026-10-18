@@ -156,6 +156,7 @@ def derive(latest, data_dir):
                     d["oct2024_abs"] = float(row["toi_abs"])
                     d["oct2024_fac"] = float(row["toi_fac"])
                     break
+    d["growth_abs"] = toi["absolute"] / d["oct2024_abs"] if d["oct2024_abs"] > 0 else float("nan")
     return d
 
 

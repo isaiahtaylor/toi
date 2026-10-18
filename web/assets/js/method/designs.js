@@ -23,7 +23,7 @@ export function renderCoverage(root, latest) {
   const notes = root.querySelector('[data-render="status-notes"]');
   if (notes) {
     const items = [...(latest.status_notes || [])];
-    if (latest.status === 'degraded') items.unshift('CelesTrak could not be reached for this run, so the population and orbits come from GCAT alone.');
+    if (latest.status === 'degraded') items.unshift('The pipeline could not reach CelesTrak for this run, so the population and orbits come from GCAT alone.');
     if (!items.length) items.push('Nothing unusual this month.');
     notes.replaceChildren(...items.map((t) => el('li', { text: t })));
   }

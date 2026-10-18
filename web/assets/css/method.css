@@ -131,6 +131,7 @@
 .m-key--bar { width: 14px; height: 8px; border-radius: 0 2px 2px 0; }
 .m-key--line { width: 16px; height: 2px; border-radius: 1px; vertical-align: middle; }
 .m-key--ring { width: 10px; height: 10px; background: var(--sky-1); border: 2px solid var(--ink-1); }
+.m-key--ring-degraded { border-style: dashed; }
 .m-key--estimate { width: 10px; height: 10px; background: transparent; border: 1.5px dashed var(--moon); border-radius: 50%; }
 
 /* ---------- Math ---------- */
@@ -297,7 +298,7 @@
 .d-proj { stroke: var(--ink-3); stroke-width: 1; stroke-opacity: 0.7; }
 .d-area { fill: var(--s-fac); }
 .d-area--tile { stroke: var(--sky-1); stroke-width: 1; }
-.d-rim { fill: var(--s-app); fill-opacity: 0.72; }
+.d-rim { fill: var(--s-app); }
 .d-corner { fill: var(--s-disc); }
 .d-blur { fill: none; stroke: var(--ink-1); stroke-opacity: 0.7; stroke-width: 1; }
 .d-blur-dot { fill: var(--ink-1); }
@@ -867,3 +868,8 @@
 @media print {
   .m-explorer, .m-seeing .m-presets, .m-range { display: none; }
 }
+
+/* The Moon symbol as a subscript in prose and figure labels (R☾, d☾, Ω☾), matching the
+   math. Newsreader has no ☾, so it comes from a fallback font; keep it small and tight. */
+.m-moon { font-size: 0.62em; line-height: 0; vertical-align: -0.25em; margin-left: 0.04em; margin-right: -0.32em; letter-spacing: 0; }
+.d-sub { font-size: 0.7em; }
