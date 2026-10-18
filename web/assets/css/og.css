@@ -33,18 +33,18 @@ body.og {
 .og-card__readout {
   position: absolute;
   left: 72px;
-  top: 92px;
+  top: 76px;
   width: 560px;
 }
 
-/* Scrim behind the text, as in the hero, so the land never crowds the sentence. */
+/* Scrim behind the text, as in the hero, kept short of the marks on the right. */
 .og-card__readout::before {
   content: "";
   position: absolute;
   z-index: -1;
-  inset: -30% -40% -30% -74px;
+  inset: -20% -80px -36% -74px;
   background: radial-gradient(
-    ellipse 70% 62% at 34% 56%,
+    ellipse 56% 62% at 44% 58%,
     color-mix(in srgb, var(--sky-0) 82%, transparent) 0%,
     color-mix(in srgb, var(--sky-0) 56%, transparent) 50%,
     transparent 100%
@@ -80,7 +80,7 @@ body.og {
 
 .og-card__unit {
   font-family: var(--font-mono);
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 500;
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;

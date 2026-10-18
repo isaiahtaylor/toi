@@ -42,7 +42,7 @@ function init(card) {
   }
 
   Promise.all([
-    document.fonts.load('500 15px "IBM Plex Mono"'),
+    document.fonts.load('500 16px "IBM Plex Mono"'),
     document.fonts.load('250 176px "Newsreader"'),
     document.fonts.load('400 30px "Newsreader"'),
   ])

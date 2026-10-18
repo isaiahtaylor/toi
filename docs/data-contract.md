@@ -173,3 +173,9 @@ additions above); its values come from GCAT alone and run high.
 ## `data/snapshots/YYYY-MM.json`
 
 A copy of `latest.json` for each monthly run.
+
+## `data/og.png`
+
+Not written by the pipeline: `web/og/render.py` renders it from the site after each run.
+The site's social preview image, a 1200×630 PNG of the hero with the facing TOI. When a
+render fails it keeps the previous month's image, so it can lag `latest.json` by a month.

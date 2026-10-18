@@ -238,6 +238,7 @@ def main():
     out = Path(args.out)
     try:
         chrome = find_chrome(args.chrome)
+        print(f"render: using {chrome}", flush=True)
         with tempfile.TemporaryDirectory(prefix="toi-og-") as tmp:
             tmp = Path(tmp)
             if args.dist:

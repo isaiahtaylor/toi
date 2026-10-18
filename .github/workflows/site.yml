@@ -2,8 +2,8 @@ name: site
 
 # Monthly data update. Vercel deploys the site on every push to main (see vercel.json),
 # including the data commit this job pushes, so there is no deploy job here.
-# - schedule, or a manual run from the default branch: run the pipeline, commit data/,
-#   and publish the month's data release.
+# - schedule, or a manual run from the default branch: run the pipeline, render the
+#   social preview image (data/og.png), commit data/, and publish the month's data release.
 
 on:
   schedule:
@@ -53,6 +53,20 @@ jobs:
       - name: Build the site (smoke test)
         run: python3 web/build.py
 
+      # The social preview image, rendered from the hero with the runner's preinstalled
+      # Google Chrome. The renderer only replaces data/og.png when the new image passes
+      # its checks. If it fails, last month's image stays and the data commit goes ahead
+      # anyway: the number on the site matters more than the picture.
+      - name: Render the social preview image
+        id: og
+        continue-on-error: true
+        timeout-minutes: 5
+        run: python3 web/og/render.py
+
+      - name: Note a failed render
+        if: steps.og.outcome == 'failure'
+        run: echo "::warning title=Social preview image::Rendering data/og.png failed (see the step above). Keeping last month's image and committing the data."
+
       - name: Commit data
         id: commit
         env:
@@ -79,15 +93,18 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           CATALOG_DATE: ${{ steps.pipeline.outputs.catalog_date }}
           SHA: ${{ steps.commit.outputs.sha }}
+          OG_RENDER: ${{ steps.og.outcome }}
         run: |
           shopt -s nullglob
           tag="data-${CATALOG_DATE:0:7}"
           files=("$RUNNER_TEMP"/toi-inputs/*.tsv "$RUNNER_TEMP"/toi-inputs/*.csv
                  "$RUNNER_TEMP"/toi-inputs/*.meta.json
                  data/latest.json data/objects.csv data/buses.json data/history.csv)
+          # Only an image rendered from this month's data belongs with this release.
+          if [ "$OG_RENDER" = success ]; then files+=(data/og.png); fi
           if gh release view "$tag" > /dev/null 2>&1; then
             gh release delete "$tag" --yes --cleanup-tag
           fi
           gh release create "$tag" "${files[@]}" --target "$SHA" \
             --title "TOI data $CATALOG_DATE" \
-            --notes "Inputs (GCAT, CelesTrak SATCAT) and outputs of the monthly TOI run for catalog date $CATALOG_DATE. Input checksums are listed in latest.json under sources. GCAT data: Jonathan C. McDowell, CC-BY-4.0. SATCAT: USSPACECOM via CelesTrak."
+            --notes "Inputs (GCAT, CelesTrak SATCAT) and outputs of the monthly TOI run for catalog date $CATALOG_DATE, with the site's social preview image (og.png). Input checksums are listed in latest.json under sources. GCAT data: Jonathan C. McDowell, CC-BY-4.0. SATCAT: USSPACECOM via CelesTrak."

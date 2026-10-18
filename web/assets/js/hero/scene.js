@@ -105,7 +105,7 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
     let cy;
     let horizonY;
     let vpX;
-    const fs = card ? 15 : narrow ? 9.5 : 10.5;
+    const fs = card ? 16 : narrow ? 9.5 : 10.5;
     let gapK = 1; // gap between the Moon and the outer mark, in Moon diameters
     // Horizontal room the Moon and the marks need, for a Moon of diameter D.
     const span = (D) => D * 0.5 + D * gapK + D * 0.5 * sApp * 1.42 + D * 0.5 + D * 0.16;
@@ -121,7 +121,7 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
       if (span(D) > avail) gapK = Math.max(0.6, 1 - (span(D) - avail) / D);
       if (span(D) > avail) D = Math.max(96, D * (avail / span(D)));
       cx = availR - D * 0.5;
-      cy = Math.round(H * 0.35);
+      cy = Math.round(H * 0.32);
       vpX = W * 0.56;
     } else if (!narrow) {
       const short = H <= 520; // phones on their side
@@ -161,8 +161,7 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
     // Moon's label on the same baseline (always on narrow screens, and on short
     // landscape screens where the Moon sits close to the marks).
     const labelX0 = tx + geom.rFac * Math.cos((76 * Math.PI) / 180) + Math.max(12, fs * 1.3);
-    const labelW = fs * 0.72 * 18;
-    const labelsRight = labelX0 + labelW;
+    const labelsRight = labelX0 + fs * 0.72 * 18;
     const moonLabelLeft = cx - (fs * 0.72 * 17) / 2;
     const dropLabels = narrow || labelsRight + fs > moonLabelLeft;
     const labelY = cy + labelDy + (dropLabels ? Math.round(fs * 1.75) : 0);
@@ -210,6 +209,7 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
     ];
     // Stars stay out from behind the canvas labels.
     const xL = tx + geom.rFac * Math.cos((76 * Math.PI) / 180) + Math.max(12, fs * 1.3);
+    const labelW = fs * 0.72 * 18;
     const moonLabelW = fs * 0.72 * 17;
     L.navBoxes.push(
       [xL - 6, labelY - fs - 4, xL + labelW, labelY + lh * 2 + 4],
@@ -346,8 +346,10 @@ export function createScene({ canvas, hero, readout, nav, narrowQuery, values, m
     if (still || !raf) draw(performance.now());
   }
 
-  // The card has a fixed size and never animates, so it needs no observers. That also
-  // keeps its frame deterministic: it is laid out exactly once per call below.
+  // The card has a fixed size and never animates, so it needs none of these. Leaving
+  // out the resize observer also keeps its frame the same on every render: each layout
+  // draws new satellites from a seeded stream, so the number of layouts must not
+  // depend on timing.
   if (!card) {
     let resizeTimer = 0;
     const ro = new ResizeObserver(() => {

@@ -67,12 +67,16 @@ manual run from any other branch does nothing). Its one job:
 1. runs the tests;
 2. runs the pipeline with the download cache in the runner's temp directory;
 3. builds the site as a smoke test;
-4. commits `data/` as `github-actions[bot]` with the message
+4. renders the social preview image `data/og.png` with `web/og/render.py` and the
+   runner's Google Chrome. If that fails, the job logs a warning, keeps last month's
+   image and carries on;
+5. commits `data/` as `github-actions[bot]` with the message
    `data: monthly update <catalog_date>` and pushes it to the default branch;
-5. publishes a GitHub release `data-YYYY-MM` (the catalog month), tagged on that commit,
-   with the input files, their `.meta.json` sidecars and the output files attached. A
-   second run in the same month replaces that month's release. If the release cannot be
-   published, the job still succeeds, because the data is already pushed.
+6. publishes a GitHub release `data-YYYY-MM` (the catalog month), tagged on that commit,
+   with the input files, their `.meta.json` sidecars, the output files and (when this run
+   rendered it) `og.png` attached. A second run in the same month replaces that month's
+   release. If the release cannot be published, the job still succeeds, because the data
+   is already pushed.
 
 Vercel deploys the site on every push to the default branch (see `vercel.json`), so the
 data commit is deployed by Vercel, not by this workflow.
