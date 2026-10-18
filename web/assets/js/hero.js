@@ -6,7 +6,9 @@ import { loadLatest, sig, intl, dateLong, prefersReducedMotion } from './toi.js'
 import { createScene } from './hero/scene.js';
 
 const KEYS = ['absolute', 'facing', 'apparent'];
-const NARROW = '(max-width: 899px), (max-aspect-ratio: 10/11)';
+// Must match the narrow media query in assets/css/hero.css. Short landscape screens
+// (phones on their side) keep the side-by-side layout so the number stays on screen.
+const NARROW = '(max-width: 599px), (max-width: 899px) and (min-height: 521px), (max-aspect-ratio: 10/11)';
 
 const hero = document.querySelector('.hero');
 if (hero) init(hero);

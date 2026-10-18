@@ -341,12 +341,14 @@
 }
 
 /* Narrow and portrait ---------------------------------------------------- */
+/* Must match NARROW in assets/js/hero.js. */
 
-@media (max-width: 899px), (max-aspect-ratio: 10/11) {
+@media (max-width: 599px), (max-width: 899px) and (min-height: 521px), (max-aspect-ratio: 10/11) {
   .hero__body {
     align-items: flex-end;
-    /* Leave room for the Moon and the marks; mirrors the layout in hero/scene.js. */
-    padding-top: calc(clamp(84px, 28vw, 150px) * 1.6 + 84px);
+    /* Leave room for the Moon and the marks; mirrors the Moon size in hero/scene.js. */
+    padding-top: calc(clamp(84px, min(28vw, 21vh), 200px) * 1.6 + 84px);
+    padding-top: calc(clamp(84px, min(28vw, 21svh), 200px) * 1.6 + 84px);
     padding-bottom: var(--space-4);
   }
 
@@ -385,6 +387,23 @@
   .hero__opt-desc { font-size: 0.75rem; line-height: 1.32; }
 
   .hero__links { gap: var(--space-4); }
+}
+
+/* Short landscape screens (phones on their side): side-by-side layout, compact type,
+   so the number and the selector fit on the first screen. */
+@media (max-height: 520px) and (min-aspect-ratio: 10/11) and (min-width: 600px) {
+  .hero__nav { padding-top: var(--space-4); }
+  .hero__body { padding-top: var(--space-4); padding-bottom: var(--space-3); }
+  .hero__readout { width: min(100%, 25rem); }
+  .hero__value { margin-top: var(--space-2); font-size: clamp(3.25rem, 17vh, 5rem); }
+  .hero__sentence { margin-top: var(--space-3); font-size: var(--step-0); line-height: 1.45; }
+  .hero__options { margin-top: var(--space-4); }
+  .hero__option { padding-top: var(--space-3); padding-right: var(--space-3); }
+  .hero__option + .hero__option { padding-left: var(--space-3); }
+  .hero__opt-desc { font-size: 0.75rem; line-height: 1.32; }
+  .hero__meta { margin-top: var(--space-3); }
+  .hero__cue { padding-top: 0; padding-bottom: var(--space-3); }
+  .hero__cue-line { height: 18px; }
 }
 
 /* Very large screens: let the readout grow with the canvas. */

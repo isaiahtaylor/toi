@@ -6,6 +6,7 @@
 - Inlines `<!--#include file.html-->` directives from web/src/.
 - Replaces `{{ path.to.value | filter }}` placeholders with values from data/latest.json,
   so the key numbers are in the HTML before any script runs. Unknown paths fail the build.
+  `derived.*` paths are computed here from latest.json and history.csv (see derive()).
 - Copies web/assets/ to dist/assets/ and data/ to dist/data/.
 - With --artifact, also writes dist/artifact.html: the same page without the
   doctype/html/head/body wrapper, for previewing as a claude.ai artifact.
@@ -13,8 +14,10 @@
 Standard library only.
 """
 import argparse
+import csv
 import datetime as dt
 import json
+import math
 import re
 import shutil
 import sys
@@ -32,6 +35,8 @@ SUPERSCRIPT = str.maketrans("-0123456789", "⁻⁰¹²³⁴⁵⁶⁷⁸⁹")
 def sig(x, n):
     """Round to n significant figures and format without exponent."""
     x = float(x)
+    if x != x:  # NaN: a derived value the data could not supply
+        return "–"
     if x == 0:
         return "0"
     from math import floor, log10
@@ -62,7 +67,96 @@ FILTERS = {
     "date_long": date_long,                                   # 18 October 2026
     "month": lambda s: f"{dt.date.fromisoformat(s[:10]):%B %Y}",  # October 2026
     "arcsec": lambda v: f"{float(v):g}″",
+    "fix1": lambda v: f"{float(v):.1f}",                       # 22.9
+    "fix2": lambda v: f"{float(v):.2f}",                       # 35.72
+    "fix6": lambda v: f"{float(v):.6f}",                       # 0.082472
+    "bytes": lambda v: human_bytes(int(v)),                    # 5.9 MB (as bytes() in method/format.js)
 }
+
+
+def human_bytes(n):
+    if n < 1024:
+        return f"{n} B"
+    if n < 1024 * 1024:
+        return f"{n / 1024:.{1 if n < 10240 else 0}f} KB"
+    return f"{n / 1024 / 1024:.1f} MB"
+
+
+def top_lead(latest):
+    """One sentence on what leads the top-objects table, from this month's data."""
+    top = latest.get("top_objects") or []
+    labels = {g["id"]: g["label"] for g in latest.get("groups", [])}
+    stations = {"iss", "tiangong"}
+    if not top:
+        return "The table ranks single objects by their absolute contribution."
+    k = 0
+    while k < len(top) and top[k].get("group") in stations:
+        k += 1
+    if k >= 2:
+        s = "The two space stations lead"
+    elif k == 1:
+        s = f"The {labels.get(top[0]['group'], top[0]['name'])} leads"
+    else:
+        s = f"{top[0]['name']} leads"
+        k = 1
+    rest = top[k:k + 10]
+    generic = {"other-payloads", "rocket-bodies", "debris"}
+    if rest:
+        counts = {}
+        for o in rest:
+            counts[o.get("group")] = counts.get(o.get("group"), 0) + 1
+        g = max(counts, key=counts.get)
+        if g in labels and g not in generic and counts[g] >= 3:
+            mine = [o for o in top if o.get("group") == g]
+            lo = min(o["alt_km"] for o in mine)
+            hi = max(o["alt_km"] for o in mine)
+            area = mine[0]["A_abs_m2"]
+            same = all(abs(o["A_abs_m2"] - area) < 1e-6 for o in mine)
+            size = f", {area:,.0f} m² each," if same else ""
+            s += f", followed by {labels[g]} satellites{size} at {lo:,.0f} to {hi:,.0f} km"
+    return s + "."
+
+
+def derive(latest, data_dir):
+    """Values the page shows that are not plain paths into latest.json. The front end
+    computes the same numbers at run time (assets/js/method/); computing them here too
+    keeps the HTML correct before any script runs."""
+    toi, sums, c = latest["toi"], latest["sums"], latest["constants"]
+    omega = c["omega_moon_sr"]
+    half = math.radians(c["default_seeing_arcsec"] / 3600) / 2
+    area = sums["fac_A_h2"] / omega
+    rim = half * sums["fac_P_h"] / omega
+    disc = sums["n"] * math.pi * half * half / omega
+    total = area + rim + disc
+    starlink = sum(g["toi_fac"] for g in latest.get("groups", []) if g.get("family") == "Starlink")
+    d = {
+        "starlink_share": starlink / toi["facing"],
+        "debris_share": latest["counts"]["debris"] / latest["counts"]["total"],
+        "app_ratio": toi["apparent"] / toi["facing"],
+        "app_area": area, "app_rim": rim, "app_disc": disc,
+        "app_area_share": area / total, "app_rim_share": rim / total, "app_disc_share": disc / total,
+        "app_area_pct": 100 * area / total, "app_rim_pct": 100 * rim / total, "app_disc_pct": 100 * disc / total,
+        # Fig. 1: disc radii against a Moon of radius 80, so area ratio = TOI.
+        "r_absolute": 80 * math.sqrt(toi["absolute"]),
+        "r_facing": 80 * math.sqrt(toi["facing"]),
+        "r_apparent": 80 * math.sqrt(toi["apparent"]),
+        "oct2024_abs": float("nan"), "oct2024_fac": float("nan"),
+    }
+    d["top_lead"] = top_lead(latest)
+    # Published file sizes, for the Verify table and the explorer's loading note.
+    for key, name in (("latest", "latest.json"), ("objects", "objects.csv"),
+                      ("buses", "buses.json"), ("history", "history.csv")):
+        f = data_dir / name
+        d[f"size_{key}"] = f.stat().st_size if f.exists() else 0
+    hist = data_dir / "history.csv"
+    if hist.exists():
+        with hist.open(newline="", encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                if row.get("date") == "2024-10-01" and row.get("kind") == "reconstructed":
+                    d["oct2024_abs"] = float(row["toi_abs"])
+                    d["oct2024_fac"] = float(row["toi_fac"])
+                    break
+    return d
 
 
 def resolve(data, path):
@@ -111,7 +205,8 @@ def main():
 
     data_dir, out = Path(args.data), Path(args.out)
     latest = json.loads((data_dir / "latest.json").read_text(encoding="utf-8"))
-    html = render((SRC / "index.html").read_text(encoding="utf-8"), latest, "index.html")
+    context = {**latest, "derived": derive(latest, data_dir)}
+    html = render((SRC / "index.html").read_text(encoding="utf-8"), context, "index.html")
 
     if out.exists():
         shutil.rmtree(out)

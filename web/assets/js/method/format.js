@@ -56,6 +56,14 @@ export function micro(x, n = 3) {
   return sig(v, n);
 }
 
+// Display typography for free text from the data files (design notes): "m2" → "m²",
+// "107 x 38 ft" → "107 × 38 ft". The files themselves stay plain ASCII.
+export function prose(text) {
+  return String(text ?? '')
+    .replace(/(\d)\s?m2\b/g, '$1 m²')
+    .replace(/(\d)\s?x\s?(\d)/g, '$1 × $2');
+}
+
 export function bytes(n) {
   if (!Number.isFinite(n)) return '–';
   if (n < 1024) return `${n} B`;

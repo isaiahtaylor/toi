@@ -1,13 +1,17 @@
 // RFC 4180 CSV parser: quoted fields, doubled quotes, commas and newlines inside quotes,
 // CRLF or LF line ends. Unquoted fields are sliced with indexOf, so a 6 MB file with
-// 35,000 rows parses in well under a second.
-export function parseCSV(text) {
-  if (text.charCodeAt(0) === 0xfeff) text = text.slice(1);
-  const rows = [];
+// 35,000 rows parses in a few hundred milliseconds. parseCSVAsync does the same work in
+// slices and yields to the main thread between them, so scrolling stays smooth while
+// the explorer loads.
+
+// Parse up to maxRows complete rows from state; returns true when the text is used up.
+function parseSome(state, maxRows) {
+  const { text } = state;
   const n = text.length;
-  let i = 0;
-  let row = [];
-  while (i < n) {
+  let { i, row } = state;
+  const { rows } = state;
+  const stop = rows.length + maxRows;
+  while (i < n && rows.length < stop) {
     let field;
     if (text.charCodeAt(i) === 34) { // opening quote
       let j = i + 1;
@@ -42,7 +46,36 @@ export function parseCSV(text) {
       row = [];
     }
   }
+  state.i = i;
+  state.row = row;
+  return i >= n;
+}
+
+function start(text) {
+  if (text.charCodeAt(0) === 0xfeff) text = text.slice(1);
+  return { text, i: 0, row: [], rows: [] };
+}
+
+function finish(state) {
+  const { rows, row } = state;
   if (row.length && !(row.length === 1 && row[0] === '')) rows.push(row);
   const header = rows.shift() || [];
   return { header, rows };
+}
+
+export function parseCSV(text) {
+  const state = start(text);
+  parseSome(state, Infinity);
+  return finish(state);
+}
+
+export function yieldToMain() {
+  if (globalThis.scheduler && typeof globalThis.scheduler.yield === 'function') return globalThis.scheduler.yield();
+  return new Promise((resolve) => setTimeout(resolve, 0));
+}
+
+export async function parseCSVAsync(text, rowsPerSlice = 2000) {
+  const state = start(text);
+  while (!parseSome(state, rowsPerSlice)) await yieldToMain();
+  return finish(state);
 }

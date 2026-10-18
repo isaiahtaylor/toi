@@ -61,34 +61,29 @@ the previous month's data in place.
 ## The monthly job
 
 [`.github/workflows/site.yml`](../.github/workflows/site.yml) runs at 07:23 UTC on the
-first of each month, and on demand from the Actions tab:
+first of each month, and on demand from the Actions tab (from the default branch only; a
+manual run from any other branch does nothing). Its one job:
 
-1. `update` job: run the tests, run the pipeline with the cache in the runner's temp
-   directory, build the site as a smoke test, commit `data/` as `github-actions[bot]`
-   with the message `data: monthly update <catalog_date>`, and publish a GitHub release
-   `data-YYYY-MM` (the catalog month) tagged on that commit, with the input files, their
-   `.meta.json` sidecars and the output files attached. A second run in the same month
-   replaces that month's release. If the release cannot be published, the job still
-   succeeds so the new data is deployed.
-2. `deploy` job: check out the exact commit the update job pushed, build `dist/` with
-   `python3 web/build.py`, and deploy it to GitHub Pages.
+1. runs the tests;
+2. runs the pipeline with the download cache in the runner's temp directory;
+3. builds the site as a smoke test;
+4. commits `data/` as `github-actions[bot]` with the message
+   `data: monthly update <catalog_date>` and pushes it to the default branch;
+5. publishes a GitHub release `data-YYYY-MM` (the catalog month), tagged on that commit,
+   with the input files, their `.meta.json` sidecars and the output files attached. A
+   second run in the same month replaces that month's release. If the release cannot be
+   published, the job still succeeds, because the data is already pushed.
 
-If GCAT is unavailable, the pipeline exits with status 2, the update job fails, nothing is
-committed and nothing is deployed, so the site keeps last month's data.
+Vercel deploys the site on every push to the default branch (see `vercel.json`), so the
+data commit is deployed by Vercel, not by this workflow.
 
-A push to `main` that touches `web/`, `data/`, `pipeline/` or `docs/` runs only the
-deploy job, from the pushed commit. Run the workflow by hand from the default branch; a
-manual run from any other branch does nothing.
+If GCAT is unavailable, the pipeline exits with status 2, the job fails, and nothing is
+committed, so the site keeps last month's data. If CelesTrak is unavailable or its file
+looks truncated, the run continues in degraded mode and labels its output as such.
 
 GitHub turns off scheduled workflows in public repositories after 60 days without
 activity. If that happens (for example after GCAT is down for two months running),
 re-enable the workflow in the Actions tab.
-
-### Enable GitHub Pages
-
-In the repository on GitHub, open **Settings → Pages** and set **Source** to
-**GitHub Actions**. The first deploy happens on the next push to `main` or when you run
-the workflow by hand.
 
 ## Verify the numbers yourself
 

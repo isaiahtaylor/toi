@@ -41,8 +41,10 @@ export function renderGroups(root, latest) {
     const label = `${g.label}: absolute ${sig(g.toi_abs, 3)} moons, facing ${sig(g.toi_fac, 3)} moons, ${pct(share, share < 0.001 ? 2 : 1)} of the facing total, ${objects(g.n)}`;
     const track = el('div', { class: 'm-bars__track' },
       ...ticks.slice(1).map((t) => el('span', { class: 'm-bars__grid', style: `left:${x(t)}`, 'aria-hidden': 'true' })),
-      el('span', { class: 'm-bars__bar m-bars__bar--abs', style: `width:${x(g.toi_abs)}` }),
-      el('span', { class: 'm-bars__bar m-bars__bar--fac', style: `width:${x(g.toi_fac)}` }),
+      el('span', { class: 'm-bars__bar m-bars__bar--abs', style: `width:${x(g.toi_abs)}` },
+        i === 0 ? el('span', { class: 'm-bars__tip', 'aria-hidden': 'true', text: `Absolute ${sig(g.toi_abs, 3)}` }) : null),
+      el('span', { class: 'm-bars__bar m-bars__bar--fac', style: `width:${x(g.toi_fac)}` },
+        i === 0 ? el('span', { class: 'm-bars__tip', 'aria-hidden': 'true', text: `Facing ${sig(g.toi_fac, 3)}` }) : null),
     );
     const li = el('li', { class: 'm-bars__row', tabindex: i === 0 ? '0' : '-1', 'aria-label': label },
       el('div', { class: 'm-bars__label' }, g.label, el('small', { text: `${objects(g.n)} · median ${trimNum(g.median_alt_km, 4)} km` })),

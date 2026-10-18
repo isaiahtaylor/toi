@@ -10,6 +10,7 @@
       <figure class="m-tweet">
         <blockquote cite="https://x.com/isaiah_p_taylor/status/1844164374845587514">
           <p>I’m minting a new term: the Taylor Occlusion Index (TOI). TOI is the present cumulative amount of occlusion caused by manmade satellites in earth orbit. The unit is moons. Right now we’re at .~03 moons.</p>
+          <p>I feel like we can easily go up to a TOI of like 10.</p>
           <blockquote class="m-tweet__quoted">
             <p class="m-tweet__quoted-meta label">Quoted post · 5 October 2024</p>
             <p>If you put every single satellite currently in LEO right next to each other in the shape of a disc (perfect packing, no gaps), how large would that disc appear in the sky?</p>
@@ -64,21 +65,21 @@
           <div class="m-scale__tile">
             <svg class="m-scale__svg" viewBox="-100 -100 200 200" role="img" aria-label="Apparent TOI drawn at the same scale">
               <circle class="m-scale__ref" r="80"></circle>
-              <circle class="m-scale__disc m-scale__disc--app" r="35.8" data-scale="toi.apparent"></circle>
+              <circle class="m-scale__disc m-scale__disc--app" r="{{ derived.r_apparent | fix2 }}" data-scale="toi.apparent"></circle>
             </svg>
             <p class="m-scale__label"><span class="label"><span class="m-key m-key--app" aria-hidden="true"></span>Apparent</span><span class="m-scale__val" data-fill="toi.apparent|sig3">{{ toi.apparent | sig3 }}</span></p>
           </div>
           <div class="m-scale__tile">
             <svg class="m-scale__svg" viewBox="-100 -100 200 200" role="img" aria-label="Absolute TOI drawn at the same scale">
               <circle class="m-scale__ref" r="80"></circle>
-              <circle class="m-scale__disc m-scale__disc--abs" r="23" data-scale="toi.absolute"></circle>
+              <circle class="m-scale__disc m-scale__disc--abs" r="{{ derived.r_absolute | fix2 }}" data-scale="toi.absolute"></circle>
             </svg>
             <p class="m-scale__label"><span class="label"><span class="m-key m-key--abs" aria-hidden="true"></span>Absolute</span><span class="m-scale__val" data-fill="toi.absolute|sig3">{{ toi.absolute | sig3 }}</span></p>
           </div>
           <div class="m-scale__tile">
             <svg class="m-scale__svg" viewBox="-100 -100 200 200" role="img" aria-label="Facing TOI drawn at the same scale">
               <circle class="m-scale__ref" r="80"></circle>
-              <circle class="m-scale__disc m-scale__disc--fac" r="17.1" data-scale="toi.facing"></circle>
+              <circle class="m-scale__disc m-scale__disc--fac" r="{{ derived.r_facing | fix2 }}" data-scale="toi.facing"></circle>
             </svg>
             <p class="m-scale__label"><span class="label"><span class="m-key m-key--fac" aria-hidden="true"></span>Facing</span><span class="m-scale__val" data-fill="toi.facing|sig3">{{ toi.facing | sig3 }}</span></p>
           </div>
@@ -450,18 +451,18 @@
           <div class="m-seeing__readout" aria-live="polite" aria-atomic="true">
             <p class="label">Apparent TOI</p>
             <p class="m-seeing__value"><span data-seeing="total">{{ toi.apparent | sig3 }}</span> <span class="m-unit">moons</span></p>
-            <p class="m-seeing__ratio" data-seeing="ratio">4.37 times the facing TOI</p>
+            <p class="m-seeing__ratio" data-seeing="ratio">{{ derived.app_ratio | sig3 }} times the facing TOI</p>
             <dl class="m-terms">
-              <div class="m-terms__row"><dt><span class="m-key m-key--fac" aria-hidden="true"></span>Area <span class="m-terms__f">Σ A/h²</span></dt><dd data-seeing="area">{{ toi.facing | sig3 }}</dd></div>
-              <div class="m-terms__row"><dt><span class="m-key m-key--app" aria-hidden="true"></span>Rims <span class="m-terms__f">(θ/2) Σ P/h</span></dt><dd data-seeing="rim">0.113</dd></div>
-              <div class="m-terms__row"><dt><span class="m-key m-key--disc" aria-hidden="true"></span>Discs <span class="m-terms__f">Nπ(θ/2)²</span></dt><dd data-seeing="disc">0.0409</dd></div>
+              <div class="m-terms__row"><dt><span class="m-key m-key--fac" aria-hidden="true"></span>Area <span class="m-terms__f">Σ A/h²</span></dt><dd data-seeing="area">{{ derived.app_area | sig3 }}</dd></div>
+              <div class="m-terms__row"><dt><span class="m-key m-key--app" aria-hidden="true"></span>Rims <span class="m-terms__f">(θ/2) Σ P/h</span></dt><dd data-seeing="rim">{{ derived.app_rim | sig3 }}</dd></div>
+              <div class="m-terms__row"><dt><span class="m-key m-key--disc" aria-hidden="true"></span>Discs <span class="m-terms__f">Nπ(θ/2)²</span></dt><dd data-seeing="disc">{{ derived.app_disc | sig3 }}</dd></div>
             </dl>
             <div class="m-compbar" aria-hidden="true">
-              <span class="m-compbar__seg m-compbar__seg--area" data-seg="area" style="flex-basis:22.9%"></span>
-              <span class="m-compbar__seg m-compbar__seg--rim" data-seg="rim" style="flex-basis:56.7%"></span>
-              <span class="m-compbar__seg m-compbar__seg--disc" data-seg="disc" style="flex-basis:20.5%"></span>
+              <span class="m-compbar__seg m-compbar__seg--area" data-seg="area" style="flex-basis:{{ derived.app_area_pct | fix1 }}%"></span>
+              <span class="m-compbar__seg m-compbar__seg--rim" data-seg="rim" style="flex-basis:{{ derived.app_rim_pct | fix1 }}%"></span>
+              <span class="m-compbar__seg m-compbar__seg--disc" data-seg="disc" style="flex-basis:{{ derived.app_disc_pct | fix1 }}%"></span>
             </div>
-            <p class="m-compbar__legend label" aria-hidden="true"><span data-seg-pct="area">23%</span> area · <span data-seg-pct="rim">57%</span> rims · <span data-seg-pct="disc">20%</span> discs</p>
+            <p class="m-compbar__legend label" aria-hidden="true"><span data-seg-pct="area">{{ derived.app_area_share | pct0 }}</span> area · <span data-seg-pct="rim">{{ derived.app_rim_share | pct0 }}</span> rims · <span data-seg-pct="disc">{{ derived.app_disc_share | pct0 }}</span> discs</p>
           </div>
         </div>
         <div class="m-math m-math--live" data-seeing-tex aria-hidden="true"></div>
@@ -602,7 +603,7 @@
     <div class="m-col">
       <p class="m-kicker"><span class="m-kicker__num">04</span> Breakdown</p>
       <h2 class="m-h2" id="breakdown-title">Where the area is</h2>
-      <p>Starlink satellites, including the Starshield satellites built on the same bus, carry <span data-fill="derived.starlinkShare|pct1">almost all</span> of the facing TOI. Large flat panels in low orbits dominate. A satellite with 60 m² facing the ground at 470 km counts as much as about 2,000 pieces of 0.1 m² debris at 850 km.</p>
+      <p>Starlink satellites, including the Starshield satellites built on the same bus, carry <span data-fill="derived.starlinkShare|pct1">{{ derived.starlink_share | pct1 }}</span> of the facing TOI. Large flat panels in low orbits dominate. A satellite with 60 m² facing the ground at 470 km counts as much as about 2,000 pieces of 0.1 m² debris at 850 km.</p>
     </div>
     <div class="m-wide">
       <figure class="m-fig m-chart" aria-labelledby="groups-title">
@@ -626,7 +627,7 @@
 
     <div class="m-col">
       <h3 class="m-h3">The largest single objects</h3>
-      <p>The two space stations lead, followed by Starlink V3 satellites still low in their orbit-raising. Select a name to open its worked calculation in the explorer.</p>
+      <p>{{ derived.top_lead }} Select a name to open its worked calculation in the explorer.</p>
     </div>
     <div class="m-wide">
       <div class="m-table-wrap" tabindex="0" role="region" aria-label="Top objects by absolute contribution">
@@ -651,7 +652,7 @@
               <tbody></tbody>
             </table>
           </div>
-          <p class="m-small">Debris is <span data-fill="derived.debrisShare|pct0">{{ counts.debris | int }} objects, over a third</span> of the objects and almost none of the area. In the apparent TOI each piece still adds a full seeing disc, so debris matters more there.</p>
+          <p class="m-small">Debris is <span data-fill="derived.debrisShare|pct0">{{ derived.debris_share | pct0 }}</span> of the objects and almost none of the area. In the apparent TOI each piece still adds a full seeing disc, so debris matters more there.</p>
         </div>
         <div>
           <h3 class="m-h3 m-h3--small">By orbit</h3>
@@ -707,7 +708,7 @@
       </figure>
     </div>
     <div class="m-col">
-      <p>When Isaiah posted in October 2024 he put the index at about 0.03 moons. The reconstruction gives <span data-fill="derived.oct2024abs|sig2">0.026</span> for the absolute TOI and <span data-fill="derived.oct2024fac|sig2">0.015</span> for the facing TOI on 1 October 2024. Since then the index has roughly tripled, mostly from V2 Mini satellites and the move to lower shells.</p>
+      <p>When Isaiah posted in October 2024 he put the index at about 0.03 moons. The reconstruction gives <span data-fill="derived.oct2024abs|sig2">{{ derived.oct2024_abs | sig2 }}</span> for the absolute TOI and <span data-fill="derived.oct2024fac|sig2">{{ derived.oct2024_fac | sig2 }}</span> for the facing TOI on 1 October 2024. Since then the index has roughly tripled, mostly from V2 Mini satellites and the move to lower shells.</p>
     </div>
   </section>
 
@@ -760,7 +761,7 @@
             </select>
           </div>
         </form>
-        <p class="m-explorer__summary" aria-live="polite" data-ex="summary">The catalog file is {{ counts.total | int }} rows, about 6 MB. It loads when you reach this section.</p>
+        <p class="m-explorer__summary" aria-live="polite" data-ex="summary">The catalog file is {{ counts.total | int }} rows, {{ derived.size_objects | bytes }}. It loads when you reach this section.</p>
 
         <div class="m-explorer__grid">
           <div class="m-explorer__list">
@@ -797,10 +798,10 @@
           <caption>Published files for the catalog of {{ catalog_date | date_long }}</caption>
           <thead><tr><th scope="col">File</th><th scope="col">Contents</th><th scope="col" class="num">Size</th></tr></thead>
           <tbody>
-            <tr><th scope="row"><a href="data/latest.json" download>latest.json</a></th><td>Headline values, the sums behind them, groups, coverage and input checksums</td><td class="num" data-size="data/latest.json">–</td></tr>
-            <tr><th scope="row"><a href="data/objects.csv" download>objects.csv</a></th><td>One row per counted object: orbit, dimensions, area source, areas and contributions</td><td class="num" data-size="data/objects.csv">–</td></tr>
-            <tr><th scope="row"><a href="data/buses.json" download>buses.json</a></th><td>The curated designs with dimensions, sources, notes, counts and contributions</td><td class="num" data-size="data/buses.json">–</td></tr>
-            <tr><th scope="row"><a href="data/history.csv" download>history.csv</a></th><td>Reconstructed monthly values since 1957 and every measured run</td><td class="num" data-size="data/history.csv">–</td></tr>
+            <tr><th scope="row"><a href="data/latest.json" download>latest.json</a></th><td>Headline values, the sums behind them, groups, coverage and input checksums</td><td class="num" data-size="data/latest.json" data-bytes="{{ derived.size_latest }}" title="{{ derived.size_latest | int }} bytes">{{ derived.size_latest | bytes }}</td></tr>
+            <tr><th scope="row"><a href="data/objects.csv" download>objects.csv</a></th><td>One row per counted object: orbit, dimensions, area source, areas and contributions</td><td class="num" data-size="data/objects.csv" data-bytes="{{ derived.size_objects }}" title="{{ derived.size_objects | int }} bytes">{{ derived.size_objects | bytes }}</td></tr>
+            <tr><th scope="row"><a href="data/buses.json" download>buses.json</a></th><td>The curated designs with dimensions, sources, notes, counts and contributions</td><td class="num" data-size="data/buses.json" data-bytes="{{ derived.size_buses }}" title="{{ derived.size_buses | int }} bytes">{{ derived.size_buses | bytes }}</td></tr>
+            <tr><th scope="row"><a href="data/history.csv" download>history.csv</a></th><td>Reconstructed monthly values since 1957 and every measured run</td><td class="num" data-size="data/history.csv" data-bytes="{{ derived.size_history }}" title="{{ derived.size_history | int }} bytes">{{ derived.size_history | bytes }}</td></tr>
           </tbody>
         </table>
       </div>
@@ -838,9 +839,9 @@ for k, v in mine.items():
         <div class="m-code m-code--out">
           <div class="m-code__bar"><span class="label">Expected output</span></div>
 <pre data-expected-output><code>objects   <span data-fill="counts.total|raw">{{ counts.total }}</span>
-absolute  <span data-fill="toi.absolute|fix6">0.082503</span>   published <span data-fill="toi.absolute|fix6">0.082503</span>
-facing    <span data-fill="toi.facing|fix6">0.045736</span>   published <span data-fill="toi.facing|fix6">0.045736</span>
-apparent  <span data-fill="toi.apparent|fix6">0.199881</span>   published <span data-fill="toi.apparent|fix6">0.199881</span></code></pre>
+absolute  <span data-fill="toi.absolute|fix6">{{ toi.absolute | fix6 }}</span>   published <span data-fill="toi.absolute|fix6">{{ toi.absolute | fix6 }}</span>
+facing    <span data-fill="toi.facing|fix6">{{ toi.facing | fix6 }}</span>   published <span data-fill="toi.facing|fix6">{{ toi.facing | fix6 }}</span>
+apparent  <span data-fill="toi.apparent|fix6">{{ toi.apparent | fix6 }}</span>   published <span data-fill="toi.apparent|fix6">{{ toi.apparent | fix6 }}</span></code></pre>
           <p class="m-code__note">The file rounds areas to six significant figures. The recomputed values still match the published ones to within one part in ten million.</p>
         </div>
       </div>

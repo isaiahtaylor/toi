@@ -108,9 +108,10 @@ export function drawMarks(ctx, M, em, P, sprites, dpr) {
     ctx.arc(tx, ty, rFac, 0, TAU);
     ctx.stroke();
   }
-  if (rApp > 0 && em.apparent > 0.01) {
+  if (rApp > 0) {
+    // Always faintly drawn, so the apparent leader lands on a visible boundary.
     ctx.setLineDash([1, 2.5]);
-    ctx.strokeStyle = rgba(P.sodium, 0.75 * em.apparent);
+    ctx.strokeStyle = rgba(P.sodium, lerp(0.26, 0.8, em.apparent));
     ctx.beginPath();
     ctx.arc(tx, ty, rApp, 0, TAU);
     ctx.stroke();

@@ -2,9 +2,12 @@
    Editorial long-form. A reading column of var(--measure); figures, charts and tables
    break out to var(--wide). Diagram hardware uses --sodium (human-made), the Moon uses
    --moon. Series colors are steps from the dataviz reference palette (dark column),
-   validated on the figure surface --sky-1 (#070c18) with validate_palette.js:
-     absolute, facing, apparent   #c98500 #3987e5 #d55181  passes adjacent and all pairs
-     area, rims, discs            #3987e5 #d55181 #9085e9  passes adjacent; these always
+   validated on the figure surface --sky-1 (#070c18) with validate_palette.js. Absolute,
+   the headline, keeps the amber of the hero; the other series stay cool, matching the
+   night palette (apparent is aqua, the color of airglow, in place of magenta):
+     absolute, facing, apparent   #c98500 #3987e5 #199e70  passes all pairs
+                                  (worst CVD ΔE 8.4, normal vision 19.8, all >= 3:1)
+     area, rims, discs            #3987e5 #199e70 #9085e9  passes adjacent; these always
      appear in this order (stacked bar, term list, Steiner figure), so blue and violet,
      which protanopes cannot separate, never touch. */
 
@@ -12,7 +15,7 @@
   /* Series identity (see the header comment for the validation) */
   --s-abs: #c98500;
   --s-fac: #3987e5;
-  --s-app: #d55181;
+  --s-app: #199e70;
   --s-disc: #9085e9;
 
   --gut-l: var(--gutter-l);
@@ -161,6 +164,7 @@
   font-weight: 300;
   color: var(--ink-1);
 }
+.m-tweet > blockquote > p + p { margin-top: 0.7em; }
 .m-tweet__quoted {
   margin: var(--space-5) 0 0;
   padding: var(--space-4) var(--space-5);
@@ -548,6 +552,7 @@
 .m-bars__track { position: relative; display: flex; flex-direction: column; gap: 2px; padding: 2px 0; }
 .m-bars__grid { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--rule); }
 .m-bars__bar { position: relative; height: 9px; min-width: 1px; border-radius: 0 4px 4px 0; }
+.m-bars__tip { position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-50%); font-family: var(--font-mono); font-size: 11px; line-height: 1; color: var(--ink-2); white-space: nowrap; pointer-events: none; }
 .m-bars__bar--abs { background: var(--s-abs); }
 .m-bars__bar--fac { background: var(--s-fac); }
 .m-bars__row:hover .m-bars__bar, .m-bars__row:focus-visible .m-bars__bar { filter: brightness(1.18); }
@@ -821,6 +826,9 @@
   .m-bars__axis > :first-child { display: none; }
   .m-bars__row { grid-template-columns: minmax(0, 1fr) var(--val-w); row-gap: 4px; }
   .m-bars__label { grid-column: 1 / -1; }
+  .m-bars__tip { display: none; }
+  .m-files td:not(.num) { min-width: 0; font-size: var(--step--1); }
+  .m-files th, .m-files td { padding-left: var(--space-3); padding-right: var(--space-3); }
   .m-explorer { --cols: 30px minmax(0, 1fr) 54px 72px; --row-h: 56px; }
   .m-legend--row .m-legend__group:not(:first-child) { flex-basis: 100%; margin-left: 0; margin-top: var(--space-1); }
   .m-designs__label { min-width: 12ch; }

@@ -111,21 +111,28 @@ export function autoNarrow(tex) {
 // letting it scroll sideways.
 const MIN_SCALE = 0.72;
 
-export function fit(katex, node) {
-  if (!node.isConnected || !node.clientWidth) return;
-  const wide = node._tex;
-  const narrow = node._texNarrow;
-  node.style.fontSize = '';
-  node.classList.remove('is-scroll');
-  if (narrow && node._showing !== 'wide') { renderInto(katex, node, wide, true); node._showing = 'wide'; }
-  const over = () => node.scrollWidth > node.clientWidth + 1;
-  if (over() && narrow) { renderInto(katex, node, narrow, true); node._showing = 'narrow'; }
-  if (over()) {
-    const base = parseFloat(getComputedStyle(node).fontSize);
-    const ratio = Math.max(MIN_SCALE, (node.clientWidth / node.scrollWidth) * 0.98);
-    node.style.fontSize = `${(base * ratio).toFixed(2)}px`;
-    if (over()) node.classList.add('is-scroll');
+// Layout is read in three batches for any number of formulas (render all, measure all,
+// adjust all), so fitting a page of formulas costs a few layouts, not one per formula.
+export function fitAll(katex, nodes) {
+  const live = nodes.filter((n) => n.isConnected);
+  for (const n of live) {
+    n.style.fontSize = '';
+    n.classList.remove('is-scroll');
+    if (n._texNarrow && n._showing !== 'wide') { renderInto(katex, n, n._tex, true); n._showing = 'wide'; }
   }
+  const over = (n) => n.scrollWidth > n.clientWidth + 1;
+  const wideOver = live.filter((n) => n.clientWidth && over(n));
+  for (const n of wideOver) {
+    if (n._texNarrow) { renderInto(katex, n, n._texNarrow, true); n._showing = 'narrow'; }
+  }
+  const shrink = wideOver.filter(over).map((n) => [n, parseFloat(getComputedStyle(n).fontSize), n.clientWidth / n.scrollWidth]);
+  for (const [n, base, ratio] of shrink) n.style.fontSize = `${(base * Math.max(MIN_SCALE, ratio * 0.98)).toFixed(2)}px`;
+  const scroll = shrink.map(([n]) => n).filter(over);
+  for (const n of scroll) n.classList.add('is-scroll');
+}
+
+export function fit(katex, node) {
+  fitAll(katex, [node]);
 }
 
 const fitted = new Set();
@@ -139,28 +146,38 @@ function watchResize(katex) {
     lastWidth = window.innerWidth;
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
-      for (const n of fitted) { if (n.isConnected) fit(katex, n); else fitted.delete(n); }
+      for (const n of fitted) if (!n.isConnected) fitted.delete(n);
+      fitAll(katex, [...fitted]);
     }, 150);
   });
 }
 
-// Render a display formula that fits itself to the column, now and on resize.
-export function renderFitted(katex, node, tex, narrowTex = null) {
-  node._tex = tex;
-  node._texNarrow = narrowTex || autoNarrow(tex);
-  node._showing = null;
-  renderInto(katex, node, tex, true);
-  node._showing = 'wide';
-  fitted.add(node);
+// Render display formulas that fit themselves to the column, now and on resize.
+// items: [{ node, tex, narrow }]
+export function renderFittedAll(katex, items) {
+  if (fitted.size > 64) for (const n of fitted) if (!n.isConnected) fitted.delete(n);
+  for (const { node, tex, narrow } of items) {
+    node._tex = tex;
+    node._texNarrow = narrow || autoNarrow(tex);
+    renderInto(katex, node, tex, true);
+    node._showing = 'wide';
+    fitted.add(node);
+  }
   watchResize(katex);
-  fit(katex, node);
+  fitAll(katex, items.map((it) => it.node));
+}
+
+export function renderFitted(katex, node, tex, narrowTex = null) {
+  renderFittedAll(katex, [{ node, tex, narrow: narrowTex }]);
 }
 
 export function renderAll(katex, root, ctx) {
+  const display = [];
   root.querySelectorAll('[data-tex]').forEach((node) => {
     const tex = fillTokens(node.dataset.tex, ctx);
     if (node.classList.contains('m-tex')) { renderInto(katex, node, tex, false); return; }
     const narrow = node.dataset.texNarrow ? fillTokens(node.dataset.texNarrow, ctx) : null;
-    renderFitted(katex, node, tex, narrow);
+    display.push({ node, tex, narrow });
   });
+  renderFittedAll(katex, display);
 }

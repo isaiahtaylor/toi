@@ -110,9 +110,9 @@ Details of the rules as implemented:
   perigee and apogee is counted even if GCAT records it as reentered.
 - A stack of joined objects counts once. GCAT's latest phase also records dockings and
   attachments ("Docked with …", "Attached to …"), including some CelesTrak has not yet
-  recorded in `ORBIT_CENTER`. Following these links up to the free-flying object of the
-  stack: a CelesTrak object whose stack leads to another counted CelesTrak object is left
-  out and represented by it (for example a cargo ship docked to the ISS that CelesTrak still
+  recorded in `ORBIT_CENTER`. The pipeline follows these links up to the free-flying object
+  of the stack. A CelesTrak object whose stack leads to another counted CelesTrak object is
+  left out and represented by it (for example a cargo ship docked to the ISS that CelesTrak still
   lists with its own orbit). When the free-flying object is one only GCAT lists, the
   catalogued object represents the stack and the GCAT-only object is left out.
 - GCAT's temporary catalog holds objects that are waiting for a US catalog number. When
@@ -129,8 +129,9 @@ including for objects whose element sets are not public (`DATA_STATUS_CODE` NEA)
 perigee or apogee that is missing or 0 counts as no orbit. The launch-mate fallback takes
 the median perigee and the median apogee of the counted objects from the same launch. It is
 not applied to objects that GCAT records as having come down or left Earth orbit. Objects
-with no orbit from any source are excluded and counted in `status_notes`. Eccentric orbits are represented by their mean altitude; HEO objects
-contribute about 0.01% so this choice does not matter at the reported precision.
+with no orbit from any source are excluded and counted in `status_notes`. Eccentric orbits
+are represented by their mean altitude; HEO objects contribute about 0.01% so this choice
+does not matter at the reported precision.
 
 Orbit regimes (for the breakdown only): LEO has apogee ≤ 2,000 km; GEO has mean altitude
 within 35,786 ± 1,000 km and eccentricity ≤ 0.02; MEO is the rest below the GEO band with
@@ -185,8 +186,9 @@ random projection of a convex body is π times its mean width.
 extent` when Span exceeds the body by more than 5%; array area `e × w` with `w` the body
 width; counted fully in `A_abs`, at ½ in `A_fac`; added to `P_fac` per the union formula.
 **Other appendages** (antennas, booms): area `0.1 × e × min(L,D)`. When Shape mentions a
-tether, Span is the tether's length and adds no area, because a tether is only a few
-millimetres thick (the 20 km tether of TSS-1R would otherwise add over 3,000 m²).
+tether, Span is the tether's length and adds neither area nor perimeter, because a tether
+is only a few millimetres thick and may not be deployed (the 20 km tether of TSS-1R would
+otherwise add over 3,000 m²).
 
 As implemented: the body extent is `max(L, D)` (`L` for a box, `D` for a flat panel); the
 body width `w` is `D`, or `D/2` for a flat panel. The arrays attach along a body side as

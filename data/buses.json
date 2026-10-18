@@ -158,7 +158,7 @@
   },
   "sources": [
    {
-    "title": "Spaceflight Now, launch coverage giving 575 kg V2 Mini Optimized satellites (6 January 2025)",
+    "title": "Spaceflight Now, SpaceX launches first dedicated Starlink mission of 2025 (6 January 2025)",
     "url": "https://spaceflightnow.com/2025/01/06/live-coverage-spacex-to-launch-24-starlink-satellites-on-falcon-9-rocket-from-cape-canaveral-4/"
    },
    {
@@ -170,7 +170,7 @@
     "url": "https://planet4589.org/space/gcat/"
    }
   ],
-  "notes": "SpaceX has not published dimensions for this version, which has launched on Falcon 9 since late 2024 at about 575 kg, lighter than the 730 to 800 kg V2 Mini. GCAT records the same 4.1 m body and 29.0 m span as V2 Mini, so we assume the V2 Mini envelope. This is the largest single assumption in the index. If the arrays were 25% smaller, the facing TOI would fall by about 10%."
+  "notes": "SpaceX has not published dimensions for this version, which has launched on Falcon 9 since 2024 at about 575 kg, nearly 22% lighter than V2 Mini (Spaceflight Now). GCAT records the same 4.1 m body and 29.0 m span as V2 Mini, so we assume the V2 Mini envelope. This is the largest single assumption in the index. If the arrays were 25% smaller, the facing TOI would fall by about 10%."
  },
  {
   "id": "starlink-v2-mini-dtc",
@@ -309,7 +309,7 @@
     "url": "https://arxiv.org/abs/2309.14152"
    }
   ],
-  "notes": "Starshield satellites are classified and no dimensions are published. GCAT records them with the same 4.1 m body and 29.0 m span as V2 Mini, flagged as guesses, and with masses of 575 to 800 kg that match the V2 Mini family, so we use the V2 Mini envelope. If they were the size of Starlink v1.5 instead, the facing TOI would fall by about 3%. Orbits come from CelesTrak where it lists them and from GCAT otherwise."
+  "notes": "Starshield satellites are classified and no dimensions are published. GCAT records them with the same 4.1 m body and 29.0 m span as V2 Mini (the span flagged as a guess) and with masses of 575 to 800 kg that match the V2 Mini family, so we use the V2 Mini envelope. If they were the size of Starlink v1.5 instead, the facing TOI would fall by about 3%. Orbits come from CelesTrak where it lists them and from GCAT otherwise."
  },
  {
   "id": "ast-bluebird-block1",
@@ -346,11 +346,11 @@
     "url": "https://www.businesswire.com/news/home/20240808143608/en/AST-SpaceMobile%E2%80%99s-Commercial-Satellites-Arrive-at-Cape-Canaveral-For-Upcoming-Launch"
    },
    {
-    "title": "Space.com, SpaceX launches 5 BlueBird satellites for AST SpaceMobile (September 2024)",
+    "title": "Space.com, SpaceX launches 5 giant BlueBird smartphone satellites for AST SpaceMobile, lands rocket (12 September 2024)",
     "url": "https://www.space.com/spacex-ast-spacemobile-bluebird-launch-september-2024"
    },
    {
-    "title": "Space.com, BlueWalker 3 deploys the largest commercial array in low Earth orbit",
+    "title": "Space.com, Satellite unfurls biggest commercial communications array ever (November 2022)",
     "url": "https://space.com/bluewalker-3-satellite-deploys-largest-commercial-array"
    }
   ],
@@ -391,11 +391,11 @@
     "url": "https://satnews.com/2025/12/24/ast-spacemobile-deploys-bluebird-6-largest-commercial-array-in-leo"
    },
    {
-    "title": "AST SpaceMobile, $43 million contract in support of the U.S. Space Development Agency (26 February 2025)",
-    "url": "https://www.businesswire.com/news/home/20250226892736/en/AST-SpaceMobile-Secures-%252443-Million-Contract-in-Support-of-U.S.-Space-Development-Agency-Through-Prime-Contractor"
+    "title": "Space.com, SpaceX launches 5 giant BlueBird smartphone satellites for AST SpaceMobile, lands rocket (12 September 2024)",
+    "url": "https://www.space.com/spacex-ast-spacemobile-bluebird-launch-september-2024"
    }
   ],
-  "notes": "AST SpaceMobile gives the Block 2 array as about 2,400 square feet (223 m2), about three times the Block 1 array. As for Block 1, the array faces Earth with the solar cells on its back and is modelled as a square of that area."
+  "notes": "AST SpaceMobile gives the Block 2 array as nearly 2,400 square feet (223 m2), about three and a half times the Block 1 array. As for Block 1, the array faces Earth with the solar cells on its back and is modelled as a square of that area."
  },
  {
   "id": "iss",
@@ -414,11 +414,11 @@
   "arrays": null,
   "extra_area_m2": 0.0,
   "A_abs_m2": 4300.0,
-  "A_fac_m2": 2560.0,
+  "A_fac_m2": 2550.0,
   "P_fac_m": 1180.0,
   "n_on_orbit": 1,
   "toi_abs": 0.00037982619049920554,
-  "toi_fac": 0.00022612908085534097,
+  "toi_fac": 0.00022524576413324981,
   "median_alt_km": 420.0,
   "alt_history": null,
   "sources": [
@@ -435,7 +435,7 @@
     "url": "https://boeing.mediaroom.com/2002-09-24-First-of-Twin-Boeing-built-Trusses-Ready-for-International-Space-Station"
    }
   ],
-  "notes": "Counted from its documented parts as one object; docked modules and visiting vehicles carry the station's catalog number and are not counted separately. Eight solar array wings of 107 x 38 ft give 3,022 m2 (Lockheed Martin); they track the Sun and count at one half in the facing area. Six heat-rejection radiators of 75 x 11 ft add 467 m2 (Boeing), also held edge-on to the Sun and counted at one half. The 94 m truss at 4.5 m wide adds 423 m2, and the pressurized modules (67 m along the main axis at about 4.2 m, plus the cross-axis modules) add about 390 m2; the station flies with these parallel to the ground, so they count in full. That gives 4,300 m2 absolute and 2,560 m2 facing. The newer roll-out arrays mostly cover the original wings and are not added. The perimeter of the facing outline, estimated from the same parts, is about 1,180 m."
+  "notes": "Counted from its documented parts as one object; docked modules and visiting vehicles carry the station's catalog number and are not counted separately. Eight solar array wings of 107 x 38 ft give 3,022 m2 (Lockheed Martin); they track the Sun and count at one half in the facing area. Six heat-rejection radiators of 75 x 11 ft add 460 m2 (Boeing), also held edge-on to the Sun and counted at one half. The 94 m truss at 4.5 m wide adds 423 m2, and the pressurized modules (67 m along the main axis at about 4.2 m, plus the cross-axis modules) add about 390 m2; the station flies with these parallel to the ground, so they count in full. That gives about 4,300 m2 absolute and 2,550 m2 facing. The newer roll-out arrays mostly cover the original wings and are not added, and neither are the smaller arrays of the Russian segment. The perimeter of the facing outline, estimated from the same parts, is about 1,180 m."
  },
  {
   "id": "tiangong",
@@ -475,13 +475,53 @@
     "url": "https://planet4589.org/space/gcat/"
    }
   ],
-  "notes": "Counted as one object from its documented parts. Wentian and Mengtian each carry two solar wings of about 110 m2, spanning about 55 m tip to tip (Xinhua). Xinhua describes these as twice the array area of the Tianhe core module, which gives about 110 m2 for Tianhe's own wings. The arrays total about 550 m2 and track the Sun, so they count at one half in the facing area. The three modules (16.6 m and twice 17.9 m long, 4.2 m across) add about 220 m2 seen from below. That gives 770 m2 absolute and 495 m2 facing, with an outline perimeter of about 390 m."
+  "notes": "Counted as one object from its documented parts. Wentian and Mengtian each carry two solar wings of about 110 m2, spanning about 55 m tip to tip (Xinhua). Xinhua describes these as twice the array area of the Tianhe core module, which gives about 110 m2 for Tianhe's own wings. The arrays total about 550 m2 and track the Sun, so they count at one half in the facing area. Xinhua also gives nearly 400 m2 of solar cells for the finished station; we use the wing area because the whole wing blocks light. The three modules (16.6 m and twice 17.9 m long, 4.2 m across) add about 220 m2 seen from below. That gives 770 m2 absolute and 495 m2 facing, with an outline perimeter of about 390 m."
+ },
+ {
+  "id": "space-shuttle",
+  "label": "Space Shuttle orbiter",
+  "family": "Crewed vehicles",
+  "confidence": "estimated",
+  "area_model": "curated",
+  "match": {
+   "gcat_bus": [
+    "STS OV"
+   ],
+   "norad": [],
+   "name_regex": null
+  },
+  "body": null,
+  "arrays": null,
+  "extra_area_m2": 0.0,
+  "A_abs_m2": 300.0,
+  "A_fac_m2": 300.0,
+  "P_fac_m": 102.0,
+  "n_on_orbit": 0,
+  "toi_abs": 0.0,
+  "toi_fac": 0.0,
+  "median_alt_km": null,
+  "alt_history": null,
+  "sources": [
+   {
+    "title": "NASA, The Space Shuttle",
+    "url": "https://www.nasa.gov/reference/the-space-shuttle/"
+   },
+   {
+    "title": "ESA, Shuttle technical facts",
+    "url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Space_Shuttle/Shuttle_technical_facts"
+   },
+   {
+    "title": "Wikipedia, Space Shuttle orbiter (specifications: wing area)",
+    "url": "https://en.wikipedia.org/wiki/Space_Shuttle_orbiter"
+   }
+  ],
+  "notes": "The orbiter flew from 1981 to 2011, so it appears only in the reconstructed history. NASA gives a length of 122 ft (37.2 m) and a wingspan of 78 ft (23.8 m). The wing reference area of 2,690 sq ft (249.9 m2) already includes the part of the wing inside the fuselage. The nose section ahead of the wing and the body flap behind it add about 50 m2, so the outline seen from above or below is about 300 m2. The orbiter's attitude varied from mission to mission, so the facing area is taken as the same. The perimeter of the outline, taken as a triangle 37.2 m long and 23.8 m across the base, is about 102 m. GCAT records the orbiter as a 37.3 x 23.8 x 23.8 m box, which the generic model would turn into 1,377 m2, so that each flight counted about as much as the whole ISS."
  },
  {
   "id": "amazon-leo",
   "label": "Amazon Leo (Kuiper)",
   "family": "Amazon Leo",
-  "confidence": "estimated",
+  "confidence": "assumed",
   "area_model": "curated",
   "match": {
    "gcat_bus": [
@@ -519,7 +559,7 @@
     "url": "https://planet4589.org/space/gcat/"
    }
   ],
-  "notes": "Amazon has not published dimensions. Mallama et al. (2026) describe three antenna panels that deploy into one Earth-facing panel and a single solar array that rotates about its long axis to track the Sun, and find reflective characteristics similar to Starlink v1. We take a 2.0 x 3.0 m panel and one 2.0 x 12.0 m array, 30 m2 face-on, the same order as Starlink v1's 26 m2. GCAT's figures (a 1.8 x 0.7 m body with a 5.0 m span, flagged as guesses) would give about 4 m2, which does not fit the deployed antenna panels."
+  "notes": "Amazon has not published dimensions. Mallama et al. (2026) describe three antenna panels that deploy into one Earth-facing panel and a single solar array that rotates about its long axis to track the Sun, and find reflective characteristics similar to Starlink v1. The paper gives no dimensions, so we assume a 2.0 x 3.0 m panel and one 2.0 x 12.0 m array, 30 m2 face-on, the same order as Starlink v1's 26 m2. GCAT's figures (a 1.8 x 0.7 m body with a 5.0 m span, flagged as guesses) would give about 4 m2, which does not fit the deployed antenna panels."
  },
  {
   "id": "oneweb",
@@ -589,7 +629,7 @@
     "url": "https://planet4589.org/space/gcat/"
    }
   ],
-  "notes": "No dimensions are published, so the generic model is applied to GCAT's dimensions, a flat panel 3.0 m across with one array across a 10.0 m span. Mallama et al. (2024) model the satellites as an Earth-facing antenna panel with one Sun-tracking array, which matches the generic flat-panel row. Some of these satellites are tumbling (Mallama et al. 2025)."
+  "notes": "No dimensions are published, so the generic model is applied to GCAT's dimensions, a flat panel 3.0 m across with one array across a 10.0 m span. Mallama et al. (2024) fit their observations with a nadir-facing antenna panel and a solar array held facing the zenith while the Sun passed overhead, and expect the array to turn toward the Sun at other times; the generic model counts it at one half. Some of these satellites are tumbling (Mallama et al. 2025)."
  },
  {
   "id": "guowang",

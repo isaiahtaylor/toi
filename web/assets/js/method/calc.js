@@ -1,7 +1,7 @@
 // The worked calculation for one object: the area model ported from pipeline/toi/areas.py
 // and designs.py, with this object's numbers substituted into each formula.
 import { ARCSEC } from '../toi.js';
-import { el, sig, intl, pct, texSci, texNum, trimNum, groupNum, arcsec, confidenceChip, TYPE_LABEL, ORBIT_SRC_LABEL } from './format.js';
+import { el, sig, intl, pct, texSci, texNum, trimNum, groupNum, arcsec, confidenceChip, prose, TYPE_LABEL, ORBIT_SRC_LABEL } from './format.js';
 
 // --- Model (keep identical to pipeline/toi/areas.py) ------------------------------------
 const SPHERE = /sphere|ball|\bico|geodesic/;
@@ -200,7 +200,7 @@ export function renderCalc(container, obj, ctx) {
       model = { A_abs: design.A_abs_m2, A_fac: design.A_fac_m2, P_fac: design.P_fac_m };
       areaKids.push(el('p', { text: 'The station’s areas are given directly, from its documented parts:' }));
       areaKids.push(texLine(`A_\\text{abs} = ${texNum(design.A_abs_m2)}\\ \\text{m}^2,\\quad A_\\text{fac} = ${texNum(design.A_fac_m2)}\\ \\text{m}^2,\\quad P_\\text{fac} = ${texNum(design.P_fac_m)}\\ \\text{m}`));
-      areaKids.push(el('p', { text: design.notes }));
+      areaKids.push(el('p', { text: prose(design.notes) }));
     }
     if (design.sources?.length) {
       areaKids.push(el('p', {}, 'Sources: ', ...design.sources.flatMap((s, i) => [i ? '; ' : '', el('a', { href: s.url, rel: 'noopener', text: s.title })])));

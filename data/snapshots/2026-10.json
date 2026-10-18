@@ -1,13 +1,16 @@
 {
  "schema_version": 1,
  "fixture": false,
- "generated_at": "2026-10-18T19:09:37Z",
+ "generated_at": "2026-10-18T19:59:08Z",
  "catalog_date": "2026-10-18",
  "next_update": "2026-11-01",
  "status": "ok",
  "status_notes": [
-  "551 objects that GCAT lists in Earth orbit but CelesTrak does not carry are counted, with orbits from GCAT.",
-  "50 objects that CelesTrak lists in orbit have no orbit in CelesTrak or GCAT and are not counted; GCAT records 47 of them as reentered or no longer in Earth orbit.",
+  "532 objects that GCAT lists in Earth orbit but CelesTrak does not carry are counted, with orbits from GCAT.",
+  "5 objects that GCAT records as docked with or attached to another counted object are counted through their host (MEV-1, SHIJIAN-25 (SJ-25), SHIJIAN-29B (SJ-29B) and 2 others).",
+  "3 objects that only GCAT lists carry a catalogued object attached to them and are counted through that object.",
+  "16 objects in GCAT's temporary catalog are not counted because CelesTrak already lists unidentified objects from the same launches (2025-276, 2026-067, 2026-156, 2026-227).",
+  "122 objects that CelesTrak lists in orbit have no orbit in CelesTrak or GCAT and are not counted; GCAT records 119 of them as reentered or no longer in Earth orbit.",
   "46 objects that only GCAT lists in Earth orbit have no orbit in any source and are not counted (17 from launch 2026-235, 4 from launch 1968-118, 25 others)."
  ],
  "constants": {
@@ -20,21 +23,21 @@
   "min_altitude_km": 100.0
  },
  "toi": {
-  "absolute": 0.08250253040228142,
-  "facing": 0.04573631778960508,
-  "apparent": 0.19988070954941628
+  "absolute": 0.08247222667560557,
+  "facing": 0.045710924579967796,
+  "apparent": 0.19938019991520886
  },
  "sums": {
-  "n": 35537,
-  "abs_A_h2": 5.294832621382108e-06,
-  "fac_A_h2": 2.9352572125182142e-06,
-  "fac_P_h": 1.4992463144543007
+  "n": 35441,
+  "abs_A_h2": 5.292887794238377e-06,
+  "fac_A_h2": 2.9336275316575968e-06,
+  "fac_P_h": 1.4944190646308708
  },
  "counts": {
-  "total": 35537,
-  "payload": 20143,
-  "rocket_body": 2292,
-  "debris": 13047,
+  "total": 35441,
+  "payload": 20112,
+  "rocket_body": 2266,
+  "debris": 13008,
   "unknown": 55
  },
  "coverage": {
@@ -42,47 +45,47 @@
    {
     "source": "curated",
     "n": 11887,
-    "share_abs": 0.9806708023631572,
-    "share_fac": 0.9735928293336633
+    "share_abs": 0.9810311416088854,
+    "share_fac": 0.9741143530244134
    },
    {
     "source": "gcat",
-    "n": 11035,
-    "share_abs": 0.019128486294663925,
-    "share_fac": 0.026045112800715184
+    "n": 10972,
+    "share_abs": 0.01876862681475896,
+    "share_fac": 0.02552438664023584
    },
    {
     "source": "rcs",
-    "n": 9081,
-    "share_abs": 0.00011792646694176517,
-    "share_fac": 0.00021272442545227963
+    "n": 9080,
+    "share_abs": 0.0001179665718835914,
+    "share_fac": 0.00021283677689580704
    },
    {
     "source": "default",
-    "n": 3534,
-    "share_abs": 8.278487515241069e-05,
-    "share_fac": 0.00014933344023298578
+    "n": 3502,
+    "share_abs": 8.226500438765498e-05,
+    "share_fac": 0.00014842355851847326
    }
   ],
   "orbit_source": [
    {
     "source": "celestrak",
-    "n": 34704
+    "n": 34699
    },
    {
     "source": "gcat",
-    "n": 746
+    "n": 735
    },
    {
     "source": "launch-mates",
-    "n": 87
+    "n": 7
    }
   ],
-  "gcat_guess_share_abs": 0.9796010457868201,
-  "gcat_guess_share_abs_final": 0.009225733565409058,
+  "gcat_guess_share_abs": 0.9797919788400384,
+  "gcat_guess_share_abs_final": 0.008968028452018894,
   "generic_only": {
-   "absolute": 0.042728378104563806,
-   "facing": 0.024935746934483957
+   "absolute": 0.042698074377888015,
+   "facing": 0.024911237041568755
   }
  },
  "groups": [
@@ -192,11 +195,11 @@
    "n": 1,
    "median_alt_km": 420.0,
    "toi_abs": 0.00037982619049920554,
-   "toi_fac": 0.00022612908085534097,
+   "toi_fac": 0.00022524576413324981,
    "abs_A_h2": 2.437641723356009e-08,
-   "fac_A_h2": 1.4512471655328799e-08,
+   "fac_A_h2": 1.4455782312925171e-08,
    "fac_P_h": 0.0028095238095238095,
-   "toi_app": 0.00043951739714853346
+   "toi_app": 0.0004386340804264423
   },
   {
    "id": "ast-bluebird-block2",
@@ -301,126 +304,126 @@
    "label": "Other payloads",
    "family": "Other",
    "bus_id": null,
-   "n": 7042,
-   "median_alt_km": 886.5,
-   "toi_abs": 0.0009461791802855035,
-   "toi_fac": 0.0006677882350703561,
-   "abs_A_h2": 6.072371798804525e-08,
-   "fac_A_h2": 4.2857193761028315e-08,
-   "fac_P_h": 0.07403574008606446,
-   "toi_app": 0.014362958077070881
+   "n": 7011,
+   "median_alt_km": 889.0,
+   "toi_abs": 0.0009335362806303216,
+   "toi_fac": 0.0006589516332081979,
+   "abs_A_h2": 5.991232423809953e-08,
+   "fac_A_h2": 4.229007990920121e-08,
+   "fac_P_h": 0.06967015989168766,
+   "toi_app": 0.013988667936237218
   },
   {
    "id": "rocket-bodies",
    "label": "Rocket bodies",
    "family": "Other",
    "bus_id": null,
-   "n": 2292,
+   "n": 2266,
    "median_alt_km": 8180.0,
-   "toi_abs": 0.00044224648612740215,
-   "toi_fac": 0.000397272385257588,
-   "abs_A_h2": 2.8382415787991712e-08,
-   "fac_A_h2": 2.549607599645198e-08,
-   "fac_P_h": 0.018631765847254515,
-   "toi_app": 0.004441873960826836
+   "toi_abs": 0.0004254529956237998,
+   "toi_fac": 0.00038235947257858036,
+   "abs_A_h2": 2.7304646161875065e-08,
+   "fac_A_h2": 2.4538997757183224e-08,
+   "fac_P_h": 0.018252154023584512,
+   "toi_app": 0.004368369388185951
   },
   {
    "id": "debris",
    "label": "Debris and fragments",
    "family": "Other",
    "bus_id": null,
-   "n": 13102,
+   "n": 13063,
    "median_alt_km": 913.0,
-   "toi_abs": 3.920494199955405e-05,
-   "toi_fac": 3.6315262260236335e-05,
-   "abs_A_h2": 2.5160877467206994e-09,
-   "fac_A_h2": 2.330634397902403e-09,
-   "fac_P_h": 0.010703355427044953,
-   "toi_app": 0.01591969422732006
+   "toi_abs": 3.833760548250716e-05,
+   "toi_fac": 3.5554883886187656e-05,
+   "abs_A_h2": 2.4604239790546252e-09,
+   "fac_A_h2": 2.281834970783316e-09,
+   "fac_P_h": 0.010621297621661469,
+   "toi_app": 0.015867862623309196
   }
  ],
  "by_type": [
   {
    "type": "payload",
-   "n": 20143,
-   "toi_abs": 0.08202107897415518,
-   "toi_fac": 0.04530273014208757,
-   "toi_app": 0.17951914136126942,
-   "abs_A_h2": 5.263934117847441e-06,
-   "fac_A_h2": 2.90743050212388e-06,
-   "fac_P_h": 1.4699111931799973
+   "n": 20112,
+   "toi_abs": 0.08200843607450005,
+   "toi_fac": 0.0452930102235033,
+   "toi_app": 0.1791439679037137,
+   "abs_A_h2": 5.263122724097498e-06,
+   "fac_A_h2": 2.906806698929648e-06,
+   "fac_P_h": 1.4655456129856215
   },
   {
    "type": "rocket_body",
-   "n": 2292,
-   "toi_abs": 0.00044224648612740215,
-   "toi_fac": 0.000397272385257588,
-   "toi_app": 0.004441873960826836,
-   "abs_A_h2": 2.8382415787991712e-08,
-   "fac_A_h2": 2.549607599645198e-08,
-   "fac_P_h": 0.018631765847254515
+   "n": 2266,
+   "toi_abs": 0.0004254529956237998,
+   "toi_fac": 0.00038235947257858036,
+   "toi_app": 0.004368369388185951,
+   "abs_A_h2": 2.7304646161875065e-08,
+   "fac_A_h2": 2.4538997757183224e-08,
+   "fac_P_h": 0.018252154023584512
   },
   {
    "type": "debris",
-   "n": 13047,
-   "toi_abs": 3.070361752856014e-05,
-   "toi_fac": 2.87670615702036e-05,
-   "toi_app": 0.01581545584938702,
-   "abs_A_h2": 1.9704912672613518e-09,
-   "fac_A_h2": 1.8462073257696061e-09,
-   "fac_P_h": 0.010261104946882649
+   "n": 13008,
+   "toi_abs": 2.9834869206392052e-05,
+   "toi_fac": 2.8005271391033707e-05,
+   "toi_app": 0.015763601685355094,
+   "abs_A_h2": 1.914736893019039e-09,
+   "fac_A_h2": 1.7973172920742793e-09,
+   "fac_P_h": 0.010178767189330156
   },
   {
    "type": "unknown",
    "n": 55,
-   "toi_abs": 8.501324470993436e-06,
-   "toi_fac": 7.548200690032483e-06,
-   "toi_app": 0.00010423837793303253,
-   "abs_A_h2": 5.455964794593173e-10,
-   "fac_A_h2": 4.844270721327808e-10,
-   "fac_P_h": 0.00044225048016229696
+   "toi_abs": 8.502736276114664e-06,
+   "toi_fac": 7.54961249515371e-06,
+   "toi_app": 0.00010426093795410303,
+   "abs_A_h2": 5.456870860355576e-10,
+   "fac_A_h2": 4.845176787090211e-10,
+   "fac_P_h": 0.00044253043233130455
   }
  ],
  "by_regime": [
   {
    "regime": "LEO",
-   "n": 29347,
-   "toi_abs": 0.08249252408489102,
-   "toi_fac": 0.04572833303930608,
-   "toi_app": 0.19230921431911827,
-   "abs_A_h2": 5.294190437736585e-06,
-   "fac_A_h2": 2.9347447686434556e-06,
-   "fac_P_h": 1.4934024844333649
+   "n": 29282,
+   "toi_abs": 0.08246225350120048,
+   "toi_fac": 0.04570296821900251,
+   "toi_app": 0.19184629812948165,
+   "abs_A_h2": 5.292247737637431e-06,
+   "fac_A_h2": 2.933116909748413e-06,
+   "fac_P_h": 1.4886003497535334
   },
   {
    "regime": "MEO",
-   "n": 1272,
-   "toi_abs": 6.309978362557629e-06,
-   "toi_fac": 5.047752266076331e-06,
-   "toi_app": 0.0016328015541083414,
-   "abs_A_h2": 4.0496066134429134e-10,
-   "fac_A_h2": 3.23953740967166e-10,
-   "fac_P_h": 0.0021739278197836225
+   "n": 1261,
+   "toi_abs": 6.308492721616544e-06,
+   "toi_fac": 5.046266625135247e-06,
+   "toi_app": 0.0016198975706345415,
+   "abs_A_h2": 4.0486531614602703e-10,
+   "fac_A_h2": 3.238583957689017e-10,
+   "fac_P_h": 0.0021706689625100176
   },
   {
    "regime": "GEO",
-   "n": 1782,
-   "toi_abs": 9.892546331533996e-07,
-   "toi_fac": 6.274735577469323e-07,
-   "toi_app": 0.002187940002413659,
-   "abs_A_h2": 6.348820668813289e-11,
-   "fac_A_h2": 4.0269885619426704e-11,
-   "fac_P_h": 0.001813412654801423
+   "n": 1772,
+   "toi_abs": 9.857765765916433e-07,
+   "toi_fac": 6.249536345963826e-07,
+   "toi_app": 0.0021758997832082728,
+   "abs_A_h2": 6.326499259697224e-11,
+   "fac_A_h2": 4.010816244274535e-11,
+   "fac_P_h": 0.0018063708061413109
   },
   {
    "regime": "HEO",
-   "n": 3136,
-   "toi_abs": 2.707084395838978e-06,
-   "toi_fac": 2.309524475053629e-06,
-   "toi_app": 0.003750753673776112,
-   "abs_A_h2": 1.7373477756418403e-10,
-   "fac_A_h2": 1.4822024816412405e-10,
-   "fac_P_h": 0.0018564895463533905
+   "n": 3126,
+   "toi_abs": 2.678905108063991e-06,
+   "toi_fac": 2.2851407054324045e-06,
+   "toi_app": 0.003738104431884427,
+   "abs_A_h2": 1.7192629227978373e-10,
+   "fac_A_h2": 1.466553509640843e-10,
+   "fac_P_h": 0.0018416751086882874
   }
  ],
  "top_objects": [
@@ -430,9 +433,9 @@
    "group": "iss",
    "alt_km": 420.0,
    "A_abs_m2": 4300.0,
-   "A_fac_m2": 2560.0,
+   "A_fac_m2": 2550.0,
    "toi_abs": 0.00037982619049920554,
-   "toi_fac": 0.00022612908085534097,
+   "toi_fac": 0.00022524576413324981,
    "cospar": "1998-067A",
    "P_fac_m": 1180.0,
    "area_src": "curated",

@@ -23,11 +23,12 @@ export function renderSources(root, latest) {
   }));
 }
 
-// Published file sizes. Files the page has fetched report their exact size through the
-// Resource Timing API; objects.csv is sized by the explorer once it loads.
+// Published file sizes. The build writes the exact sizes into the table (data-bytes);
+// without them, files the page has fetched report their size through the Resource
+// Timing API and objects.csv is sized by the explorer once it loads.
 export function setFileSize(root, path, n, approx = false) {
   const cell = root.querySelector(`[data-size="${path}"]`);
-  if (!cell || !Number.isFinite(n) || n <= 0) return;
+  if (!cell || !Number.isFinite(n) || n <= 0 || +cell.dataset.bytes > 0) return;
   cell.textContent = approx ? `about ${bytes(n)}` : bytes(n);
   cell.title = approx ? 'Estimated from the row count until the catalog loads' : `${intl(n)} bytes`;
 }
