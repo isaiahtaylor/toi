@@ -20,7 +20,7 @@ required unless marked optional. Units are SI unless the name says otherwise (`_
     "moon_radius_km": 1737.4,
     "moon_distance_km": 384400,
     "moon_angular_diameter_deg": 0.51790,
-    "omega_moon_sr": 6.4177e-5,
+    "omega_moon_sr": 6.41778e-5,
     "default_seeing_arcsec": 2.0,
     "sun_tracking_factor": 0.5,
     "min_altitude_km": 100
@@ -102,15 +102,52 @@ The curated design table, resolved:
 ```jsonc
 [ { "id": "starlink-v2-mini", "label": "Starlink V2 Mini", "family": "Starlink",
     "confidence": "published",               // published | estimated | assumed | proxy
+    "area_model": "curated",                 // "curated", or "gcat" (GCAT dims, generic model)
     "match": { "gcat_bus": ["Starlink V2M"], "norad": [], "name_regex": null },
     "body": { "a_m": 2.7, "b_m": 4.1 },      // null for directly specified designs
     "arrays": { "n": 2, "length_m": 12.8, "width_m": 4.1, "tracking": "sun" },   // or null
     "extra_area_m2": 0.0,
     "A_abs_m2": 116.0, "A_fac_m2": 63.6, "P_fac_m": 64.8,
     "n_on_orbit": 2561, "toi_abs": 0.0189, "toi_fac": 0.0104,
-    "sources": [ { "title": "Mallama et al. 2023, The Brightness of Starlink V2 Mini satellites", "url": "https://arxiv.org/abs/2309.14152" } ],
+    "median_alt_km": 483.0,
+    "alt_history": { "shell_km": 530.0, "until": "2026-01-01", "ramp_until": "2026-10-01",
+                     "raise_days": 45, "descent_days": 120, "transit_km": 350.0 },   // or null
+    "sources": [ { "title": "Mallama et al. 2023, Assessment of Brightness Mitigation Practices for Starlink Satellites", "url": "https://arxiv.org/abs/2309.14152" } ],
     "notes": "…" } ]
 ```
+
+### Additions in schema version 1 (written by the pipeline, optional for readers)
+
+These fields are present in the files the pipeline writes. They were added after the
+first draft of this contract; nothing above was renamed or removed.
+
+- `latest.json`
+  - `groups[]`: `toi_app` (apparent TOI of the group at the default seeing).
+  - `groups` order: curated designs sorted by `toi_fac` descending, then the generic groups
+    in the fixed order `other-payloads`, `rocket-bodies`, `debris`. Groups with no objects
+    are omitted. `debris` also holds objects of unknown type; `by_type` keeps `unknown`
+    separate.
+  - `by_type[]` and `by_regime[]`: `toi_app`, `abs_A_h2`, `fac_A_h2`, `fac_P_h`.
+  - `top_objects[]`: `cospar`, `P_fac_m`, `area_src`, `bus`. `norad` is `null` for objects
+    without a catalog number.
+  - `coverage.gcat_guess_share_abs_final`: share of the published absolute TOI from objects
+    whose area still comes from GCAT dimensions flagged `?`.
+  - `coverage.generic_only`: `{ "absolute": …, "facing": … }`, the TOI the generic model
+    would give with no curated designs.
+  - `sources[]`: one entry per input, ids `celestrak-satcat`, `gcat-satcat`,
+    `gcat-satcat100k`, `gcat-tmpcat`, `gcat-auxcat`, `gcat-currentcat`. In degraded mode
+    `celestrak-satcat` is absent. `updated` is GCAT's `# Updated …` header stamp, and for
+    CelesTrak the HTTP `Last-Modified` header when the file was downloaded (else `null`).
+  - All floats are written at full double precision.
+- `objects.csv`: two columns appended after `toi_fac`: `jcat` (GCAT identifier, empty if
+  GCAT does not have the object) and `regime` (`LEO`, `MEO`, `GEO`, `HEO`). For GCAT-only
+  objects `cospar` is GCAT's piece designation, which for temporary-catalog objects is only
+  the launch designation; `jcat` then identifies the object.
+- `buses.json`: `area_model`, `median_alt_km`, `alt_history`. For `area_model = "gcat"`,
+  `body` and `arrays` are `null` and `A_abs_m2`, `A_fac_m2`, `P_fac_m` are the medians over
+  the matched objects. Designs given directly (the stations) have `body` and `arrays`
+  `null`.
+- `history.csv`: values are written to 6 significant figures.
 
 ## `data/history.csv`
 

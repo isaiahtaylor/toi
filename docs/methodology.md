@@ -21,7 +21,7 @@ gaps), how large would that disc appear in the sky?"
 The Moon's mean solid angle, seen from Earth at its mean distance:
 
     α = asin(R☾ / d☾)          R☾ = 1737.4 km, d☾ = 384,400 km
-    Ω☾ = 2π (1 − cos α)  ≈ 6.4177 × 10⁻⁵ sr     (angular diameter 2α ≈ 0.5179°)
+    Ω☾ = 2π (1 − cos α)  ≈ 6.4178 × 10⁻⁵ sr     (angular diameter 2α ≈ 0.5179°)
 
 A TOI of 1 means the objects cover as much sky as the full Moon.
 
@@ -92,13 +92,37 @@ Note the last term: each object, however small or distant, adds one seeing disc.
 Object types: payload, rocket body, debris (CelesTrak `DEB`, GCAT components and debris),
 unknown.
 
+Details of the rules as implemented:
+
+- A GCAT object's current status is the latest phase in GCAT's `currentcat`
+  (`ExpandedStatus` "In Earth orbit" is status O, "Lost" is OX). Docked, attached and
+  internal objects have other statuses and are left out.
+- Left out as aliases, placeholders or tracking artifacts: type `PA` (alias), `CC` (cargo
+  placeholder), byte 6 `G` (cargo mass-accounting entry), byte 9 `m` (placeholder for an
+  uncatalogued debris event), and names containing "dup", "mistag" or "bad TLE".
+- "Absent from CelesTrak" means: a GCAT S-catalog object whose number is not in CelesTrak's
+  file at all, any T-catalog (temporary) object, and auxiliary-catalog objects with no US
+  catalog number (`Satcat` = `NNA…`). Auxiliary objects that share a number with a
+  catalogued object are represented by that object.
+- GCAT types map to `PAY` (P), `R/B` (R), `DEB` (C and D).
+- CelesTrak decides for every object it carries: an object CelesTrak lists as decayed is not
+  counted even if GCAT still lists it in orbit.
+
 ## Altitude
 
 `h = (perigee + apogee) / 2`, in km, from CelesTrak SATCAT. If missing: GCAT
 `currentcat`. If still missing: median of objects from the same launch (COSPAR launch
-prefix). Floor of 100 km. Objects with no orbit from any source are excluded and counted
+prefix). Floor of 100 km. CelesTrak's perigee and apogee are used whenever present,
+including for objects whose element sets are not public (`DATA_STATUS_CODE` NEA). A
+perigee or apogee that is missing or 0 counts as no orbit. The launch-mate fallback takes
+the median perigee and the median apogee of the counted objects from the same launch. Objects with no orbit from any source are excluded and counted
 in `status_notes`. Eccentric orbits are represented by their mean altitude; HEO objects
 contribute about 0.01% so this choice does not matter at the reported precision.
+
+Orbit regimes (for the breakdown only): LEO has apogee ≤ 2,000 km; GEO has mean altitude
+within 35,786 ± 1,000 km and eccentricity ≤ 0.02; MEO is the rest below the GEO band with
+eccentricity < 0.25; HEO is everything else (eccentric orbits and orbits beyond the GEO
+band).
 
 ## Areas
 
@@ -116,7 +140,14 @@ flat-panel design with body face `a × b` and `n` arrays of `L × w`:
 `P_fac` is the perimeter of the projected outline with arrays attached to the body's `b`
 sides (the shared edges are subtracted). Designs whose shape does not fit this model (the
 space stations) give `A_abs`, `A_fac` and `P_fac` directly, derived in the notes from their
-documented components.
+documented components. Designs with no published dimensions and no better estimate
+(OneWeb, Qianfan, Guowang, Iridium NEXT) keep GCAT's dimensions and the generic model below
+(`area_model = "gcat"`) while still forming their own display group.
+
+Only payloads are matched to curated designs. Matching tries, in order, an explicit catalog
+number, GCAT's exact `Bus` string, and a name pattern. The name pattern applies to objects
+that have no GCAT `Bus` yet (new CelesTrak objects GCAT has not catalogued) or to designs
+that list no `Bus` strings (OneWeb, whose Arrow bus GCAT also uses for other satellites).
 
 ### Generic objects (GCAT dimensions)
 
@@ -139,6 +170,14 @@ extent` when Span exceeds the body by more than 5%; array area `e × w` with `w`
 width; counted fully in `A_abs`, at ½ in `A_fac`; added to `P_fac` per the union formula.
 **Other appendages** (antennas, booms): area `0.1 × e × min(L,D)`.
 
+As implemented: the body extent is `max(L, D)` (`L` for a box, `D` for a flat panel); the
+body width `w` is `D`, or `D/2` for a flat panel. The arrays attach along a body side as
+wide as they are, so the union formula adds `2e` to `P_fac`. Other appendages count at ½
+in `A_fac` (a thin plate of unknown attitude) and also add `2e` to `P_fac`. The body row is
+chosen from the first word group of `Shape` (before any `+`): sphere for "sphere", "ball",
+"ico", "geodesic"; cylinder for "cyl", "cone", "frust", "disk", "torus", "tank", "nozzle",
+"rod", "tube", "ring", "ell(ipsoid)", "drum"; otherwise box, or flat panel when `L < D`.
+
 **Rocket bodies** use the cylinder row regardless of the shape string (tumbling).
 
 **No dimensions** (`Length` or `Diameter` missing or 0, which is the case for almost all
@@ -147,6 +186,11 @@ and `A_fac`, with `P_fac` the circumference of a circle of that area. Otherwise 
 by type: debris 0.1 m², payload 1 m², rocket body 10 m², unknown 0.1 m².
 
 Every object records where its area came from (`area_src`: curated, gcat, rcs, default).
+
+GCAT marks guessed dimensions with `?`. `coverage.gcat_guess_share_abs` in `latest.json` is
+the share of the absolute TOI that would rest on such guesses if every object used the
+generic model (before curation); `coverage.gcat_guess_share_abs_final` is the share of the
+published absolute TOI that still does.
 
 ## History
 
@@ -157,6 +201,28 @@ Every object records where its area came from (`area_src`: curated, gcat, rcs, d
   `alt_history` (for example Starlink shells at ~550 km before the 2026 lowering to
   ~480 km). This is an approximation and is labelled as one; for instance the ISS is
   counted at full size from 1998.
+
+As implemented:
+
+- An object counts on the first of a month `t` when `start ≤ t < decay`. The start is
+  GCAT's separation date (`SDate`, when the object became a separate object, which for
+  breakup debris is the breakup date), or the launch date when GCAT has none.
+- The sums are built event by event: each object adds its contribution at its first month
+  and removes it at its decay month, so a run costs one pass over objects plus one over
+  months.
+- Decayed objects: GCAT's early-operations orbit, then CelesTrak's listed orbit, then the
+  median of the same launch; objects with none of these are skipped.
+- `alt_history` rule: within `raise_days` (45) of launch and `descent_days` (120) of decay an
+  object is in transit at `min(transit_km, own altitude)` with `transit_km` = 350 km. On
+  station it flies at `shell_km` before `until`, then moves linearly to its current
+  altitude by `ramp_until`. Starlink v1 uses 550 km and V2 Mini 530 km (the FCC's Gen2
+  shells are 525, 530 and 535 km) until 1 January 2026, reaching current altitudes by
+  1 October 2026; the direct-to-cell satellites use 360 km.
+- Objects docked today (CelesTrak `ORBIT_CENTER` not `EA`) are left out of the history,
+  as they are from today's count. Visiting vehicles that have since come down are counted as free objects
+  from launch to decay. GCAT-only objects that have come down are not included.
+- In degraded mode the decayed objects come from GCAT's S catalog (latest status reentered,
+  deorbited, landed, crashed or exploded on Earth).
 
 ## What this is not
 

@@ -1,0 +1,406 @@
+/* Hero: the night survey. A full-screen canvas (terrain, sky, Moon, TOI marks) under
+   an HTML readout. Desktop: readout in a left column, Moon upper right. Narrow or
+   portrait screens: Moon top right, readout lower down over a scrim. The narrow
+   breakpoint must match NARROW in assets/js/hero.js. */
+
+.hero {
+  --hero-pad-l: max(var(--gutter-l), 5vw);
+  --hero-pad-r: max(var(--gutter-r), 5vw);
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  background: var(--sky-0);
+  color: var(--ink-1);
+}
+
+.hero__canvas {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+}
+
+/* Nav ------------------------------------------------------------------- */
+
+.hero__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  padding: var(--space-5) var(--hero-pad-r) 0 var(--hero-pad-l);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.hero__wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  color: var(--ink-1);
+  font-size: var(--step--1);
+  letter-spacing: 0.26em;
+  text-decoration: none;
+}
+
+.hero__glyph { display: block; overflow: visible; }
+.hero__glyph-moon { fill: var(--moon); opacity: 0.92; }
+.hero__glyph-toi { fill: var(--sodium); }
+
+.hero__links {
+  display: flex;
+  gap: clamp(var(--space-4), 3vw, var(--space-6));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero__links a {
+  display: inline-block;
+  padding: 6px 0;
+  color: var(--ink-2);
+  text-decoration: none;
+  transition: color 0.2s var(--ease);
+}
+
+.hero__links a:hover { color: var(--ink-1); }
+
+/* Readout ---------------------------------------------------------------- */
+
+.hero__body {
+  display: flex;
+  align-items: center;
+  padding: var(--space-7) var(--hero-pad-r) var(--space-6) var(--hero-pad-l);
+}
+
+.hero__readout {
+  position: relative;
+  width: min(100%, 35rem);
+}
+
+/* Scrim that travels with the readout so text stays legible over the land. */
+.hero__readout::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -22% -45% -18% calc(-1 * var(--hero-pad-l) - 2px);
+  background: radial-gradient(ellipse 70% 62% at 32% 56%, rgba(3, 5, 11, 0.84) 0%, rgba(3, 5, 11, 0.58) 50%, transparent 100%);
+  background: radial-gradient(
+    ellipse 70% 62% at 32% 56%,
+    color-mix(in srgb, var(--sky-0) 84%, transparent) 0%,
+    color-mix(in srgb, var(--sky-0) 58%, transparent) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.hero__eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-2);
+  text-wrap: wrap;
+}
+
+.hero__value {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0 0.9rem;
+  margin-top: var(--space-4);
+  font-family: var(--font-serif);
+  font-size: var(--step-hero);
+  font-weight: 250;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  font-variant-numeric: lining-nums tabular-nums;
+  font-optical-sizing: auto;
+  color: var(--ink-1);
+}
+
+.hero__num {
+  display: inline-block;
+  transition: opacity 0.17s var(--ease), transform 0.17s var(--ease), filter 0.17s var(--ease);
+}
+
+.hero__unit {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.hero__sentence {
+  max-width: 31em;
+  margin-top: var(--space-5);
+  font-size: var(--step-1);
+  line-height: 1.42;
+  color: var(--ink-2);
+  transition: opacity 0.17s var(--ease);
+}
+
+.hero__num.is-swapping {
+  opacity: 0;
+  transform: translateY(0.06em);
+  filter: blur(2px);
+}
+
+.hero__sentence.is-swapping { opacity: 0; }
+
+/* Expression selector: a radiogroup laid out as three instrument columns. */
+
+.hero__options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: var(--space-7);
+  border-top: 1px solid var(--rule-strong);
+}
+
+.hero__option {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  margin: 0;
+  padding: var(--space-4) var(--space-4) var(--space-2) 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--ink-3);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hero__option + .hero__option {
+  padding-left: var(--space-4);
+  border-left: 1px solid var(--rule);
+}
+
+.hero__option::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--sodium);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.4s var(--ease);
+}
+
+.hero__option[aria-checked="true"]::before { transform: scaleX(1); }
+
+.hero__option:focus-visible {
+  outline: 2px solid var(--sodium);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.hero__opt-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero__opt-name {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-2);
+  transition: color 0.4s var(--ease);
+}
+
+.hero__opt-value {
+  font-family: var(--font-mono);
+  font-size: var(--step-0);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--ink-2);
+  transition: color 0.4s var(--ease);
+}
+
+.hero__opt-desc {
+  font-size: var(--step--1);
+  line-height: 1.4;
+  color: var(--ink-3);
+  transition: color 0.4s var(--ease);
+}
+
+.hero__option:hover .hero__opt-name { color: var(--ink-1); }
+.hero__option[aria-checked="true"] .hero__opt-name { color: var(--ink-1); }
+.hero__option[aria-checked="true"] .hero__opt-value { color: var(--sodium); }
+.hero__option[aria-checked="true"] .hero__opt-desc { color: var(--ink-2); }
+
+/* A miniature of the canvas marks, to scale, with this option's mark lit. */
+.hero__opt-glyph {
+  flex: none;
+  display: block;
+  width: 16px;
+  height: 16px;
+  margin: -3px 0;
+  overflow: visible;
+  opacity: 0.6;
+  transition: opacity 0.4s var(--ease);
+}
+
+.hero__opt-glyph circle { transition: fill-opacity 0.4s var(--ease), stroke-opacity 0.4s var(--ease); }
+.hero__opt-glyph .g-app { fill: var(--sodium); fill-opacity: 0.1; stroke: none; }
+.hero__opt-glyph .g-abs { fill: none; stroke: var(--sodium); stroke-width: 1; stroke-opacity: 0.3; }
+.hero__opt-glyph .g-fac { fill: var(--sky-0); stroke: var(--sodium); stroke-width: 1; stroke-opacity: 0.3; }
+
+[data-expr="absolute"] .g-abs { stroke-opacity: 1; }
+[data-expr="absolute"] .g-fac { fill-opacity: 0.45; }
+[data-expr="facing"] .g-fac { stroke-opacity: 1; }
+[data-expr="apparent"] .g-app { fill-opacity: 0.38; }
+
+.hero__option[aria-checked="true"] .hero__opt-glyph,
+.hero__option:hover .hero__opt-glyph { opacity: 1; }
+
+.hero__meta {
+  margin-top: var(--space-5);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  line-height: 1.6;
+  letter-spacing: 0.03em;
+  color: var(--ink-3);
+}
+
+.hero__status {
+  margin-top: var(--space-2);
+  padding-left: var(--space-3);
+  border-left: 1px solid var(--rule-strong);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.hero__status[hidden] { display: none; }
+
+/* Scroll cue ------------------------------------------------------------- */
+
+.hero__cue {
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: var(--space-3) var(--space-4) var(--space-5);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  text-decoration: none;
+  transition: color 0.2s var(--ease);
+}
+
+.hero__cue:hover { color: var(--ink-1); }
+
+.hero__cue-line {
+  position: relative;
+  width: 1px;
+  height: 34px;
+  overflow: hidden;
+  background: linear-gradient(var(--rule-strong), transparent);
+}
+
+.hero__cue-line::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -45%;
+  width: 1px;
+  height: 45%;
+  background: linear-gradient(transparent, var(--ink-2), transparent);
+  animation: hero-cue 2.8s var(--ease) infinite;
+}
+
+@keyframes hero-cue {
+  to { top: 100%; }
+}
+
+/* Narrow and portrait ---------------------------------------------------- */
+
+@media (max-width: 899px), (max-aspect-ratio: 10/11) {
+  .hero__body {
+    align-items: flex-end;
+    /* Leave room for the Moon and the marks; mirrors the layout in hero/scene.js. */
+    padding-top: calc(clamp(84px, 28vw, 150px) * 1.6 + 84px);
+    padding-bottom: var(--space-4);
+  }
+
+  .hero__readout { width: min(100%, 35rem); }
+
+  .hero__readout::before {
+    /* Full screen width, whatever the readout's own width. */
+    inset: -64px auto -40% calc(-1 * var(--hero-pad-l) - 2px);
+    width: calc(100vw + 4px);
+    background: linear-gradient(to bottom, transparent 0%, rgba(3, 5, 11, 0.66) 12%, rgba(3, 5, 11, 0.84) 34%, rgba(3, 5, 11, 0.88) 100%);
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      color-mix(in srgb, var(--sky-0) 66%, transparent) 12%,
+      color-mix(in srgb, var(--sky-0) 84%, transparent) 34%,
+      color-mix(in srgb, var(--sky-0) 88%, transparent) 100%
+    );
+  }
+
+  .hero__value { margin-top: var(--space-3); }
+
+  .hero__sentence {
+    margin-top: var(--space-4);
+    font-size: var(--step-0);
+    line-height: 1.5;
+  }
+
+  .hero__options { margin-top: var(--space-5); }
+
+  .hero__option {
+    padding-right: var(--space-3);
+  }
+
+  .hero__option + .hero__option { padding-left: var(--space-3); }
+
+  .hero__opt-desc { font-size: 0.75rem; line-height: 1.32; }
+
+  .hero__links { gap: var(--space-4); }
+}
+
+/* Very large screens: let the readout grow with the canvas. */
+@media (min-width: 1800px) and (min-aspect-ratio: 10/11) {
+  .hero__readout { width: min(100%, 44rem); }
+  .hero__value { font-size: clamp(9.5rem, 7.4vw, 13.5rem); }
+  .hero__sentence { font-size: var(--step-2); max-width: 26em; }
+  .hero__opt-desc { font-size: var(--step-0); }
+  .hero__opt-value { font-size: var(--step-1); }
+}
+
+@media (max-width: 360px) {
+  .hero__opt-head { gap: 6px; }
+  .hero__opt-name { letter-spacing: 0.08em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__cue-line::after { animation: none; top: 30%; }
+}

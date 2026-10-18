@@ -1,0 +1,60 @@
+<header class="hero" id="top" data-selected="absolute"
+  data-absolute="{{ toi.absolute }}" data-facing="{{ toi.facing }}" data-apparent="{{ toi.apparent }}"
+  data-seeing="{{ constants.default_seeing_arcsec }}" data-moon-deg="{{ constants.moon_angular_diameter_deg }}">
+  <canvas class="hero__canvas" aria-hidden="true"></canvas>
+
+  <nav class="hero__nav" aria-label="Site">
+    <a class="hero__wordmark" href="#top">
+      <svg class="hero__glyph" viewBox="0 0 26 14" width="26" height="14" aria-hidden="true" focusable="false">
+        <circle class="hero__glyph-moon" cx="19" cy="7" r="6"></circle>
+        <circle class="hero__glyph-toi" cx="4" cy="7" r="1.75"></circle>
+      </svg>
+      <span>TOI</span>
+    </a>
+    <ul class="hero__links">
+      <li><a href="#method">Method</a></li>
+      <li><a href="#data">Data</a></li>
+      <li><a href="https://github.com/isaiahtaylor/toi">Source</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero__body">
+    <div class="hero__readout">
+      <h1 class="hero__eyebrow">Taylor Occlusion Index <span aria-hidden="true">·</span> <span data-hero="month">{{ catalog_date | month }}</span></h1>
+
+      <div class="hero__now" aria-live="polite" aria-atomic="true">
+        <p class="hero__value"><span class="hero__num" data-hero="value">{{ toi.absolute | sig2 }}</span> <span class="hero__unit">moons</span></p>
+        <p class="hero__sentence" data-hero="sentence">Every tracked object in orbit, laid flat directly overhead, would cover {{ toi.absolute | pct1 }} of the full Moon.</p>
+      </div>
+
+      <div class="hero__options" role="radiogroup" aria-label="How the index is counted">
+        <button type="button" class="hero__option" role="radio" aria-checked="true" tabindex="0" data-expr="absolute"
+          aria-labelledby="hero-opt-abs-name hero-opt-abs-val" aria-describedby="hero-opt-abs-desc">
+          <span class="hero__opt-head"><svg class="hero__opt-glyph" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle class="g-app" cx="8" cy="8" r="7.4"></circle><circle class="g-abs" cx="8" cy="8" r="5"></circle><circle class="g-fac" cx="8" cy="8" r="3.7"></circle></svg><span class="hero__opt-name" id="hero-opt-abs-name">Absolute</span></span>
+          <span class="hero__opt-value" id="hero-opt-abs-val" data-hero="absolute">{{ toi.absolute | sig2 }}</span>
+          <span class="hero__opt-desc" id="hero-opt-abs-desc">Every object laid flat, face&#8209;on.</span>
+        </button>
+        <button type="button" class="hero__option" role="radio" aria-checked="false" tabindex="-1" data-expr="facing"
+          aria-labelledby="hero-opt-fac-name hero-opt-fac-val" aria-describedby="hero-opt-fac-desc">
+          <span class="hero__opt-head"><svg class="hero__opt-glyph" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle class="g-app" cx="8" cy="8" r="7.4"></circle><circle class="g-abs" cx="8" cy="8" r="5"></circle><circle class="g-fac" cx="8" cy="8" r="3.7"></circle></svg><span class="hero__opt-name" id="hero-opt-fac-name">Facing</span></span>
+          <span class="hero__opt-value" id="hero-opt-fac-val" data-hero="facing">{{ toi.facing | sig2 }}</span>
+          <span class="hero__opt-desc" id="hero-opt-fac-desc">As the hardware actually faces the ground.</span>
+        </button>
+        <button type="button" class="hero__option" role="radio" aria-checked="false" tabindex="-1" data-expr="apparent"
+          aria-labelledby="hero-opt-app-name hero-opt-app-val" aria-describedby="hero-opt-app-desc">
+          <span class="hero__opt-head"><svg class="hero__opt-glyph" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle class="g-app" cx="8" cy="8" r="7.4"></circle><circle class="g-abs" cx="8" cy="8" r="5"></circle><circle class="g-fac" cx="8" cy="8" r="3.7"></circle></svg><span class="hero__opt-name" id="hero-opt-app-name">Apparent</span></span>
+          <span class="hero__opt-value" id="hero-opt-app-val" data-hero="apparent">{{ toi.apparent | sig2 }}</span>
+          <span class="hero__opt-desc" id="hero-opt-app-desc">Blurred by the atmosphere’s <span data-hero="seeing">{{ constants.default_seeing_arcsec | arcsec }}</span> seeing.</span>
+        </button>
+      </div>
+
+      <p class="hero__meta"><span data-hero="count">{{ counts.total | int }}</span> tracked objects · catalog of <span data-hero="date">{{ catalog_date | date_long }}</span> · recomputed monthly</p>
+      <p class="hero__status" data-hero="status" role="status" hidden></p>
+    </div>
+  </div>
+
+  <a class="hero__cue" href="#method">
+    <span>How it’s measured</span>
+    <span class="hero__cue-line" aria-hidden="true"></span>
+  </a>
+</header>
